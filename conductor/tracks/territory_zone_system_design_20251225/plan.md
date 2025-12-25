@@ -11,11 +11,11 @@
 - [x] Task: Refine the tie-breaker logic for multi-user contention. <!-- id: ownership_doc -->
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Capture & Ownership Blueprint' (Protocol in workflow.md) <!-- id: e30fbff -->
 
-#### Phase 3: Loop Geometry & Algorithms
-- [ ] Task: Define geometric criteria for "Enclosure" (Point-in-polygon vs. Enclosed-Hexes).
-- [ ] Task: Establish numeric thresholds for loop proximity and area validity.
-- [ ] Task: Define maximum computational complexity limits for loop detection to ensure mobile and backend feasibility.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Loop Geometry & Algorithms' (Protocol in workflow.md)
+#### Phase 3: Loop Geometry & Algorithms [checkpoint: 260473a]
+- [x] Task: Define geometric criteria for "Enclosure" (Point-in-polygon vs. Enclosed-Hexes). <!-- id: loops_doc -->
+- [x] Task: Establish numeric thresholds for loop proximity and area validity. <!-- id: loops_doc -->
+- [x] Task: Define maximum computational complexity limits for loop detection to ensure mobile and backend feasibility. <!-- id: loops_doc -->
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Loop Geometry & Algorithms' (Protocol in workflow.md) <!-- id: 260473a -->
 
 #### Phase 4: Safeguards & UX Logic
 - [ ] Task: Define explicit speed/acceleration constants for anti-gaming.
