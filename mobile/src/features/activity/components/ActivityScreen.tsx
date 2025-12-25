@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useActivityStore, ActivityState } from '../store/activityStore';
 import { Colors } from '../../../constants/Colors';
 import { Typography } from '../../../constants/Typography';
@@ -50,7 +50,7 @@ export default function ActivityScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.metricsContainer}>
         <View style={styles.metricRow}>
             <Text style={styles.metricValue}>{formatTime(metrics.elapsedTime)}</Text>
@@ -66,94 +66,94 @@ export default function ActivityScreen() {
         </View>
       </View>
 
-      <View style={styles.controlsContainer}>
-        {status === ActivityState.IDLE && (
-          <TouchableOpacity 
-            style={[styles.button, styles.startButton]} 
-            onPress={startActivity}
-            accessibilityRole="button"
-            accessibilityLabel="Start Activity"
-          >
-            <Text style={styles.buttonText}>Start</Text>
-          </TouchableOpacity>
-        )}
+      {status === ActivityState.COMPLETED ? (
+         <View style={styles.summaryContainer}>
+            <Text style={styles.summaryTitle}>Run Completed!</Text>
+            
+            <TouchableOpacity 
+              onPress={handleMapPress}
+              style={styles.mapPreviewContainer}
+              activeOpacity={0.9}
+            >
+              <ActivityRouteMap 
+                coordinates={coordinates} 
+                style={styles.mapPreview} 
+              />
+            </TouchableOpacity>
 
-        {status === ActivityState.TRACKING && (
-          <>
+            <Text style={styles.summaryText}>Your activity has been saved locally.</Text>
             <TouchableOpacity 
-              style={[styles.button, styles.pauseButton]} 
-              onPress={pauseActivity}
-              accessibilityRole="button"
-              accessibilityLabel="Pause Activity"
+                style={[styles.button, styles.startButton]} 
+                onPress={resetActivity}
+                accessibilityRole="button"
+                accessibilityLabel="Start New Run"
             >
-              <Text style={styles.buttonText}>Pause</Text>
+                <Text style={styles.buttonText}>New Run</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.finishButton]} 
-              onPress={handleFinish}
-              accessibilityRole="button"
-              accessibilityLabel="Finish Activity"
-            >
-              <Text style={styles.buttonText}>Finish</Text>
-            </TouchableOpacity>
-          </>
-        )}
+         </View>
+      ) : (
+        <View style={styles.controlsContainer}>
+            {status === ActivityState.IDLE && (
+              <TouchableOpacity 
+                style={[styles.button, styles.startButton]} 
+                onPress={startActivity}
+                accessibilityRole="button"
+                accessibilityLabel="Start Activity"
+              >
+                <Text style={styles.buttonText}>Start</Text>
+              </TouchableOpacity>
+            )}
 
-        {status === ActivityState.PAUSED && (
-          <>
-            <TouchableOpacity 
-              style={[styles.button, styles.resumeButton]} 
-              onPress={resumeActivity}
-              accessibilityRole="button"
-              accessibilityLabel="Resume Activity"
-            >
-              <Text style={styles.buttonText}>Resume</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.finishButton]} 
-              onPress={handleFinish}
-              accessibilityRole="button"
-              accessibilityLabel="Finish Activity"
-            >
-              <Text style={styles.buttonText}>Finish</Text>
-            </TouchableOpacity>
-          </>
-        )}
-        
-        {status === ActivityState.COMPLETED && (
-             <View style={styles.summaryContainer}>
-                <Text style={styles.summaryTitle}>Run Completed!</Text>
-                
+            {status === ActivityState.TRACKING && (
+              <>
                 <TouchableOpacity 
-                  onPress={handleMapPress}
-                  style={styles.mapPreviewContainer}
-                  activeOpacity={0.9}
+                  style={[styles.button, styles.pauseButton]} 
+                  onPress={pauseActivity}
+                  accessibilityRole="button"
+                  accessibilityLabel="Pause Activity"
                 >
-                  <ActivityRouteMap 
-                    coordinates={coordinates} 
-                    style={styles.mapPreview} 
-                  />
+                  <Text style={styles.buttonText}>Pause</Text>
                 </TouchableOpacity>
-
-                <Text style={styles.summaryText}>Your activity has been saved locally.</Text>
                 <TouchableOpacity 
-                    style={[styles.button, styles.startButton]} 
-                    onPress={resetActivity}
-                    accessibilityRole="button"
-                    accessibilityLabel="Start New Run"
+                  style={[styles.button, styles.finishButton]} 
+                  onPress={handleFinish}
+                  accessibilityRole="button"
+                  accessibilityLabel="Finish Activity"
                 >
-                    <Text style={styles.buttonText}>New Run</Text>
+                  <Text style={styles.buttonText}>Finish</Text>
                 </TouchableOpacity>
-             </View>
-        )}
-      </View>
-    </View>
+              </>
+            )}
+
+            {status === ActivityState.PAUSED && (
+              <>
+                <TouchableOpacity 
+                  style={[styles.button, styles.resumeButton]} 
+                  onPress={resumeActivity}
+                  accessibilityRole="button"
+                  accessibilityLabel="Resume Activity"
+                >
+                  <Text style={styles.buttonText}>Resume</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.button, styles.finishButton]} 
+                  onPress={handleFinish}
+                  accessibilityRole="button"
+                  accessibilityLabel="Finish Activity"
+                >
+                  <Text style={styles.buttonText}>Finish</Text>
+                </TouchableOpacity>
+              </>
+            )}
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     backgroundColor: Colors.light.background,
     justifyContent: 'space-between',
     padding: 24,
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     gap: 32,
+    minHeight: 200,
   },
   metricRow: {
     alignItems: 'center',
@@ -220,6 +221,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     gap: 16,
+    paddingBottom: 40,
   },
   summaryTitle: {
     fontSize: Typography.fontSize.xl,
