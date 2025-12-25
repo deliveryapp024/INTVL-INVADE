@@ -17,10 +17,10 @@
 
 ## Phase 3: Minimalist Activity Screen (UI)
 - [x] Task: Create typography and color constants based on Product Guidelines c0d71d4
-- [ ] Task: Write tests for the Activity Screen UI components (checking for metric display)
-- [ ] Task: Build the Minimalist Activity Screen layout (elapsed time, distance, pace)
-- [ ] Task: Implement Start, Pause, Resume, and Finish controls with high-contrast accents
-- [ ] Task: Ensure accessibility compliance (touch targets, contrast ratios)
+- [x] Task: Write tests for the Activity Screen UI components (checking for metric display) ed5a32b
+- [x] Task: Build the Minimalist Activity Screen layout (elapsed time, distance, pace) ed5a32b
+- [x] Task: Implement Start, Pause, Resume, and Finish controls with high-contrast accents ed5a32b
+- [x] Task: Ensure accessibility compliance (touch targets, contrast ratios) ed5a32b
 - [ ] Task: Conductor - User Manual Verification 'Minimalist Activity Screen (UI)' (Protocol in workflow.md)
 
 ## Phase 4: Activity Completion & Local Storage
