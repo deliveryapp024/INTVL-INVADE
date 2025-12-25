@@ -1,9 +1,5 @@
-import { View, Text } from 'react-native';
+import ActivityScreen from '../src/features/activity/components/ActivityScreen';
 
 export default function Home() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
+  return <ActivityScreen />;
 }

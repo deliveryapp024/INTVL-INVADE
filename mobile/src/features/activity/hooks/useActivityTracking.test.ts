@@ -5,6 +5,10 @@ import { useActivityStore, ActivityState } from '../store/activityStore';
 import { act } from 'react-test-renderer';
 import { locationCallback } from '../../../jest-setup';
 
+jest.mock('../services/locationService', () => ({
+  requestLocationPermissions: jest.fn(() => Promise.resolve(true)),
+}));
+
 describe('useActivityTracking', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -19,6 +23,11 @@ describe('useActivityTracking', () => {
     });
 
     renderHook(() => useActivityTracking());
+
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
 
     expect(Location.watchPositionAsync).toHaveBeenCalled();
   });
