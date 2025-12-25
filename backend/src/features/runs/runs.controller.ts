@@ -15,13 +15,31 @@ export const createRun = async (req: Request, res: Response) => {
   } = req.body;
 
   try {
-    // Basic implementation for Task 2
-    // Assumes user is authenticated and userId is available (e.g. from middleware)
-    // For now, using a hardcoded user_id for testing or getting it from req.user
     const userId = (req as any).user?.id || 'test-user-id';
 
-    // We need to ensure the user exists for the foreign key constraint if we were using a real DB
-    // But since we are implementing the logic:
+    // Idempotency check
+    const existingRun = await prisma.run.findUnique({
+      where: { id }
+    });
+
+    if (existingRun) {
+      if (existingRun.userId !== userId) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'Run ID already exists for another user'
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Run already processed',
+        data: {
+          id: existingRun.id,
+          run_status: existingRun.status,
+          received_at: existingRun.createdAt
+        }
+      });
+    }
     
     const run = await prisma.run.create({
       data: {
