@@ -15,13 +15,13 @@
 - [x] Task: Implement background tracking using `expo-task-manager` e82d059
 - [x] Task: Conductor - User Manual Verification 'Location & Tracking Logic' (Protocol in workflow.md) 793f258
 
-## Phase 3: Minimalist Activity Screen (UI)
+## Phase 3: Minimalist Activity Screen (UI) [checkpoint: ca07d13]
 - [x] Task: Create typography and color constants based on Product Guidelines c0d71d4
 - [x] Task: Write tests for the Activity Screen UI components (checking for metric display) ed5a32b
 - [x] Task: Build the Minimalist Activity Screen layout (elapsed time, distance, pace) ed5a32b
 - [x] Task: Implement Start, Pause, Resume, and Finish controls with high-contrast accents ed5a32b
 - [x] Task: Ensure accessibility compliance (touch targets, contrast ratios) ed5a32b
-- [ ] Task: Conductor - User Manual Verification 'Minimalist Activity Screen (UI)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Minimalist Activity Screen (UI)' (Protocol in workflow.md) ca07d13
 
 ## Phase 4: Activity Completion & Local Storage
 - [ ] Task: Write tests for activity saving logic
