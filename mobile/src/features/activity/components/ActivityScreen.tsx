@@ -4,6 +4,7 @@ import { useActivityStore, ActivityState } from '../store/activityStore';
 import { Colors } from '../../../constants/Colors';
 import { Typography } from '../../../constants/Typography';
 import { useActivityTracking } from '../hooks/useActivityTracking';
+import { saveActivity } from '../services/activityStorage';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -24,10 +25,22 @@ const formatPace = (pace: number) => {
 };
 
 export default function ActivityScreen() {
-  const { status, metrics, startActivity, pauseActivity, resumeActivity, finishActivity } = useActivityStore();
+  const { status, metrics, startActivity, pauseActivity, resumeActivity, finishActivity, resetActivity } = useActivityStore();
   
   // Initialize tracking hook
   useActivityTracking();
+
+  const handleFinish = async () => {
+    const activityData = {
+        id: Date.now().toString(),
+        startTime: Date.now() - (metrics.elapsedTime * 1000),
+        duration: metrics.elapsedTime,
+        distance: metrics.distance,
+        pace: metrics.pace,
+    };
+    await saveActivity(activityData);
+    finishActivity();
+  };
 
   return (
     <View style={styles.container}>
@@ -70,7 +83,7 @@ export default function ActivityScreen() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.button, styles.finishButton]} 
-              onPress={finishActivity}
+              onPress={handleFinish}
               accessibilityRole="button"
               accessibilityLabel="Finish Activity"
             >
@@ -91,7 +104,7 @@ export default function ActivityScreen() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.button, styles.finishButton]} 
-              onPress={finishActivity}
+              onPress={handleFinish}
               accessibilityRole="button"
               accessibilityLabel="Finish Activity"
             >
@@ -101,14 +114,18 @@ export default function ActivityScreen() {
         )}
         
         {status === ActivityState.COMPLETED && (
-             <TouchableOpacity 
-               style={[styles.button, styles.startButton]} 
-               onPress={startActivity}
-               accessibilityRole="button"
-               accessibilityLabel="Start New Run"
-             >
-                <Text style={styles.buttonText}>New Run</Text>
-             </TouchableOpacity>
+             <View style={styles.summaryContainer}>
+                <Text style={styles.summaryTitle}>Run Completed!</Text>
+                <Text style={styles.summaryText}>Your activity has been saved locally.</Text>
+                <TouchableOpacity 
+                    style={[styles.button, styles.startButton]} 
+                    onPress={resetActivity}
+                    accessibilityRole="button"
+                    accessibilityLabel="Start New Run"
+                >
+                    <Text style={styles.buttonText}>New Run</Text>
+                </TouchableOpacity>
+             </View>
         )}
       </View>
     </View>
@@ -179,5 +196,21 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.lg,
     fontFamily: Typography.fontFamily.bold,
     color: Colors.light.text,
+  },
+  summaryContainer: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 16,
+  },
+  summaryTitle: {
+    fontSize: Typography.fontSize.xl,
+    fontFamily: Typography.fontFamily.bold,
+    color: Colors.light.text,
+  },
+  summaryText: {
+    fontSize: Typography.fontSize.md,
+    color: Colors.light.textSecondary,
+    textAlign: 'center',
+    marginBottom: 16,
   },
 });

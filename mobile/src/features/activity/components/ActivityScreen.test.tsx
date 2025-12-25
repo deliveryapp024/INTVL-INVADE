@@ -43,4 +43,15 @@ describe('ActivityScreen', () => {
     expect(getByText('Resume')).toBeTruthy();
     expect(getByText('Finish')).toBeTruthy();
   });
+
+  it('should display summary when COMPLETED', () => {
+    act(() => {
+      useActivityStore.getState().startActivity();
+      useActivityStore.getState().finishActivity();
+    });
+
+    const { getByText } = render(<ActivityScreen />);
+    expect(getByText('Run Completed!')).toBeTruthy();
+    expect(getByText('New Run')).toBeTruthy();
+  });
 });
