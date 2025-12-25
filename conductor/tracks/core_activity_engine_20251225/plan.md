@@ -12,7 +12,7 @@
 - [x] Task: Set up `expo-location` permissions and foreground tracking cd39f2c
 - [x] Task: Write tests for the activity tracking service/hook ec4baca
 - [x] Task: Implement the activity tracking service/hook to update state with GPS data ec4baca
-- [ ] Task: Implement background tracking using `expo-task-manager`
+- [x] Task: Implement background tracking using `expo-task-manager` e82d059
 - [ ] Task: Conductor - User Manual Verification 'Location & Tracking Logic' (Protocol in workflow.md)
 
 ## Phase 3: Minimalist Activity Screen (UI)
