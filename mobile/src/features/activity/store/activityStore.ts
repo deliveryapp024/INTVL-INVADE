@@ -21,6 +21,7 @@ export interface ActivityStore {
   resumeActivity: () => void;
   finishActivity: () => void;
   resetActivity: () => void;
+  updateMetrics: (metrics: Partial<ActivityMetrics>) => void;
 }
 
 export const useActivityStore = create<ActivityStore>((set) => ({
@@ -35,4 +36,8 @@ export const useActivityStore = create<ActivityStore>((set) => ({
       status: ActivityState.IDLE,
       metrics: { elapsedTime: 0, distance: 0, pace: 0 },
     }),
+  updateMetrics: (metrics) =>
+    set((state) => ({
+      metrics: { ...state.metrics, ...metrics },
+    })),
 }));
