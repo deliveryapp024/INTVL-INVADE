@@ -25,7 +25,7 @@ const formatPace = (pace: number) => {
 };
 
 export default function ActivityScreen() {
-  const { status, metrics, startActivity, pauseActivity, resumeActivity, finishActivity, resetActivity } = useActivityStore();
+  const { status, metrics, coordinates, startActivity, pauseActivity, resumeActivity, finishActivity, resetActivity } = useActivityStore();
   
   // Initialize tracking hook
   useActivityTracking();
