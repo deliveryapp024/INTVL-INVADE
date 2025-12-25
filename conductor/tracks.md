@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Run Persistence & Backend Sync
-*Link: [./conductor/tracks/run_persistence_sync_20251225/](./conductor/tracks/run_persistence_sync_20251225/)*
+## [~] Track: Run Finalization & Integrity Layer
+*Link: [./conductor/tracks/run_finalization_integrity_20251225/](./conductor/tracks/run_finalization_integrity_20251225/)*

@@ -9,6 +9,8 @@
 
 ## Backend & Infrastructure
 -   **Environment:** **Node.js (TypeScript)**.
+-   **Framework:** **Express.js**
+-   **ORM:** **Prisma**
 -   **API Style:** REST (initial), with scope to evolve as needed.
 -   **Database:** **PostgreSQL** for relational data handling (leaderboards, user stats, streaks).
 -   **Caching / Jobs (Future):** Redis for leaderboard caching and background jobs (planned for Phase-2).

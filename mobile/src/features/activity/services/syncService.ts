@@ -2,15 +2,21 @@ import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { getActivities, updateActivitySyncStatus } from './activityStorage';
 
-const API_BASE_URL = 'http://localhost:3001/api'; 
+// Using local IP for physical device testing
+const API_BASE_URL = 'http://192.168.1.104:3001/api'; 
 const SYNC_TASK_NAME = 'BACKGROUND_SYNC';
 
 export const syncPendingActivities = async () => {
+  console.log('[Sync] Starting syncPendingActivities...');
   const activities = await getActivities();
+  console.log(`[Sync] Found ${activities.length} total activities.`);
+  
   const pending = activities.filter(a => a.syncStatus === 'local_only' || a.syncStatus === 'failed');
+  console.log(`[Sync] Found ${pending.length} pending activities.`);
 
   for (const activity of pending) {
     try {
+      console.log(`[Sync] Attempting to sync activity: ${activity.id} to ${API_BASE_URL}/runs`);
       await updateActivitySyncStatus(activity.id, 'syncing');
       
       const response = await fetch(`${API_BASE_URL}/runs`, {
@@ -31,12 +37,17 @@ export const syncPendingActivities = async () => {
         }),
       });
 
+      console.log(`[Sync] Response status: ${response.status}`);
+
       if (response.ok) {
         await updateActivitySyncStatus(activity.id, 'synced');
+        console.log(`[Sync] Activity ${activity.id} synced successfully!`);
       } else if (response.status >= 400 && response.status < 500) {
         await updateActivitySyncStatus(activity.id, 'rejected');
+        console.warn(`[Sync] Activity ${activity.id} rejected by server.`);
       } else {
         await updateActivitySyncStatus(activity.id, 'failed');
+        console.warn(`[Sync] Activity ${activity.id} failed with status ${response.status}`);
       }
     } catch (e) {
       console.error('Sync failed for activity', activity.id, e);
@@ -66,6 +77,7 @@ export const registerBackgroundSync = async () => {
     });
     console.log('Background sync task registered');
   } catch (err) {
-    console.error('Background sync registration failed', err);
+    // Warn instead of Error since this fails in Expo Go
+    console.warn('Background sync registration failed (Expected in Expo Go)', err);
   }
 };

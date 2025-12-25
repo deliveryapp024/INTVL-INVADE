@@ -29,7 +29,10 @@ model Run {
   activityType  String   @default("RUN") @map("activity_type")
   
   polyline      String?  @db.Text
-  status        String   @default("synced") // synced, overlapping, flagged
+  status        String   @default("PENDING") // PENDING, PROCESSING, FINALIZED, REJECTED
+  
+  rejectReason  String?  @map("reject_reason")
+  computedMetrics Json?  @map("computed_metrics")
   
   metadata      Json?    @default("{}")
   
