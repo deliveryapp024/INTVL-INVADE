@@ -17,10 +17,10 @@
 - [x] Task: Define maximum computational complexity limits for loop detection to ensure mobile and backend feasibility. <!-- id: loops_doc -->
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Loop Geometry & Algorithms' (Protocol in workflow.md) <!-- id: 260473a -->
 
-#### Phase 4: Safeguards & UX Logic
-- [ ] Task: Define explicit speed/acceleration constants for anti-gaming.
-- [ ] Task: Map out the user feedback loop for successful vs. failed (near-miss) captures.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Safeguards & UX Logic' (Protocol in workflow.md)
+#### Phase 4: Safeguards & UX Logic [checkpoint: 9a42ab2]
+- [x] Task: Define explicit speed/acceleration constants for anti-gaming. <!-- id: safeguards_doc -->
+- [x] Task: Map out the user feedback loop for successful vs. failed (near-miss) captures. <!-- id: safeguards_doc -->
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Safeguards & UX Logic' (Protocol in workflow.md) <!-- id: 9a42ab2 -->
 
 #### Phase 5: Visualization & Leaderboard Hierarchy
 - [ ] Task: Design the leaderboard data flow (Zone activity -> Ward leaderboards -> City rankings).
