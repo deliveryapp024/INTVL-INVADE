@@ -1,9 +1,9 @@
 # Implementation Plan: Map Route Visualization (MVP)
 
-## Phase 1: Infrastructure & Setup
+## Phase 1: Infrastructure & Setup [checkpoint: 7f13859]
 - [x] Task: Install and configure `react-native-maps` for iOS and Android. <!-- id: 9148629 -->
 - [x] Task: Define minimalist map styling JSON (Light-First). <!-- id: fcbaf45 -->
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Setup' (Protocol in workflow.md) <!-- id: 7f13859 -->
 
 ## Phase 2: Core Map Components (TDD)
 - [ ] Task: Create `ActivityRouteMap` component that accepts coordinates, start/end markers, and styling as props.
