@@ -11,8 +11,11 @@ export const requestLocationPermissions = async (): Promise<boolean> => {
     return false;
   }
 
-  const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-  return backgroundStatus === 'granted';
+  // Background permissions require a Development Client or standalone build.
+  // For Expo Go on iOS, we stick to foreground for MVP verification.
+  // const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+  // return backgroundStatus === 'granted';
+  return true;
 };
 
 export const startForegroundTracking = async (callback: (location: Location.LocationObject) => void) => {

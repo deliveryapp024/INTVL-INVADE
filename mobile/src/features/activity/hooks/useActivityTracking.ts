@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as Location from 'expo-location';
 import { useActivityStore, ActivityState } from '../store/activityStore';
 import { calculateDistance, calculatePace } from '../utils/activityUtils';
+import { requestLocationPermissions } from '../services/locationService';
 
 export const useActivityTracking = () => {
   const { status, updateMetrics } = useActivityStore();
@@ -12,6 +13,12 @@ export const useActivityTracking = () => {
     let subscription: Location.LocationSubscription | null = null;
 
     const startTracking = async () => {
+      const hasPermission = await requestLocationPermissions();
+      if (!hasPermission) {
+        console.warn('Location permission denied');
+        return;
+      }
+
       subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
