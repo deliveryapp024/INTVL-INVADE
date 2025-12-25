@@ -14,7 +14,7 @@
 - [x] Task: Document the "overlapping run" flag logic in the API contract. [e93d903]
 - [x] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md) [c32e78c]
 
-## Phase 3: Backend Implementation (Run Ingestion)
+## Phase 3: Backend Implementation (Run Ingestion) [checkpoint: 5008425]
 - [x] Task: Set up the database migration for the new `runs` schema and any related tables. [334c011]
 - [x] Task: Implement the `POST /api/runs` endpoint in Node.js. [fe3ddb7]
 - [x] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing. [512baf2]
@@ -22,7 +22,7 @@
 - [x] Task: Implement logic to detect overlapping runs and set the `overlapping` flag. [77fb38e]
 - [x] Task: Implement storage logic for both the simplified polyline and raw GPS data. [77fb38e]
 - [x] Task: Write unit and integration tests for the ingestion endpoint (success, duplicate, overlap, invalid data). [77fb38e]
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Backend Implementation (Run Ingestion)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Backend Implementation (Run Ingestion)' (Protocol in workflow.md) [5008425]
 
 ## Phase 4: Mobile → Backend Sync Logic
 - [ ] Task: Implement a local queue or status flag in the mobile app's local storage to track unsynced runs.
