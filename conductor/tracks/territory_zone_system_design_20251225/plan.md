@@ -22,8 +22,8 @@
 - [x] Task: Map out the user feedback loop for successful vs. failed (near-miss) captures. <!-- id: safeguards_doc -->
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Safeguards & UX Logic' (Protocol in workflow.md) <!-- id: 9a42ab2 -->
 
-#### Phase 5: Visualization & Leaderboard Hierarchy
-- [ ] Task: Design the leaderboard data flow (Zone activity -> Ward leaderboards -> City rankings).
-- [ ] Task: Define the UI overlay rules (Z-index, transparency, owner colors).
-- [ ] Task: Define visual state for contested zones (no clear owner).
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Visualization & Leaderboard Hierarchy' (Protocol in workflow.md)
+#### Phase 5: Visualization & Leaderboard Hierarchy [checkpoint: 54b5b01]
+- [x] Task: Design the leaderboard data flow (Zone activity -> Ward leaderboards -> City rankings). <!-- id: viz_doc -->
+- [x] Task: Define the UI overlay rules (Z-index, transparency, owner colors). <!-- id: viz_doc -->
+- [x] Task: Define visual state for contested zones (no clear owner). <!-- id: viz_doc -->
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Visualization & Leaderboard Hierarchy' (Protocol in workflow.md) <!-- id: 54b5b01 -->
