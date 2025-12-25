@@ -13,9 +13,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Core Map Components' (Protocol in workflow.md) <!-- id: 6cd0060 -->
 
 ## Phase 3: Integration with Activity Summary
-- [ ] Task: Modify `ActivityScreen` to retrieve coordinate data from `activityStore`.
-- [ ] Task: Embed `ActivityRouteMap` as a preview header/section in `ActivityScreen`.
-- [ ] Task: Implement tap interaction on the preview to trigger navigation.
+- [x] Task: Modify `ActivityScreen` to retrieve coordinate data from `activityStore`. <!-- id: e3060be -->
+- [x] Task: Embed `ActivityRouteMap` as a preview header/section in `ActivityScreen`. <!-- id: 35bbe66 -->
+- [x] Task: Implement tap interaction on the preview to trigger navigation. <!-- id: 83e3250 -->
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Integration with Activity Summary' (Protocol in workflow.md)
 
 ## Phase 4: Full-Screen Detail View

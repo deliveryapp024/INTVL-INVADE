@@ -85,4 +85,25 @@ describe('useActivityTracking', () => {
 
     expect(useActivityStore.getState().metrics.distance).toBeGreaterThan(0);
   });
+
+  it('should store coordinates when location changes', async () => {
+    act(() => {
+      useActivityStore.getState().startActivity();
+    });
+
+    renderHook(() => useActivityTracking());
+
+    await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 0));
+    });
+
+    const mockCoord = { latitude: 51.5074, longitude: -0.1278 };
+    act(() => {
+      locationCallback({
+        coords: mockCoord,
+      });
+    });
+
+    expect(useActivityStore.getState().coordinates).toContainEqual(mockCoord);
+  });
 });

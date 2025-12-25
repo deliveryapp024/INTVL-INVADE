@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1766662724189" clover="3.2.0">
+  <project timestamp="1766662724189" name="All files">
+    <metrics statements="137" coveredstatements="112" conditionals="54" coveredconditionals="36" methods="35" coveredmethods="30" elements="226" coveredelements="178" complexity="0" loc="137" ncloc="137" packages="6" files="10" classes="10"/>
+    <package name="constants">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="Colors.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\constants\Colors.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="2" type="stmt"/>
+      </file>
+      <file name="MapStyles.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\constants\MapStyles.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="Typography.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\constants\Typography.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="features.activity.components">
+      <metrics statements="36" coveredstatements="31" conditionals="22" coveredconditionals="20" methods="10" coveredmethods="7"/>
+      <file name="ActivityRouteMap.tsx" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\components\ActivityRouteMap.tsx">
+        <metrics statements="14" coveredstatements="13" conditionals="10" coveredconditionals="9" methods="4" coveredmethods="3"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="21" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="33" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="43" count="3" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+      </file>
+      <file name="ActivityScreen.tsx" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\components\ActivityScreen.tsx">
+        <metrics statements="22" coveredstatements="18" conditionals="12" coveredconditionals="11" methods="6" coveredmethods="4"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="13" count="4" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="24" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="26" count="4" type="stmt"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="34" count="4" type="stmt"/>
+        <line num="36" count="4" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="52" count="4" type="stmt"/>
+        <line num="154" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="features.activity.hooks">
+      <metrics statements="33" coveredstatements="29" conditionals="10" coveredconditionals="8" methods="6" coveredmethods="6"/>
+      <file name="useActivityTracking.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\hooks\useActivityTracking.ts">
+        <metrics statements="33" coveredstatements="29" conditionals="10" coveredconditionals="8" methods="6" coveredmethods="6"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="10" type="stmt"/>
+        <line num="9" count="10" type="stmt"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="16" count="4" type="stmt"/>
+        <line num="17" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="22" count="4" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="30" count="3" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
+        <line num="51" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="4" type="stmt"/>
+        <line num="53" count="4" type="stmt"/>
+        <line num="54" count="3" type="stmt"/>
+        <line num="55" count="3" type="stmt"/>
+        <line num="56" count="3" type="stmt"/>
+        <line num="57" count="3" type="stmt"/>
+        <line num="63" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="69" count="5" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="71" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="72" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="features.activity.services">
+      <metrics statements="43" coveredstatements="27" conditionals="20" coveredconditionals="6" methods="7" coveredmethods="5"/>
+      <file name="activityStorage.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\services\activityStorage.ts">
+        <metrics statements="14" coveredstatements="11" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="27" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+      </file>
+      <file name="locationService.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\services\locationService.ts">
+        <metrics statements="29" coveredstatements="16" conditionals="16" coveredconditionals="3" methods="5" coveredmethods="3"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="34" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="61" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="65" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="67" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="features.activity.store">
+      <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="10"/>
+      <file name="activityStore.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\store\activityStore.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="10"/>
+        <line num="34" count="4" type="stmt"/>
+        <line num="38" count="11" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="43" count="16" type="stmt"/>
+        <line num="49" count="5" type="stmt"/>
+        <line num="53" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="features.activity.utils">
+      <metrics statements="14" coveredstatements="14" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+      <file name="activityUtils.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\utils\activityUtils.ts">
+        <metrics statements="14" coveredstatements="14" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="13" count="3" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

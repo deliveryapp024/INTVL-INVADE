@@ -51,4 +51,21 @@ describe('useActivityStore', () => {
     });
     expect(result.current.status).toBe(ActivityState.COMPLETED);
   });
+
+  it('should store and reset coordinates', () => {
+    const { result } = renderHook(() => useActivityStore());
+    const coord = { latitude: 10, longitude: 20 };
+    
+    act(() => {
+      result.current.addCoordinate(coord);
+    });
+    
+    expect(result.current.coordinates).toContainEqual(coord);
+    
+    act(() => {
+      result.current.resetActivity();
+    });
+    
+    expect(result.current.coordinates).toHaveLength(0);
+  });
 });
