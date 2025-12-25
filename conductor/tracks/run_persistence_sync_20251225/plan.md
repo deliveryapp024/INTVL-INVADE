@@ -8,8 +8,8 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Data Model & Schema Design' (Protocol in workflow.md) [3f9563b]
 
 ## Phase 2: API Contracts (Design-First)
-- [ ] Task: Define the REST API endpoint for run submission (e.g., `POST /api/runs`).
-- [ ] Task: Define the JSON request payload structure, including the idempotency key (UUID) and run data.
+- [x] Task: Define the REST API endpoint for run submission (e.g., `POST /api/runs`). [f2341d0]
+- [~] Task: Define the JSON request payload structure, including the idempotency key (UUID) and run data.
 - [ ] Task: Define idempotent response behavior (duplicate UUID returns 200 OK with existing run reference).
 - [ ] Task: Document the "overlapping run" flag logic in the API contract.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md)
