@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Build the core activity tracking engine and the Minimalist Activity Screen (MVP)
-*Link: [./conductor/tracks/core_activity_engine_20251225/](./conductor/tracks/core_activity_engine_20251225/)*
+## [~] Track: Map Route Visualization (MVP)
+*Link: [./conductor/tracks/map_route_visualization_20251225/](./conductor/tracks/map_route_visualization_20251225/)*
