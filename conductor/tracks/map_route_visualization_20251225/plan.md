@@ -12,11 +12,11 @@
 - [x] Task: Implement auto-fit logic using `mapRef.fitToCoordinates`. <!-- id: 3f5ec9e -->
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Core Map Components' (Protocol in workflow.md) <!-- id: 6cd0060 -->
 
-## Phase 3: Integration with Activity Summary
+## Phase 3: Integration with Activity Summary [checkpoint: e1013c1]
 - [x] Task: Modify `ActivityScreen` to retrieve coordinate data from `activityStore`. <!-- id: e3060be -->
 - [x] Task: Embed `ActivityRouteMap` as a preview header/section in `ActivityScreen`. <!-- id: 35bbe66 -->
 - [x] Task: Implement tap interaction on the preview to trigger navigation. <!-- id: 83e3250 -->
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Integration with Activity Summary' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Integration with Activity Summary' (Protocol in workflow.md) <!-- id: e1013c1 -->
 
 ## Phase 4: Full-Screen Detail View
 - [ ] Task: Create `FullScreenRouteScreen` using Expo Router.
