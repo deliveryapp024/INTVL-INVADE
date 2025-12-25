@@ -7,12 +7,12 @@
 - [x] Task: Define run lifecycle/status fields (e.g., `local_only`, `syncing`, `synced`, `failed`) for reconciliation. [635d4a9]
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Data Model & Schema Design' (Protocol in workflow.md) [3f9563b]
 
-## Phase 2: API Contracts (Design-First)
+## Phase 2: API Contracts (Design-First) [checkpoint: c32e78c]
 - [x] Task: Define the REST API endpoint for run submission (e.g., `POST /api/runs`). [f2341d0]
 - [x] Task: Define the JSON request payload structure, including the idempotency key (UUID) and run data. [970c6fb]
 - [x] Task: Define idempotent response behavior (duplicate UUID returns 200 OK with existing run reference). [1e8c215]
 - [x] Task: Document the "overlapping run" flag logic in the API contract. [e93d903]
-- [~] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md) [c32e78c]
 
 ## Phase 3: Backend Implementation (Run Ingestion)
 - [ ] Task: Set up the database migration for the new `runs` schema and any related tables.
