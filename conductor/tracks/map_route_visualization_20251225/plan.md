@@ -5,12 +5,12 @@
 - [x] Task: Define minimalist map styling JSON (Light-First). <!-- id: fcbaf45 -->
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Setup' (Protocol in workflow.md) <!-- id: 7f13859 -->
 
-## Phase 2: Core Map Components (TDD)
-- [ ] Task: Create `ActivityRouteMap` component that accepts coordinates, start/end markers, and styling as props.
-- [ ] Task: Implement polyline rendering with high-contrast styling.
-- [ ] Task: Implement Start and End marker rendering using minimalist design.
-- [ ] Task: Implement auto-fit logic using `mapRef.fitToCoordinates`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Map Components' (Protocol in workflow.md)
+## Phase 2: Core Map Components (TDD) [checkpoint: 6cd0060]
+- [x] Task: Create `ActivityRouteMap` component that accepts coordinates, start/end markers, and styling as props. <!-- id: 3f5ec9e -->
+- [x] Task: Implement polyline rendering with high-contrast styling. <!-- id: 3f5ec9e -->
+- [x] Task: Implement Start and End marker rendering using minimalist design. <!-- id: 3f5ec9e -->
+- [x] Task: Implement auto-fit logic using `mapRef.fitToCoordinates`. <!-- id: 3f5ec9e -->
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Core Map Components' (Protocol in workflow.md) <!-- id: 6cd0060 -->
 
 ## Phase 3: Integration with Activity Summary
 - [ ] Task: Modify `ActivityScreen` to retrieve coordinate data from `activityStore`.
