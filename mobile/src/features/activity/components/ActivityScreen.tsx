@@ -4,9 +4,11 @@ import { useActivityStore, ActivityState } from '../store/activityStore';
 import { Colors } from '../../../constants/Colors';
 import { Typography } from '../../../constants/Typography';
 import { useActivityTracking } from '../hooks/useActivityTracking';
-import { saveActivity } from '../services/activityStorage';
+import { saveActivity, ActivityData } from '../services/activityStorage';
 import ActivityRouteMap from './ActivityRouteMap';
 import { useRouter } from 'expo-router';
+import { encodePolyline } from '../utils/activityUtils';
+import { syncPendingActivities } from '../services/syncService';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -34,14 +36,25 @@ export default function ActivityScreen() {
   useActivityTracking();
 
   const handleFinish = async () => {
-    const activityData = {
-        id: Date.now().toString(),
-        startTime: Date.now() - (metrics.elapsedTime * 1000),
+    const now = Date.now();
+    const activityData: ActivityData = {
+        id: `${now}-${Math.floor(Math.random() * 1000)}`,
+        startTime: now - (metrics.elapsedTime * 1000),
+        endTime: now,
         duration: metrics.elapsedTime,
         distance: metrics.distance,
         pace: metrics.pace,
+        activityType: 'RUN',
+        polyline: encodePolyline(coordinates),
+        rawData: coordinates.map(c => ({
+          lat: c.latitude,
+          lng: c.longitude,
+          time: new Date(c.timestamp).toISOString()
+        })),
+        syncStatus: 'local_only',
     };
     await saveActivity(activityData);
+    syncPendingActivities(); // Fire and forget sync
     finishActivity();
   };
 

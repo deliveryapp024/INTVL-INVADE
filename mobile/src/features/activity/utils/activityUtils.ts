@@ -20,3 +20,30 @@ export const calculatePace = (distanceMeters: number, timeSeconds: number): numb
   const minutes = timeSeconds / 60;
   return minutes / distanceKm;
 };
+
+export const encodePolyline = (coordinates: { latitude: number; longitude: number }[]): string => {
+  const encode = (num: number) => {
+    let v = Math.round(num * 1e5);
+    v = v < 0 ? ~(v << 1) : v << 1;
+    let s = '';
+    while (v >= 0x20) {
+      s += String.fromCharCode((0x20 | (v & 0x1f)) + 63);
+      v >>= 5;
+    }
+    s += String.fromCharCode(v + 63);
+    return s;
+  };
+
+  let lastLat = 0;
+  let lastLng = 0;
+  let result = '';
+
+  for (const coord of coordinates) {
+    result += encode(coord.latitude - lastLat);
+    result += encode(coord.longitude - lastLng);
+    lastLat = coord.latitude;
+    lastLng = coord.longitude;
+  }
+
+  return result;
+};

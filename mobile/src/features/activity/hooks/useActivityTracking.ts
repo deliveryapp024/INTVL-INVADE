@@ -29,7 +29,11 @@ export const useActivityTracking = () => {
           const { latitude, longitude } = location.coords;
           const { addCoordinate, metrics } = useActivityStore.getState();
 
-          addCoordinate({ latitude, longitude });
+          addCoordinate({ 
+            latitude, 
+            longitude, 
+            timestamp: location.timestamp 
+          });
 
           if (lastLocation.current) {
             const distanceDelta = calculateDistance(
