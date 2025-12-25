@@ -15,8 +15,8 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md) [c32e78c]
 
 ## Phase 3: Backend Implementation (Run Ingestion)
-- [ ] Task: Set up the database migration for the new `runs` schema and any related tables.
-- [ ] Task: Implement the `POST /api/runs` endpoint in Node.js.
+- [x] Task: Set up the database migration for the new `runs` schema and any related tables. [334c011]
+- [~] Task: Implement the `POST /api/runs` endpoint in Node.js.
 - [ ] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing.
 - [ ] Task: Separate validation logic from persistence logic to ensure failed runs are not partially stored.
 - [ ] Task: Implement logic to detect overlapping runs and set the `overlapping` flag.
