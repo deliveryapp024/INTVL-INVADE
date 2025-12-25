@@ -6,14 +6,14 @@
 - [x] Task: Implement activity state machine using Zustand (IDLE, TRACKING, PAUSED, COMPLETED) 3e3cb5c
 - [x] Task: Conductor - User Manual Verification 'Foundation & State Management' (Protocol in workflow.md) f56678b
 
-## Phase 2: Location & Tracking Logic
+## Phase 2: Location & Tracking Logic [checkpoint: 793f258]
 - [x] Task: Write tests for distance and pace calculation utilities e78473c
 - [x] Task: Implement distance and pace calculation utilities (Green Phase) e78473c
 - [x] Task: Set up `expo-location` permissions and foreground tracking cd39f2c
 - [x] Task: Write tests for the activity tracking service/hook ec4baca
 - [x] Task: Implement the activity tracking service/hook to update state with GPS data ec4baca
 - [x] Task: Implement background tracking using `expo-task-manager` e82d059
-- [ ] Task: Conductor - User Manual Verification 'Location & Tracking Logic' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Location & Tracking Logic' (Protocol in workflow.md) 793f258
 
 ## Phase 3: Minimalist Activity Screen (UI)
 - [ ] Task: Create typography and color constants based on Product Guidelines
