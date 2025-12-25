@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1766664343054" clover="3.2.0">
-  <project timestamp="1766664343054" name="All files">
-    <metrics statements="140" coveredstatements="4" conditionals="55" coveredconditionals="0" methods="36" coveredmethods="1" elements="231" coveredelements="5" complexity="0" loc="140" ncloc="140" packages="6" files="11" classes="11"/>
+<coverage generated="1766664831556" clover="3.2.0">
+  <project timestamp="1766664831556" name="All files">
+    <metrics statements="140" coveredstatements="29" conditionals="55" coveredconditionals="11" methods="36" coveredmethods="11" elements="231" coveredelements="51" complexity="0" loc="140" ncloc="140" packages="6" files="11" classes="11"/>
     <package name="constants">
-      <metrics statements="3" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="Colors.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\constants\Colors.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -13,12 +13,12 @@
         <line num="1" count="0" type="stmt"/>
       </file>
       <file name="Typography.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\constants\Typography.ts">
-        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="0" type="stmt"/>
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
       </file>
     </package>
     <package name="features.activity.components">
-      <metrics statements="39" coveredstatements="3" conditionals="23" coveredconditionals="0" methods="11" coveredmethods="1"/>
+      <metrics statements="39" coveredstatements="18" conditionals="23" coveredconditionals="11" methods="11" coveredmethods="4"/>
       <file name="ActivityRouteMap.tsx" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\components\ActivityRouteMap.tsx">
         <metrics statements="14" coveredstatements="0" conditionals="11" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="18" count="0" type="cond" truecount="0" falsecount="1"/>
@@ -37,35 +37,35 @@
         <line num="72" count="0" type="stmt"/>
       </file>
       <file name="ActivityScreen.tsx" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\components\ActivityScreen.tsx">
-        <metrics statements="22" coveredstatements="0" conditionals="12" coveredconditionals="0" methods="6" coveredmethods="0"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="23" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
+        <metrics statements="22" coveredstatements="18" conditionals="12" coveredconditionals="11" methods="6" coveredmethods="4"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="13" count="4" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="24" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="26" count="4" type="stmt"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="34" count="4" type="stmt"/>
+        <line num="36" count="4" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
         <line num="44" count="0" type="stmt"/>
         <line num="45" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
         <line num="49" count="0" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="154" count="0" type="stmt"/>
+        <line num="52" count="4" type="stmt"/>
+        <line num="154" count="1" type="stmt"/>
       </file>
       <file name="FullScreenRouteScreen.tsx" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\components\FullScreenRouteScreen.tsx">
-        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="29" count="1" type="stmt"/>
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
       </file>
     </package>
     <package name="features.activity.hooks">
@@ -108,18 +108,18 @@
       </file>
     </package>
     <package name="features.activity.services">
-      <metrics statements="43" coveredstatements="0" conditionals="20" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <metrics statements="43" coveredstatements="3" conditionals="20" coveredconditionals="0" methods="7" coveredmethods="0"/>
       <file name="activityStorage.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\services\activityStorage.ts">
-        <metrics statements="14" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
+        <metrics statements="14" coveredstatements="3" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
         <line num="16" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="17" count="0" type="stmt"/>
         <line num="18" count="0" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
         <line num="25" count="0" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
         <line num="27" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -160,16 +160,16 @@
       </file>
     </package>
     <package name="features.activity.store">
-      <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="0"/>
+      <metrics statements="8" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="7"/>
       <file name="activityStore.ts" path="C:\Users\prabh\Other Projects\INVTL\mobile\src\features\activity\store\activityStore.ts">
-        <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="0"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
+        <metrics statements="8" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="7"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
         <line num="40" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="43" count="4" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
         <line num="53" count="0" type="stmt"/>
       </file>
     </package>
