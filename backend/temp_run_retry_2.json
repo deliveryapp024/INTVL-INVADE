@@ -1,0 +1,19 @@
+{
+    "id": "mock-uuid-1",
+    "start_time": "2025-12-25T10:00:00Z",
+    "end_time": "2025-12-25T10:30:00Z",
+    "duration": 1800,
+    "distance": 5000,
+    "activity_type": "RUN",
+    "polyline": "test_polyline",
+    "raw_data": [
+        {
+            "lat": 1,
+            "lng": 1,
+            "time": "2025-12-25T10:00:01Z"
+        }
+    ],
+    "metadata": {
+        "test": true
+    }
+}
