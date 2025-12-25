@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(uuid())
+  runs  Run[]
+  
+  @@map("users")
+}
+
+model Run {
+  id            String   @id @default(uuid()) // Client-generated UUID
+  userId        String   @map("user_id")
+  user          User     @relation(fields: [userId], references: [id])
+  
+  startTime     DateTime @map("start_time")
+  endTime       DateTime @map("end_time")
+  duration      Int      // In seconds
+  distance      Float    // In meters
+  activityType  String   @default("RUN") @map("activity_type")
+  
+  polyline      String?  @db.Text
+  status        String   @default("synced") // synced, overlapping, flagged
+  
+  metadata      Json?    @default("{}")
+  
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  rawData      RunRawData?
+
+  @@index([userId, startTime(sort: Desc)])
+  @@index([status])
+  @@map("runs")
+}
+
+model RunRawData {
+  runId    String   @id @map("run_id")
+  run      Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+  rawData  Json     @map("raw_data")
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@map("run_raw_data")
+}
