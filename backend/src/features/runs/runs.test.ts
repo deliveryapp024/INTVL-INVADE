@@ -61,8 +61,21 @@ jest.mock('../../lib/prisma', () => ({
           .send(runData);
     
         expect(response.status).toBe(200);
-        expect(response.body.message).toBe('Run already processed');
-        expect(response.body.data.id).toBe(runData.id);
-      });
-    });
-    
+            expect(response.body.message).toBe('Run already processed');
+            expect(response.body.data.id).toBe(runData.id);
+          });
+        
+          it('should return 400 for invalid distance', async () => {
+            (prisma.run.findUnique as jest.Mock).mockResolvedValue(null);
+            const invalidData = { ...runData, distance: -1 };
+            
+            const response = await request(app)
+              .post('/api/runs')
+              .set('Authorization', 'Bearer test-token')
+              .send(invalidData);
+        
+            expect(response.status).toBe(400);
+            expect(response.body.message).toContain('distance');
+          });
+        });
+        

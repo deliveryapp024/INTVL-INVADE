@@ -1,7 +1,17 @@
 import { Request, Response } from 'express';
 import prisma from '../../lib/prisma';
+import { validateRun } from './runs.validation';
 
 export const createRun = async (req: Request, res: Response) => {
+  // Separate validation from persistence
+  const validationError = validateRun(req.body);
+  if (validationError) {
+    return res.status(400).json({
+      status: 'error',
+      message: validationError
+    });
+  }
+
   const { 
     id, 
     start_time, 
