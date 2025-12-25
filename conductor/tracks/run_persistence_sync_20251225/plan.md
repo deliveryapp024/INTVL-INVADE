@@ -19,8 +19,8 @@
 - [x] Task: Implement the `POST /api/runs` endpoint in Node.js. [fe3ddb7]
 - [x] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing. [512baf2]
 - [x] Task: Separate validation logic from persistence logic to ensure failed runs are not partially stored. [0788da0]
-- [~] Task: Implement logic to detect overlapping runs and set the `overlapping` flag.
-- [ ] Task: Implement storage logic for both the simplified polyline and raw GPS data.
+- [x] Task: Implement logic to detect overlapping runs and set the `overlapping` flag. [77fb38e]
+- [~] Task: Implement storage logic for both the simplified polyline and raw GPS data.
 - [ ] Task: Write unit and integration tests for the ingestion endpoint (success, duplicate, overlap, invalid data).
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Backend Implementation (Run Ingestion)' (Protocol in workflow.md)
 
