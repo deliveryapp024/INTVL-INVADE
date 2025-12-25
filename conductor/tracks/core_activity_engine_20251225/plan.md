@@ -10,8 +10,8 @@
 - [x] Task: Write tests for distance and pace calculation utilities e78473c
 - [x] Task: Implement distance and pace calculation utilities (Green Phase) e78473c
 - [x] Task: Set up `expo-location` permissions and foreground tracking cd39f2c
-- [ ] Task: Write tests for the activity tracking service/hook
-- [ ] Task: Implement the activity tracking service/hook to update state with GPS data
+- [x] Task: Write tests for the activity tracking service/hook ec4baca
+- [x] Task: Implement the activity tracking service/hook to update state with GPS data ec4baca
 - [ ] Task: Implement background tracking using `expo-task-manager`
 - [ ] Task: Conductor - User Manual Verification 'Location & Tracking Logic' (Protocol in workflow.md)
 
