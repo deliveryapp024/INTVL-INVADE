@@ -23,8 +23,8 @@
 - [x] Task: Ensure accessibility compliance (touch targets, contrast ratios) ed5a32b
 - [x] Task: Conductor - User Manual Verification 'Minimalist Activity Screen (UI)' (Protocol in workflow.md) ca07d13
 
-## Phase 4: Activity Completion & Local Storage
+## Phase 4: Activity Completion & Local Storage [checkpoint: 7b15ae5]
 - [x] Task: Write tests for activity saving logic 39de579
 - [x] Task: Implement logic to finalize and save activity data to local storage (AsyncStorage or similar) 39de579
 - [x] Task: Build a basic activity summary component/screen 7b15ae5
-- [ ] Task: Conductor - User Manual Verification 'Activity Completion & Local Storage' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Activity Completion & Local Storage' (Protocol in workflow.md) 7b15ae5
