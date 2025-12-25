@@ -12,9 +12,10 @@ interface Coordinate {
 interface ActivityRouteMapProps {
   coordinates: Coordinate[];
   style?: any;
+  interactive?: boolean;
 }
 
-const ActivityRouteMap: React.FC<ActivityRouteMapProps> = ({ coordinates, style }) => {
+const ActivityRouteMap: React.FC<ActivityRouteMapProps> = ({ coordinates, style, interactive = false }) => {
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
@@ -47,10 +48,10 @@ const ActivityRouteMap: React.FC<ActivityRouteMapProps> = ({ coordinates, style 
         provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
         style={styles.map}
         customMapStyle={MinimalistMapStyle}
-        scrollEnabled={false}
-        zoomEnabled={false}
-        pitchEnabled={false}
-        rotateEnabled={false}
+        scrollEnabled={interactive}
+        zoomEnabled={interactive}
+        pitchEnabled={interactive}
+        rotateEnabled={interactive}
       >
         <Polyline
           coordinates={coordinates}

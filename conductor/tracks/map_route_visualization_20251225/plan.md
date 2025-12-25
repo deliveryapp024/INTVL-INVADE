@@ -19,7 +19,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Integration with Activity Summary' (Protocol in workflow.md) <!-- id: e1013c1 -->
 
 ## Phase 4: Full-Screen Detail View
-- [ ] Task: Create `FullScreenRouteScreen` using Expo Router.
+- [~] Task: Create `FullScreenRouteScreen` using Expo Router.
 - [ ] Task: Implement the full-screen layout with a "Back" button and standard map interactions.
 - [ ] Task: Ensure coordinate data is passed correctly to the full-screen component.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Full-Screen Detail View' (Protocol in workflow.md)

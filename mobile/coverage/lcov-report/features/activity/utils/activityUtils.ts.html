@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -84,48 +84,48 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number =&gt; {
-  const R = 6371e3; // Earth radius in meters
-  const φ1 = (lat1 * Math.PI) / 180;
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const calculateDistance = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(l</span>at1: number, lon1: number, lat2: number, lon2: number): number =&gt; {</span>
+  const R = <span class="cstat-no" title="statement not covered" >6371e3;</span> // Earth radius in meters
+  const φ1 = <span class="cstat-no" title="statement not covered" >(lat1 * Math.PI) / 180;</span>
+  const φ2 = <span class="cstat-no" title="statement not covered" >(lat2 * Math.PI) / 180;</span>
+  const Δφ = <span class="cstat-no" title="statement not covered" >((lat2 - lat1) * Math.PI) / 180;</span>
+  const Δλ = <span class="cstat-no" title="statement not covered" >((lon2 - lon1) * Math.PI) / 180;</span>
 &nbsp;
-  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+  const a = <span class="cstat-no" title="statement not covered" >Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +</span>
           Math.cos(φ1) * Math.cos(φ2) *
           Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const c = <span class="cstat-no" title="statement not covered" >2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));</span>
 &nbsp;
-  return R * c; // in meters
+<span class="cstat-no" title="statement not covered" >  return R * c; </span>// in meters
 };
 &nbsp;
-export const calculatePace = (distanceMeters: number, timeSeconds: number): number =&gt; {
-  if (distanceMeters &lt;= 0) return 0;
+export const calculatePace = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>istanceMeters: number, timeSeconds: number): number =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  if (distanceMeters &lt;= 0) <span class="cstat-no" title="statement not covered" >return 0;</span></span>
   
-  const distanceKm = distanceMeters / 1000;
-  const minutes = timeSeconds / 60;
-  return minutes / distanceKm;
+  const distanceKm = <span class="cstat-no" title="statement not covered" >distanceMeters / 1000;</span>
+  const minutes = <span class="cstat-no" title="statement not covered" >timeSeconds / 60;</span>
+<span class="cstat-no" title="statement not covered" >  return minutes / distanceKm;</span>
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -133,7 +133,7 @@ export const calculatePace = (distanceMeters: number, timeSeconds: number): numb
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-25T11:38:44.171Z
+                at 2025-12-25T12:05:42.992Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

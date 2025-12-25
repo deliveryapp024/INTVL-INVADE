@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.57% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.57% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -104,23 +104,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -135,23 +135,23 @@ export interface ActivityData {
   pace: number;
 }
 &nbsp;
-const STORAGE_KEY = 'activities';
+const STORAGE_KEY = <span class="cstat-no" title="statement not covered" >'activities';</span>
 &nbsp;
-export const saveActivity = async (activity: ActivityData) =&gt; {
-  try {
-    const existingData = await AsyncStorage.getItem(STORAGE_KEY);
-    const activities: ActivityData[] = existingData ? JSON.parse(existingData) : [];
-    activities.push(activity);
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
+export const saveActivity = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (activity: ActivityData) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const existingData = <span class="cstat-no" title="statement not covered" >await AsyncStorage.getItem(STORAGE_KEY);</span>
+    const activities: ActivityData[] = <span class="cstat-no" title="statement not covered" >existingData ? JSON.parse(existingData) : [];</span>
+<span class="cstat-no" title="statement not covered" >    activities.push(activity);</span>
+<span class="cstat-no" title="statement not covered" >    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(activities));</span>
   } catch (e) {
 <span class="cstat-no" title="statement not covered" >    console.error('Failed to save activity', e);</span>
   }
 };
 &nbsp;
-export const getActivities = async (): Promise&lt;ActivityData[]&gt; =&gt; {
-  try {
-    const data = await AsyncStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+export const getActivities = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (): Promise&lt;ActivityData[]&gt; =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const data = <span class="cstat-no" title="statement not covered" >await AsyncStorage.getItem(STORAGE_KEY);</span>
+<span class="cstat-no" title="statement not covered" >    return data ? JSON.parse(data) : [];</span>
   } catch (e) {
 <span class="cstat-no" title="statement not covered" >    console.error('Failed to get activities', e);</span>
 <span class="cstat-no" title="statement not covered" >    return [];</span>
@@ -163,7 +163,7 @@ export const getActivities = async (): Promise&lt;ActivityData[]&gt; =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-25T11:38:44.171Z
+                at 2025-12-25T12:05:42.992Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
