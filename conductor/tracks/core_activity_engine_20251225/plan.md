@@ -9,7 +9,7 @@
 ## Phase 2: Location & Tracking Logic
 - [x] Task: Write tests for distance and pace calculation utilities e78473c
 - [x] Task: Implement distance and pace calculation utilities (Green Phase) e78473c
-- [ ] Task: Set up `expo-location` permissions and foreground tracking
+- [x] Task: Set up `expo-location` permissions and foreground tracking cd39f2c
 - [ ] Task: Write tests for the activity tracking service/hook
 - [ ] Task: Implement the activity tracking service/hook to update state with GPS data
 - [ ] Task: Implement background tracking using `expo-task-manager`
