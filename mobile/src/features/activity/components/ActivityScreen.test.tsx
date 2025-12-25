@@ -3,6 +3,11 @@ import ActivityScreen from './ActivityScreen';
 import { useActivityStore, ActivityState } from '../store/activityStore';
 import { act } from 'react-test-renderer';
 
+jest.mock('./ActivityRouteMap', () => {
+  const { View } = require('react-native');
+  return (props: any) => <View testID="mock-route-map" {...props} />;
+});
+
 // Mock the hook to avoid location permission logic in UI tests
 jest.mock('../hooks/useActivityTracking', () => ({
   useActivityTracking: jest.fn(),

@@ -5,6 +5,7 @@ import { Colors } from '../../../constants/Colors';
 import { Typography } from '../../../constants/Typography';
 import { useActivityTracking } from '../hooks/useActivityTracking';
 import { saveActivity } from '../services/activityStorage';
+import ActivityRouteMap from './ActivityRouteMap';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -116,6 +117,12 @@ export default function ActivityScreen() {
         {status === ActivityState.COMPLETED && (
              <View style={styles.summaryContainer}>
                 <Text style={styles.summaryTitle}>Run Completed!</Text>
+                
+                <ActivityRouteMap 
+                  coordinates={coordinates} 
+                  style={styles.mapPreview} 
+                />
+
                 <Text style={styles.summaryText}>Your activity has been saved locally.</Text>
                 <TouchableOpacity 
                     style={[styles.button, styles.startButton]} 
@@ -212,5 +219,11 @@ const styles = StyleSheet.create({
     color: Colors.light.textSecondary,
     textAlign: 'center',
     marginBottom: 16,
+  },
+  mapPreview: {
+    height: 180,
+    marginVertical: 16,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
   },
 });
