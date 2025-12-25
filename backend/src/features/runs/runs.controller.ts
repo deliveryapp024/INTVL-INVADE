@@ -50,17 +50,34 @@ export const createRun = async (req: Request, res: Response) => {
         }
       });
     }
+
+    const start = new Date(start_time);
+    const end = new Date(end_time);
+
+    // Overlap detection
+    const overlappingRun = await prisma.run.findFirst({
+      where: {
+        userId,
+        AND: [
+          { startTime: { lt: end } },
+          { endTime: { gt: start } }
+        ]
+      }
+    });
+
+    const status = overlappingRun ? 'overlapping' : 'synced';
     
     const run = await prisma.run.create({
       data: {
         id,
         userId,
-        startTime: new Date(start_time),
-        endTime: new Date(end_time),
+        startTime: start,
+        endTime: end,
         duration,
         distance,
         activityType: activity_type,
         polyline,
+        status,
         metadata,
         rawData: {
           create: {
