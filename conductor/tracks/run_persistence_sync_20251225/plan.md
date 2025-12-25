@@ -16,8 +16,8 @@
 
 ## Phase 3: Backend Implementation (Run Ingestion)
 - [x] Task: Set up the database migration for the new `runs` schema and any related tables. [334c011]
-- [~] Task: Implement the `POST /api/runs` endpoint in Node.js.
-- [ ] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing.
+- [x] Task: Implement the `POST /api/runs` endpoint in Node.js. [fe3ddb7]
+- [~] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing.
 - [ ] Task: Separate validation logic from persistence logic to ensure failed runs are not partially stored.
 - [ ] Task: Implement logic to detect overlapping runs and set the `overlapping` flag.
 - [ ] Task: Implement storage logic for both the simplified polyline and raw GPS data.
