@@ -26,5 +26,5 @@
 ## Phase 4: Activity Completion & Local Storage
 - [x] Task: Write tests for activity saving logic 39de579
 - [x] Task: Implement logic to finalize and save activity data to local storage (AsyncStorage or similar) 39de579
-- [ ] Task: Build a basic activity summary component/screen
+- [x] Task: Build a basic activity summary component/screen 7b15ae5
 - [ ] Task: Conductor - User Manual Verification 'Activity Completion & Local Storage' (Protocol in workflow.md)
