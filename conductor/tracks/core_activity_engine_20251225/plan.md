@@ -7,8 +7,8 @@
 - [x] Task: Conductor - User Manual Verification 'Foundation & State Management' (Protocol in workflow.md) f56678b
 
 ## Phase 2: Location & Tracking Logic
-- [ ] Task: Write tests for distance and pace calculation utilities
-- [ ] Task: Implement distance and pace calculation utilities (Green Phase)
+- [x] Task: Write tests for distance and pace calculation utilities e78473c
+- [x] Task: Implement distance and pace calculation utilities (Green Phase) e78473c
 - [ ] Task: Set up `expo-location` permissions and foreground tracking
 - [ ] Task: Write tests for the activity tracking service/hook
 - [ ] Task: Implement the activity tracking service/hook to update state with GPS data
