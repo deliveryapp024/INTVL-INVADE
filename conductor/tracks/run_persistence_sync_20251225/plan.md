@@ -11,8 +11,8 @@
 - [x] Task: Define the REST API endpoint for run submission (e.g., `POST /api/runs`). [f2341d0]
 - [x] Task: Define the JSON request payload structure, including the idempotency key (UUID) and run data. [970c6fb]
 - [x] Task: Define idempotent response behavior (duplicate UUID returns 200 OK with existing run reference). [1e8c215]
-- [~] Task: Document the "overlapping run" flag logic in the API contract.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md)
+- [x] Task: Document the "overlapping run" flag logic in the API contract. [e93d903]
+- [~] Task: Conductor - User Manual Verification 'Phase 2: API Contracts' (Protocol in workflow.md)
 
 ## Phase 3: Backend Implementation (Run Ingestion)
 - [ ] Task: Set up the database migration for the new `runs` schema and any related tables.
