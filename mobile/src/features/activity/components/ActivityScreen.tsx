@@ -6,6 +6,7 @@ import { Typography } from '../../../constants/Typography';
 import { useActivityTracking } from '../hooks/useActivityTracking';
 import { saveActivity } from '../services/activityStorage';
 import ActivityRouteMap from './ActivityRouteMap';
+import { useRouter } from 'expo-router';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -27,6 +28,7 @@ const formatPace = (pace: number) => {
 
 export default function ActivityScreen() {
   const { status, metrics, coordinates, startActivity, pauseActivity, resumeActivity, finishActivity, resetActivity } = useActivityStore();
+  const router = useRouter();
   
   // Initialize tracking hook
   useActivityTracking();
@@ -41,6 +43,10 @@ export default function ActivityScreen() {
     };
     await saveActivity(activityData);
     finishActivity();
+  };
+
+  const handleMapPress = () => {
+    router.push('/activity-route');
   };
 
   return (
@@ -118,10 +124,16 @@ export default function ActivityScreen() {
              <View style={styles.summaryContainer}>
                 <Text style={styles.summaryTitle}>Run Completed!</Text>
                 
-                <ActivityRouteMap 
-                  coordinates={coordinates} 
-                  style={styles.mapPreview} 
-                />
+                <TouchableOpacity 
+                  onPress={handleMapPress}
+                  style={styles.mapPreviewContainer}
+                  activeOpacity={0.9}
+                >
+                  <ActivityRouteMap 
+                    coordinates={coordinates} 
+                    style={styles.mapPreview} 
+                  />
+                </TouchableOpacity>
 
                 <Text style={styles.summaryText}>Your activity has been saved locally.</Text>
                 <TouchableOpacity 
@@ -225,5 +237,8 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     borderWidth: 1,
     borderColor: Colors.light.border,
+  },
+  mapPreviewContainer: {
+    width: '100%',
   },
 });

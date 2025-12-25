@@ -3,6 +3,12 @@ import ActivityScreen from './ActivityScreen';
 import { useActivityStore, ActivityState } from '../store/activityStore';
 import { act } from 'react-test-renderer';
 
+jest.mock('expo-router', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 jest.mock('./ActivityRouteMap', () => {
   const { View } = require('react-native');
   return (props: any) => <View testID="mock-route-map" {...props} />;
