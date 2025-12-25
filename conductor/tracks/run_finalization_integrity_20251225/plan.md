@@ -28,8 +28,8 @@
 - [x] Task: Implement Idempotency logic for repeated finalization calls
 - [ ] Task: Conductor - User Manual Verification 'Finalization API & Lifecycle' (Protocol in workflow.md)
 
-### Phase 5: Integration & Verification
+### Phase 5: Integration & Verification [checkpoint: 645b075]
 - [x] Task: Perform full end-to-end test of the Run upload -> Finalization flow
 - [x] Task: Ensure client-provided summary stats are ignored post-ingestion
 - [x] Task: Verify determinism of the finalization process
-- [ ] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md)
