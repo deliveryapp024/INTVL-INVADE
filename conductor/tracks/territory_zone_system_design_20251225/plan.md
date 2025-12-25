@@ -5,11 +5,11 @@
 - [x] Task: Document the coordinate-to-H3 mapping logic and indexing strategy. <!-- id: geometry_doc -->
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Geometric & Technical Foundation' (Protocol in workflow.md) <!-- id: 930b8ac -->
 
-#### Phase 2: Capture & Ownership Blueprint
-- [ ] Task: Create detailed pseudo-code for the "Competitive Control" aggregation logic.
-- [ ] Task: Document the "Defending Champion" soft-reset state transition.
-- [ ] Task: Refine the tie-breaker logic for multi-user contention.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Capture & Ownership Blueprint' (Protocol in workflow.md)
+#### Phase 2: Capture & Ownership Blueprint [checkpoint: e30fbff]
+- [x] Task: Create detailed pseudo-code for the "Competitive Control" aggregation logic. <!-- id: ownership_doc -->
+- [x] Task: Document the "Defending Champion" soft-reset state transition. <!-- id: ownership_doc -->
+- [x] Task: Refine the tie-breaker logic for multi-user contention. <!-- id: ownership_doc -->
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Capture & Ownership Blueprint' (Protocol in workflow.md) <!-- id: e30fbff -->
 
 #### Phase 3: Loop Geometry & Algorithms
 - [ ] Task: Define geometric criteria for "Enclosure" (Point-in-polygon vs. Enclosed-Hexes).
