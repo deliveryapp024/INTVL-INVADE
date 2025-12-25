@@ -20,9 +20,9 @@
 - [x] Task: Implement the idempotency check using the UUID; ensure existing runs return success without reprocessing. [512baf2]
 - [x] Task: Separate validation logic from persistence logic to ensure failed runs are not partially stored. [0788da0]
 - [x] Task: Implement logic to detect overlapping runs and set the `overlapping` flag. [77fb38e]
-- [~] Task: Implement storage logic for both the simplified polyline and raw GPS data.
-- [ ] Task: Write unit and integration tests for the ingestion endpoint (success, duplicate, overlap, invalid data).
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Backend Implementation (Run Ingestion)' (Protocol in workflow.md)
+- [x] Task: Implement storage logic for both the simplified polyline and raw GPS data. [77fb38e]
+- [x] Task: Write unit and integration tests for the ingestion endpoint (success, duplicate, overlap, invalid data). [77fb38e]
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Backend Implementation (Run Ingestion)' (Protocol in workflow.md)
 
 ## Phase 4: Mobile → Backend Sync Logic
 - [ ] Task: Implement a local queue or status flag in the mobile app's local storage to track unsynced runs.
