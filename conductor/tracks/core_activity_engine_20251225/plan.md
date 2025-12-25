@@ -1,7 +1,7 @@
 # Plan: Core Activity Engine & Minimalist UI
 
 ## Phase 1: Foundation & State Management
-- [ ] Task: Set up initial React Native project with Expo Dev Client
+- [x] Task: Set up initial React Native project with Expo Dev Client 08ba358
 - [ ] Task: Configure basic folder structure following feature-based architecture
 - [ ] Task: Implement activity state machine using Zustand (IDLE, TRACKING, PAUSED, COMPLETED)
 - [ ] Task: Conductor - User Manual Verification 'Foundation & State Management' (Protocol in workflow.md)
