@@ -1,7 +1,7 @@
 # Implementation Plan - Run Persistence & Backend Sync
 
 ## Phase 1: Data Model & Schema Design
-- [~] Task: Design and document the PostgreSQL schema for the `runs` table, including columns for UUID, user ID, timestamps, distance, duration, and metadata.
+- [x] Task: Design and document the PostgreSQL schema for the `runs` table, including columns for UUID, user ID, timestamps, distance, duration, and metadata. [d80fd71]
 - [ ] Task: Define the storage strategy for raw GPS coordinates (e.g., separate table vs. JSONB column) and the simplified polyline.
 - [ ] Task: Define database constraints and indices, specifically enforcing uniqueness on the run UUID.
 - [ ] Task: Define run lifecycle/status fields (e.g., `local_only`, `syncing`, `synced`, `failed`) for reconciliation.
