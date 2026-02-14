@@ -1,0 +1,31 @@
+{
+  "name": "kimi-cli-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for interacting with Kimi CLI - enables AI agents to use Kimi Code CLI capabilities",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "mcp",
+    "kimi",
+    "cli",
+    "ai",
+    "model-context-protocol"
+  ],
+  "author": "INVADE Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}

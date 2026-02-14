@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914047828656",
+    "project_id": "intvl-invade",
+    "storage_bucket": "intvl-invade.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914047828656:android:c34ea9435275cead097175",
+        "android_client_info": {
+          "package_name": "com.intvlinvade.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWyn2FotiXXp-I986ZyRdy1f2XO_U6Lng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

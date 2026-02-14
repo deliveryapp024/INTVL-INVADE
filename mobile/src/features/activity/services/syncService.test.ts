@@ -31,16 +31,22 @@ describe('syncService', () => {
 
   it('should sync pending activities successfully', async () => {
     (getActivities as jest.Mock).mockResolvedValue([mockActivity]);
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      status: 201,
-      json: async () => ({ status: 'success', data: { run_status: 'synced' } }),
-    });
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: async () => ({ status: 'success', data: { run_status: 'synced' } }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ status: 'success', data: { status: 'FINALIZED' } }),
+      });
 
     await syncPendingActivities();
 
     expect(global.fetch).toHaveBeenCalled();
-    expect(updateActivitySyncStatus).toHaveBeenCalledWith('123', 'synced');
+    expect(updateActivitySyncStatus).toHaveBeenCalledWith('123', 'finalized');
   });
 
   it('should handle sync failure', async () => {

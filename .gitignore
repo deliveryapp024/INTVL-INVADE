@@ -1,10 +1,121 @@
+# Dependencies
 node_modules/
-.gemini/tmp/
-.expo/
+*/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Build outputs
 dist/
+build/
+out/
+*.tsbuildinfo
+
+# Expo / React Native
+.expo/
+*/.expo/
+.expo-shared/
+web-build/
+expo-env.d.ts
+
+# Native iOS/Android
+ios/
+android/
+*/ios/
+*/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+.kotlin/
+
+# Metro
+.metro-health-check*
+
+# Coverage
+coverage/
+*/coverage/
+
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# Mobile specific
-mobile/node_modules/
-mobile/.expo/
+lerna-debug.log*
+.pnpm-debug.log*
+
+# macOS
+.DS_Store
+*.pem
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+*.stackdump
+[Dd]esktop.ini
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
+
+# Cursor
+.cursor/
+
+# Claude
+.claude/
+
+# Logs
+logs/
+*.log
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+**/google-services.json
+**/GoogleService-Info.plist
+**/*firebase-adminsdk*.json
+**/firebase-credentials.json
+
+# Supabase
+.supabase/
+
+# Prisma
+*.db
+*.db-journal
+prisma/*.db
+prisma/migrations/*/migration_lock.toml
+
+# Testing
+*.test.js.snap
+*.test.ts.snap
+*.test.tsx.snap
+__snapshots__/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.cache/
+*.temp
+
+# Misc
+nul
+.check_patch.txt

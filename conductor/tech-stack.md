@@ -19,7 +19,7 @@
 ## Maps & Geospatial
 -   **Maps:** `react-native-maps` (Google Maps / Apple Maps integration).
 -   **Overlays:** Polygons and Polylines for tracking routes and defining city/territory boundaries.
--   **Grid System:** **H3 Hexagonal Grid** (Resolution 8) for zone indexing and territory management.
+-   **Grid System:** **H3 Hexagonal Grid** (MVP fixed at **Resolution 8**) for zone indexing and territory management.
 
 ## Testing & Quality
 -   **Frontend:** Jest & React Native Testing Library.

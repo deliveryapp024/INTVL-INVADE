@@ -40,6 +40,9 @@ model Run {
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   rawData      RunRawData?
+  hexes        RunHex[]
+  zoneContributions RunZoneContribution[]
+  loop         RunLoop?
 
   @@index([userId, startTime(sort: Desc)])
   @@index([status])
@@ -53,4 +56,69 @@ model RunRawData {
   createdAt DateTime @default(now()) @map("created_at")
   
   @@map("run_raw_data")
+}
+
+model RunHex {
+  id            String @id @default(uuid())
+  runId         String @map("run_id")
+  run           Run    @relation(fields: [runId], references: [id], onDelete: Cascade)
+  sequenceIndex Int    @map("sequence_index")
+  h3Index       String @map("h3_index")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@unique([runId, sequenceIndex])
+  @@index([h3Index])
+  @@index([runId])
+  @@map("run_hexes")
+}
+
+model RunZoneContribution {
+  id        String   @id @default(uuid())
+  runId     String   @map("run_id")
+  run       Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+  cycleKey  String   @map("cycle_key")
+  cycleStart DateTime @map("cycle_start")
+  cycleEnd   DateTime @map("cycle_end")
+  userId    String   @map("user_id")
+  h3Index   String   @map("h3_index")
+  distanceM Float    @map("distance_m")
+  firstAt   DateTime @map("first_at")
+  source    String   @default("DISTANCE") @map("source")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([runId, h3Index, cycleKey, source])
+  @@index([cycleKey, h3Index])
+  @@index([cycleKey, userId])
+  @@map("run_zone_contributions")
+}
+
+model ZoneOwnership {
+  id           String   @id @default(uuid())
+  cycleKey     String   @map("cycle_key")
+  cycleStart   DateTime @map("cycle_start")
+  cycleEnd     DateTime @map("cycle_end")
+  h3Index      String   @map("h3_index")
+  ownerUserId  String   @map("owner_user_id")
+  ownerDistanceM Float  @map("owner_distance_m")
+  tieBreakFirstAt DateTime @map("tie_break_first_at")
+  computedAt   DateTime @default(now()) @map("computed_at")
+
+  @@unique([cycleKey, h3Index])
+  @@index([cycleKey, ownerUserId])
+  @@index([h3Index])
+  @@map("zone_ownerships")
+}
+
+model RunLoop {
+  runId          String @id @map("run_id")
+  run            Run    @relation(fields: [runId], references: [id], onDelete: Cascade)
+  cycleKey       String @map("cycle_key")
+  loopStartIndex Int    @map("loop_start_index")
+  loopEndIndex   Int    @map("loop_end_index")
+  boundaryHexes  Json   @map("boundary_hexes")
+  enclosedHexes  Json   @map("enclosed_hexes")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([cycleKey])
+  @@map("run_loops")
 }

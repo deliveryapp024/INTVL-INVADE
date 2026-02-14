@@ -26,3 +26,14 @@ jest.mock('expo-task-manager', () => ({
   unregisterTaskAsync: jest.fn(() => Promise.resolve()),
   defineTask: jest.fn(),
 }));
+
+jest.mock('expo-background-fetch', () => ({
+  registerTaskAsync: jest.fn(() => Promise.resolve()),
+  unregisterTaskAsync: jest.fn(() => Promise.resolve()),
+  getStatusAsync: jest.fn(() => Promise.resolve(3)),
+  BackgroundFetchResult: {
+    NewData: 1,
+    NoData: 2,
+    Failed: 3,
+  },
+}));

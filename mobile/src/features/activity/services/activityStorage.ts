@@ -1,6 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export type SyncStatus = 'local_only' | 'syncing' | 'synced' | 'failed' | 'rejected';
+export type SyncStatus =
+  | 'local_only'
+  | 'syncing'
+  | 'synced'
+  | 'finalizing'
+  | 'finalized'
+  | 'failed'
+  | 'rejected';
 
 export interface ActivityData {
   id: string;

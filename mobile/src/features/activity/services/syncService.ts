@@ -1,9 +1,8 @@
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { getActivities, updateActivitySyncStatus } from './activityStorage';
+import { API_BASE_URL } from '../../../services/api';
 
-// Using local IP for physical device testing
-const API_BASE_URL = 'http://192.168.1.104:3001/api'; 
 const SYNC_TASK_NAME = 'BACKGROUND_SYNC';
 
 export const syncPendingActivities = async () => {
@@ -11,7 +10,13 @@ export const syncPendingActivities = async () => {
   const activities = await getActivities();
   console.log(`[Sync] Found ${activities.length} total activities.`);
   
-  const pending = activities.filter(a => a.syncStatus === 'local_only' || a.syncStatus === 'failed');
+  const pending = activities.filter(
+    a =>
+      a.syncStatus === 'local_only' ||
+      a.syncStatus === 'failed' ||
+      a.syncStatus === 'synced' ||
+      a.syncStatus === 'finalizing'
+  );
   console.log(`[Sync] Found ${pending.length} pending activities.`);
 
   for (const activity of pending) {
@@ -42,6 +47,23 @@ export const syncPendingActivities = async () => {
       if (response.ok) {
         await updateActivitySyncStatus(activity.id, 'synced');
         console.log(`[Sync] Activity ${activity.id} synced successfully!`);
+
+        await updateActivitySyncStatus(activity.id, 'finalizing');
+        const finalizeRes = await fetch(`${API_BASE_URL}/runs/${encodeURIComponent(activity.id)}/finalize`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (finalizeRes.ok) {
+          await updateActivitySyncStatus(activity.id, 'finalized');
+          console.log(`[Sync] Activity ${activity.id} finalized successfully!`);
+        } else if (finalizeRes.status >= 400 && finalizeRes.status < 500) {
+          await updateActivitySyncStatus(activity.id, 'rejected');
+          console.warn(`[Sync] Activity ${activity.id} rejected on finalize.`);
+        } else {
+          await updateActivitySyncStatus(activity.id, 'failed');
+          console.warn(`[Sync] Activity ${activity.id} finalize failed with status ${finalizeRes.status}`);
+        }
       } else if (response.status >= 400 && response.status < 500) {
         await updateActivitySyncStatus(activity.id, 'rejected');
         console.warn(`[Sync] Activity ${activity.id} rejected by server.`);
