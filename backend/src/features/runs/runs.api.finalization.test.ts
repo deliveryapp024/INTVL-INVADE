@@ -11,9 +11,26 @@ import { mockRunsStore } from './runs.store';
 jest.mock('../../lib/prisma', () => ({
     __esModule: true,
     default: {
+        $transaction: jest.fn(),
         run: {
             findUnique: jest.fn(),
             update: jest.fn(),
+        },
+        runHex: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+        },
+        runZoneContribution: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+            findMany: jest.fn().mockResolvedValue([]),
+        },
+        zoneOwnership: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+        },
+        runLoop: {
+            upsert: jest.fn(),
         },
         runRawData: {
             create: jest.fn()
@@ -43,11 +60,22 @@ describe('POST /api/runs/:id/finalize', () => {
             rawData: { rawData: validRawData }
         });
 
-        (prisma.run.update as jest.Mock).mockResolvedValue({
-            id: runId,
-            status: 'FINALIZED',
-            computedMetrics: { distance_m: 1000, duration_s: 300 }
-        });
+        const tx = {
+            runHex: prisma.runHex,
+            runZoneContribution: prisma.runZoneContribution,
+            zoneOwnership: prisma.zoneOwnership,
+            runLoop: prisma.runLoop,
+            run: {
+                update: jest.fn().mockResolvedValue({
+                    id: runId,
+                    status: 'FINALIZED',
+                    computedMetrics: { distance_m: 1000, duration_s: 300 },
+                    hexes: []
+                })
+            }
+        };
+
+        (prisma.$transaction as jest.Mock).mockImplementation(async (fn: any) => fn(tx));
 
         const response = await request(app)
             .post(`/api/runs/${runId}/finalize`)
@@ -56,7 +84,9 @@ describe('POST /api/runs/:id/finalize', () => {
         expect(response.status).toBe(200);
         expect(response.body.status).toBe('success');
         expect(response.body.data.status).toBe('FINALIZED');
-        expect(prisma.run.update).toHaveBeenCalledWith(expect.objectContaining({
+        expect(prisma.$transaction).toHaveBeenCalled();
+        expect(prisma.runHex.deleteMany).toHaveBeenCalledWith({ where: { runId } });
+        expect(tx.run.update).toHaveBeenCalledWith(expect.objectContaining({
             where: { id: runId },
             data: expect.objectContaining({ status: 'FINALIZED' })
         }));

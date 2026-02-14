@@ -7,11 +7,28 @@ import { calculateMetrics } from './runs.finalization';
 jest.mock('../../lib/prisma', () => ({
     __esModule: true,
     default: {
+        $transaction: jest.fn(),
         run: {
             create: jest.fn(),
             findUnique: jest.fn(),
             findFirst: jest.fn(),
             update: jest.fn(),
+        },
+        runHex: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+        },
+        runZoneContribution: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+            findMany: jest.fn().mockResolvedValue([]),
+        },
+        zoneOwnership: {
+            deleteMany: jest.fn(),
+            createMany: jest.fn(),
+        },
+        runLoop: {
+            upsert: jest.fn(),
         },
         runRawData: {
             create: jest.fn()
@@ -81,16 +98,26 @@ describe('E2E: Run Upload -> Finalization Flow', () => {
         });
 
         // Setup mock for finalize update
-        (prisma.run.update as jest.Mock).mockImplementation((args: any) => {
-            console.log('Mock Update Called with:', JSON.stringify(args, null, 2));
-            return {
-                id: runId,
-                userId,
-                status: args.data.status,
-                computedMetrics: args.data.computedMetrics,
-                rejectReason: args.data.rejectReason
-            };
-        });
+        const tx = {
+            runHex: prisma.runHex,
+            runZoneContribution: prisma.runZoneContribution,
+            zoneOwnership: prisma.zoneOwnership,
+            runLoop: prisma.runLoop,
+            run: {
+                update: jest.fn().mockImplementation((args: any) => {
+                    console.log('Mock Update Called with:', JSON.stringify(args, null, 2));
+                    return {
+                        id: runId,
+                        userId,
+                        status: args.data.status,
+                        computedMetrics: args.data.computedMetrics,
+                        rejectReason: args.data.rejectReason,
+                        hexes: []
+                    };
+                })
+            }
+        };
+        (prisma.$transaction as jest.Mock).mockImplementation(async (fn: any) => fn(tx));
 
         console.log('Sending Finalize Request...');
         const finalizeRes = await request(app)

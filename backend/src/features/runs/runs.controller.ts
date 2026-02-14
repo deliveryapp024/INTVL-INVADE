@@ -3,6 +3,14 @@ import prisma from '../../lib/prisma';
 import { validateRun as validateCreatePayload } from './runs.validation';
 import { mockRunsStore } from './runs.store';
 import { calculateMetrics, validateRun as validateRunRules } from './runs.finalization';
+import { gpsToRunHexes, H3_RESOLUTION_MVP } from './run-hexes';
+import { replaceRunHexes } from './run-hexes.persistence';
+import { computeRunZoneContributions } from '../zones/zone-contributions';
+import { computeZoneOwners } from '../zones/zone-ownership';
+import { replaceRunZoneContributions, replaceZoneOwnershipsForHexes } from '../zones/zone.persistence';
+import { computeEnclosedHexes, detectFirstLoop } from '../loops/loop-master';
+import { upsertRunLoop } from '../loops/loop.persistence';
+import { BONUS_METERS_PER_HEX, LOOP_MASTER_ENABLED, MIN_LOOP_LENGTH } from '../loops/loop-master.config';
 
 const MOCK_DB = process.env.MOCK_DB === 'true';
 
@@ -212,14 +220,106 @@ export const finalizeRun = async (req: Request, res: Response) => {
       run.rejectReason = rejectReason;
       updatedRun = run;
     } else {
-      updatedRun = await prisma.run.update({
-        where: { id },
-        data: {
-          status: finalStatus,
-          computedMetrics: metrics as any, // Json type
-          rejectReason: rejectReason
-        }
-      });
+      if (finalStatus === 'FINALIZED') {
+        const { runHexes } = await gpsToRunHexes(rawDataPoints, H3_RESOLUTION_MVP);
+        const cycleAt = run.endTime ?? new Date(rawDataPoints[rawDataPoints.length - 1]?.time ?? Date.now());
+        const { cycleKey, cycleStart, cycleEnd, contributions } = await computeRunZoneContributions(
+          rawDataPoints,
+          H3_RESOLUTION_MVP,
+          cycleAt
+        );
+
+        updatedRun = await prisma.$transaction(async (tx) => {
+          await replaceRunHexes(tx, id, runHexes);
+          await replaceRunZoneContributions(tx, {
+            runId: id,
+            userId,
+            cycleKey,
+            cycleStart,
+            cycleEnd,
+            contributions
+          });
+
+          if (LOOP_MASTER_ENABLED) {
+            const loop = detectFirstLoop(runHexes, MIN_LOOP_LENGTH);
+            if (loop) {
+              const { enclosedHexes } = await computeEnclosedHexes(loop.boundaryHexes, H3_RESOLUTION_MVP);
+
+              await upsertRunLoop(tx, {
+                runId: id,
+                cycleKey,
+                loopStartIndex: loop.loopStartIndex,
+                loopEndIndex: loop.loopEndIndex,
+                boundaryHexes: loop.boundaryHexes,
+                enclosedHexes
+              });
+
+              if (enclosedHexes.length > 0 && BONUS_METERS_PER_HEX > 0) {
+                await replaceRunZoneContributions(tx, {
+                  runId: id,
+                  userId,
+                  cycleKey,
+                  cycleStart,
+                  cycleEnd,
+                  source: 'LOOP_BONUS',
+                  contributions: enclosedHexes.map((h3Index) => ({
+                    h3Index,
+                    distanceM: BONUS_METERS_PER_HEX,
+                    firstAt: cycleAt
+                  }))
+                });
+              }
+            }
+          }
+
+          const h3IndicesSet = new Set<string>(contributions.map((c) => c.h3Index));
+          const loopBonusHexes = LOOP_MASTER_ENABLED
+            ? (
+                await tx.runZoneContribution.findMany({
+                  where: { runId: id, cycleKey, source: 'LOOP_BONUS' },
+                  select: { h3Index: true }
+                })
+              ).map((r) => r.h3Index)
+            : [];
+          for (const h of loopBonusHexes) h3IndicesSet.add(h);
+          const h3Indices = [...h3IndicesSet];
+          if (h3Indices.length > 0) {
+            const rows = await tx.runZoneContribution.findMany({
+              where: { cycleKey, h3Index: { in: h3Indices } },
+              select: { h3Index: true, userId: true, distanceM: true, firstAt: true }
+            });
+            const owners = computeZoneOwners(
+              rows.map((r) => ({
+                h3Index: r.h3Index,
+                userId: r.userId,
+                distanceM: r.distanceM,
+                firstAt: r.firstAt
+              }))
+            );
+
+            await replaceZoneOwnershipsForHexes(tx, { cycleKey, cycleStart, cycleEnd, owners, h3Indices });
+          }
+
+          return tx.run.update({
+            where: { id },
+            data: {
+              status: finalStatus,
+              computedMetrics: metrics as any,
+              rejectReason: null
+            },
+            include: { hexes: true }
+          });
+        });
+      } else {
+        updatedRun = await prisma.run.update({
+          where: { id },
+          data: {
+            status: finalStatus,
+            computedMetrics: metrics as any, // Json type
+            rejectReason: rejectReason
+          }
+        });
+      }
     }
 
     return res.status(200).json({
@@ -235,4 +335,51 @@ export const finalizeRun = async (req: Request, res: Response) => {
       details: error.message
     });
   }
+};
+
+export const getLatestRun = async (req: Request, res: Response) => {
+  const userId = (req as any).user?.id || (req.query.userId as string) || 'test-user-id';
+
+  if (MOCK_DB) {
+    const latest = [...mockRunsStore]
+      .filter((r) => r.userId === userId)
+      .sort((a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime())[0];
+
+    if (!latest) return res.json({ status: 'success', data: null });
+
+    return res.json({
+      status: 'success',
+      data: {
+        id: latest.id,
+        userId: latest.userId,
+        polyline: latest.polyline ?? null,
+        startTime: latest.startTime,
+        endTime: latest.endTime
+      }
+    });
+  }
+
+  const run = await prisma.run.findFirst({
+    where: { userId, status: 'FINALIZED' },
+    orderBy: { endTime: 'desc' },
+    include: { rawData: true }
+  });
+
+  if (!run) return res.json({ status: 'success', data: null });
+
+  const coordinates = Array.isArray(run.rawData?.rawData)
+    ? (run.rawData!.rawData as any[]).map((p) => ({ latitude: p.lat, longitude: p.lng }))
+    : [];
+
+  return res.json({
+    status: 'success',
+    data: {
+      id: run.id,
+      userId: run.userId,
+      startTime: run.startTime,
+      endTime: run.endTime,
+      polyline: run.polyline ?? null,
+      coordinates
+    }
+  });
 };
