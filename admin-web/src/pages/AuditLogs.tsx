@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { auditApi } from '@/services/api'
-import { FileText, Search, Filter, User, Calendar, Activity } from 'lucide-react'
+import { FileText, Search, User, Calendar, Activity } from 'lucide-react'
 import { format } from 'date-fns'
 
 const actionColors: Record<string, string> = {

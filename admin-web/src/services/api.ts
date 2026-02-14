@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useAuthStore } from '@/hooks/useAuth'
+import type { User } from '../types'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api/v1'
+  baseURL: ((import.meta as any).env?.VITE_API_URL as string | undefined) || '/api/v1'
 })
 
 // Request interceptor to add auth token
@@ -38,7 +39,7 @@ export const authApi = {
 
 // Users API
 export const usersApi = {
-  getUsers: (params?: { page?: number; limit?: number; search?: string; role?: string }) =>
+  getUsers: (params?: { page?: number; limit?: number; search?: string; role?: string; status?: string }) =>
     api.get('/admin/users', { params }),
   
   getUser: (id: string) =>
@@ -59,7 +60,7 @@ export const usersApi = {
 
 // Runs API
 export const runsApi = {
-  getRuns: (params?: { page?: number; limit?: number; user_id?: string }) =>
+  getRuns: (params?: { page?: number; limit?: number; user_id?: string; search?: string }) =>
     api.get('/admin/runs', { params }),
   
   getRun: (id: string) =>
@@ -128,7 +129,7 @@ export const complianceApi = {
 
 // Audit API
 export const auditApi = {
-  getLogs: (params?: { page?: number; limit?: number; action?: string; entity_type?: string }) =>
+  getLogs: (params?: { page?: number; limit?: number; action?: string; entity_type?: string; search?: string }) =>
     api.get('/admin/audit-logs', { params }),
   
   getStats: () =>

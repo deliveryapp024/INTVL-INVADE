@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { complianceApi } from '@/services/api'
 import { toast } from 'react-hot-toast'
-import { Shield, Download, Trash2, Clock, FileText, AlertTriangle, CheckCircle, Plus } from 'lucide-react'
+import { Shield, Download, Trash2, Clock, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 
 export default function CompliancePage() {
@@ -40,12 +40,51 @@ export default function CompliancePage() {
     }
   })
 
+  const requestExport = () => {
+    const userId = window.prompt('Enter user_id to export data for (UUID):')
+    if (!userId) return
+    createExportMutation.mutate(userId)
+  }
+
+  const addPolicy = () => {
+    const name = window.prompt('Policy name:')
+    if (!name) return
+    const entity = window.prompt('Entity (e.g. run_coordinates, analytics_events):')
+    if (!entity) return
+    const daysStr = window.prompt('Retention days (number):', '90')
+    const retention_days = Number(daysStr)
+    if (!Number.isFinite(retention_days) || retention_days <= 0) {
+      toast.error('Invalid retention days')
+      return
+    }
+    const action = window.prompt('Action (delete|anonymize):', 'delete') || 'delete'
+    createPolicyMutation.mutate({ name, entity, retention_days, action })
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Compliance & GDPR</h1>
           <p className="mt-1 text-gray-600">Data privacy, exports, and retention policies</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            className="btn-secondary flex items-center"
+            onClick={requestExport}
+            disabled={createExportMutation.isPending}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Request Export
+          </button>
+          <button
+            className="btn-primary flex items-center"
+            onClick={addPolicy}
+            disabled={createPolicyMutation.isPending}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Policy
+          </button>
         </div>
       </div>
 

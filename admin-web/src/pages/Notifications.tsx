@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationsApi } from '@/services/api'
 import { toast } from 'react-hot-toast'
-import { Bell, Send, Calendar, Users, MessageSquare, CheckCircle, XCircle, Clock, RotateCcw } from 'lucide-react'
+import { Bell, Send, CheckCircle, XCircle, Clock, RotateCcw } from 'lucide-react'
 import { format } from 'date-fns'
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('jobs')
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  const [targetType, setTargetType] = useState<'all' | 'segment' | 'specific'>('all')
+  const [scheduledFor, setScheduledFor] = useState('')
   const queryClient = useQueryClient()
 
   const { data: jobs, isLoading: jobsLoading } = useQuery({
@@ -41,6 +45,29 @@ export default function NotificationsPage() {
     }
   })
 
+  const createMutation = useMutation({
+    mutationFn: () =>
+      notificationsApi.createJob({
+        title,
+        body,
+        target_type: targetType,
+        scheduled_for: scheduledFor ? new Date(scheduledFor).toISOString() : undefined
+      }),
+    onSuccess: () => {
+      toast.success('Notification created')
+      setShowCreateModal(false)
+      setTitle('')
+      setBody('')
+      setTargetType('all')
+      setScheduledFor('')
+      queryClient.invalidateQueries({ queryKey: ['notification-jobs'] })
+      queryClient.invalidateQueries({ queryKey: ['notification-stats'] })
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error || 'Failed to create notification')
+    }
+  })
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -56,6 +83,76 @@ export default function NotificationsPage() {
           Send Notification
         </button>
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gray-900/60" onClick={() => setShowCreateModal(false)} />
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+            <h2 className="text-lg font-semibold text-gray-900">Create Notification</h2>
+            <div className="mt-4 space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <input
+                  className="input-field mt-1"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Time to run"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Body</label>
+                <textarea
+                  className="input-field mt-1 min-h-[90px]"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  placeholder="Message..."
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Target</label>
+                  <select
+                    className="input-field mt-1"
+                    value={targetType}
+                    onChange={(e) => setTargetType(e.target.value as any)}
+                  >
+                    <option value="all">All users</option>
+                    <option value="segment">Segment</option>
+                    <option value="specific">Specific users</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Schedule (optional)</label>
+                  <input
+                    type="datetime-local"
+                    className="input-field mt-1"
+                    value={scheduledFor}
+                    onChange={(e) => setScheduledFor(e.target.value)}
+                  />
+                </div>
+              </div>
+              {(targetType === 'segment' || targetType === 'specific') && (
+                <p className="text-sm text-gray-600">
+                  Segment and specific targeting UI isn’t wired up yet; defaulting to "all" is recommended.
+                </p>
+              )}
+            </div>
+
+            <div className="mt-6 flex justify-end gap-2">
+              <button className="btn-secondary" onClick={() => setShowCreateModal(false)}>
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                disabled={!title || !body || createMutation.isPending}
+                onClick={() => createMutation.mutate()}
+              >
+                {createMutation.isPending ? 'Sending...' : 'Create'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
