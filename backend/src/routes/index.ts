@@ -7,6 +7,8 @@ import achievementRoutes from './achievements'
 import challengeRoutes from './challenges'
 import webhookRoutes from './webhooks'
 import adminRoutes from './admin'
+import adminNotificationRoutes from './admin-notifications'
+import adminComplianceRoutes from './admin-compliance'
 
 const router = Router()
 
@@ -19,5 +21,7 @@ router.use('/achievements', achievementRoutes)
 router.use('/challenges', challengeRoutes)
 router.use('/webhooks', webhookRoutes)
 router.use('/admin', adminRoutes)
+router.use('/admin/notifications', adminNotificationRoutes)
+router.use('/admin/compliance', adminComplianceRoutes)
 
 export default router

@@ -1,0 +1,85 @@
+# Render Deployment Configuration
+# For INVADE Admin Dashboard + Backend
+
+services:
+  # Backend API
+  - type: web
+    name: invade-api
+    runtime: node
+    repo: https://github.com/your-org/invade.git
+    branch: main
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGINS
+        value: "https://invade-admin.onrender.com,http://localhost:3000"
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: invade-redis
+          property: connectionString
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: ENABLE_PUSH_NOTIFICATIONS
+        value: "true"
+      - key: ENABLE_ANALYTICS
+        value: "true"
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Admin Web Dashboard
+  - type: web
+    name: invade-admin
+    runtime: static
+    repo: https://github.com/your-org/invade.git
+    branch: main
+    rootDir: admin-web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://invade-api.onrender.com/api/v1"
+    autoDeploy: true
+
+  # Redis for BullMQ
+  - type: redis
+    name: invade-redis
+    ipAllowList: []
+    plan: starter
+
+# Environment Configuration
+databases:
+  # Supabase is used as the database (external)
+  # Configure in Supabase dashboard
+
+# Notes:
+# 1. Update the repo URL to your actual GitHub repository
+# 2. Set the following secrets in Render dashboard:
+#    - SUPABASE_URL
+#    - SUPABASE_ANON_KEY
+#    - SUPABASE_SERVICE_ROLE_KEY
+#    - FIREBASE_PROJECT_ID
+#    - FIREBASE_CLIENT_EMAIL
+#    - FIREBASE_PRIVATE_KEY
+# 3. Upload Firebase service account key as environment variable
+# 4. The admin-web will be served as a static site
+# 5. Backend API handles all admin operations with RBAC

@@ -1,13 +1,35 @@
 import app from './app'
 import config from './config'
 import logger from './utils/logger'
+import { initializeNotificationQueue, initializeNotificationWorker } from './services/NotificationQueueService'
 
 const PORT = config.port
 const HOST = config.host
 
+// Initialize services
+let notificationWorker: any = null
+
+if (config.redis.url) {
+  try {
+    initializeNotificationQueue()
+    notificationWorker = initializeNotificationWorker()
+    logger.info('✅ Notification queue and worker initialized')
+  } catch (error) {
+    logger.error('❌ Failed to initialize notification queue:', error)
+  }
+} else {
+  logger.warn('⚠️ Redis URL not configured. Notification scheduling will not be available.')
+}
+
 // Graceful shutdown
 const gracefulShutdown = (signal: string) => {
   logger.info(`${signal} received. Starting graceful shutdown...`)
+  
+  // Close notification worker
+  if (notificationWorker) {
+    notificationWorker.close()
+    logger.info('Notification worker closed')
+  }
   
   // Close server
   server.close(() => {
