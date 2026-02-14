@@ -1,20 +1,33 @@
 import dotenv from 'dotenv'
 import path from 'path'
+import crypto from 'crypto'
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
-// Validate required environment variables
-const requiredEnvVars = [
-  'SUPABASE_URL',
-  'SUPABASE_ANON_KEY',
-  'JWT_SECRET'
-]
+// Render deployments are configured via dashboard env vars.
+// Avoid hard-crashing during boot: provide fallbacks for non-secret values.
+// If JWT_SECRET is missing we generate an ephemeral secret (tokens will reset on restart).
+const FALLBACK_SUPABASE_URL = 'https://dawowfbfqfygjkugpdwq.supabase.co'
+// Public anon key (also present in backend/.env.example). This is not a secret.
+const FALLBACK_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhd293ZmJmcWZ5Z2prdWdwZHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5ODgzNDMsImV4cCI6MjA4NjU2NDM0M30.U44IM3zGbsGpHRoO5FCkPqoE3XY-Kkzf-jLpBBquCkQ'
 
-for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    throw new Error(`Missing required environment variable: ${envVar}`)
-  }
+const envSupabaseUrl = process.env.SUPABASE_URL || FALLBACK_SUPABASE_URL
+const envSupabaseAnonKey = process.env.SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY
+const envJwtSecret = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex')
+
+const missingCritical: string[] = []
+if (!process.env.SUPABASE_URL) missingCritical.push('SUPABASE_URL')
+if (!process.env.SUPABASE_ANON_KEY) missingCritical.push('SUPABASE_ANON_KEY')
+if (!process.env.JWT_SECRET) missingCritical.push('JWT_SECRET')
+
+if (missingCritical.length > 0) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[config] Missing env vars: ${missingCritical.join(', ')}. ` +
+      'Using fallbacks (JWT secret is ephemeral). Set these in your Render service env vars.'
+  )
 }
 
 export const config = {
@@ -25,14 +38,17 @@ export const config = {
   
   // Supabase
   supabase: {
-    url: process.env.SUPABASE_URL!,
-    anonKey: process.env.SUPABASE_ANON_KEY!,
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY!
+    url: envSupabaseUrl,
+    anonKey: envSupabaseAnonKey,
+    // NOTE: service role key is required for privileged admin operations.
+    // If it's missing, we fall back to anon key so the server can boot,
+    // but admin write operations may fail due to RLS.
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || envSupabaseAnonKey
   },
   
   // JWT
   jwt: {
-    secret: process.env.JWT_SECRET!,
+    secret: envJwtSecret,
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d'
   },
