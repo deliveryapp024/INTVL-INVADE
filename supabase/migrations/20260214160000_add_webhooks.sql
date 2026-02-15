@@ -50,12 +50,14 @@ ALTER TABLE webhooks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE webhook_deliveries ENABLE ROW LEVEL SECURITY;
 
 -- Only admins can manage webhooks (simplified - check in application layer)
+DROP POLICY IF EXISTS "Admins can manage webhooks" ON webhooks;
 CREATE POLICY "Admins can manage webhooks" ON webhooks
   FOR ALL
   TO authenticated
   USING (true)
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Admins can view webhook deliveries" ON webhook_deliveries;
 CREATE POLICY "Admins can view webhook deliveries" ON webhook_deliveries
   FOR SELECT
   TO authenticated
