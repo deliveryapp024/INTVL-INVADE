@@ -57,7 +57,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: "https://invade-api.onrender.com/api/v1"
+        value: "https://intvl-invade-backend.onrender.com/api/v1"
     autoDeploy: true
     routes:
       - type: rewrite
