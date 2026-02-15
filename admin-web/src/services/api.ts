@@ -56,8 +56,22 @@ export default api
 export const authApi = {
   login: (email: string, password: string) =>
     api.post('/auth/login', { email, password }),
-  
-  me: () => api.get('/auth/me')
+
+  me: () => api.get('/auth/me'),
+
+  updateProfile: (data: any) =>
+    api.patch('/auth/me', data),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api.post('/auth/change-password', { currentPassword, newPassword }),
+
+  uploadAvatar: (file: File) => {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    return api.post('/auth/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  }
 }
 
 // Users API
@@ -162,4 +176,28 @@ export const auditApi = {
 // Dashboard API
 export const dashboardApi = {
   getStats: () => api.get('/admin/stats')
+}
+
+// Settings API
+export const settingsApi = {
+  getSettings: () =>
+    api.get('/settings'),
+
+  updateSettings: (settings: any) =>
+    api.patch('/settings', settings),
+
+  getNotifications: (params?: { page?: number; limit?: number }) =>
+    api.get('/settings/notifications', { params }),
+
+  getUnreadCount: () =>
+    api.get('/settings/notifications/unread-count'),
+
+  markNotificationAsRead: (id: string) =>
+    api.patch(`/settings/notifications/${id}/read`),
+
+  markAllNotificationsAsRead: () =>
+    api.post('/settings/notifications/read-all'),
+
+  testNotification: () =>
+    api.post('/settings/notifications/test')
 }

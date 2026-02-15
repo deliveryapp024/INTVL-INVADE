@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/hooks/useAuth'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { authApi } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,7 +13,8 @@ import { toast } from 'react-hot-toast'
 import { User, Mail, Shield, Calendar, Activity, Trophy, Zap, Edit3, Camera, Save, X } from 'lucide-react'
 
 export default function ProfilePage() {
-  const { user } = useAuthStore()
+  const { user, setAuth } = useAuthStore()
+  const queryClient = useQueryClient()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -19,10 +22,31 @@ export default function ProfilePage() {
     username: user?.username || ''
   })
 
+  // Fetch fresh user data (background refresh)
+  useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => authApi.me().then(res => res.data.data),
+    enabled: !!user
+  })
+
+  // Update profile mutation
+  const updateMutation = useMutation({
+    mutationFn: (data: any) => authApi.updateProfile(data),
+    onSuccess: (response) => {
+      // Update local storage with new user data
+      const updatedUser = response.data.data
+      setAuth(updatedUser, useAuthStore.getState().token!)
+      queryClient.invalidateQueries({ queryKey: ['current-user'] })
+      toast.success('Profile updated successfully!')
+      setIsEditing(false)
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Failed to update profile')
+    }
+  })
+
   const handleSave = () => {
-    // TODO: Connect to backend API
-    toast.success('Profile updated successfully!')
-    setIsEditing(false)
+    updateMutation.mutate(formData)
   }
 
   const handleCancel = () => {

@@ -9,6 +9,7 @@ import webhookRoutes from './webhooks'
 import adminRoutes from './admin'
 import adminNotificationRoutes from './admin-notifications'
 import adminComplianceRoutes from './admin-compliance'
+import settingsRoutes from './settings'
 
 const router = Router()
 
@@ -23,5 +24,6 @@ router.use('/webhooks', webhookRoutes)
 router.use('/admin', adminRoutes)
 router.use('/admin/notifications', adminNotificationRoutes)
 router.use('/admin/compliance', adminComplianceRoutes)
+router.use('/settings', settingsRoutes)
 
 export default router

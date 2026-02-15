@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { settingsApi } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -20,6 +22,7 @@ import { useTheme } from '@/components/theme-provider'
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme()
+  const queryClient = useQueryClient()
   
   const [settings, setSettings] = useState({
     // Notifications
@@ -40,9 +43,54 @@ export default function SettingsPage() {
     suspiciousActivityAlerts: true
   })
 
+  // Fetch settings from API
+  const { data: settingsData } = useQuery({
+    queryKey: ['user-settings'],
+    queryFn: () => settingsApi.getSettings().then(res => res.data.data)
+  })
+
+  // Update settings mutation
+  const updateMutation = useMutation({
+    mutationFn: (newSettings: any) => settingsApi.updateSettings(newSettings),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-settings'] })
+      toast.success('Settings saved successfully!')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Failed to save settings')
+    }
+  })
+
+  // Initialize settings from API data
+  useEffect(() => {
+    if (settingsData) {
+      setSettings({
+        emailNotifications: settingsData.email_notifications ?? true,
+        pushNotifications: settingsData.push_notifications ?? true,
+        marketingEmails: settingsData.marketing_emails ?? false,
+        profileVisible: settingsData.profile_visible ?? true,
+        activityVisible: settingsData.activity_visible ?? false,
+        compactMode: settingsData.compact_mode ?? false,
+        autoRefresh: settingsData.auto_refresh ?? true,
+        loginAlerts: settingsData.login_alerts ?? true,
+        suspiciousActivityAlerts: settingsData.suspicious_activity_alerts ?? true
+      })
+    }
+  }, [settingsData])
+
   const handleSave = () => {
-    // TODO: Connect to backend API
-    toast.success('Settings saved successfully!')
+    const apiSettings = {
+      email_notifications: settings.emailNotifications,
+      push_notifications: settings.pushNotifications,
+      marketing_emails: settings.marketingEmails,
+      profile_visible: settings.profileVisible,
+      activity_visible: settings.activityVisible,
+      compact_mode: settings.compactMode,
+      auto_refresh: settings.autoRefresh,
+      login_alerts: settings.loginAlerts,
+      suspicious_activity_alerts: settings.suspiciousActivityAlerts
+    }
+    updateMutation.mutate(apiSettings)
   }
 
   const SettingItem = ({ 
