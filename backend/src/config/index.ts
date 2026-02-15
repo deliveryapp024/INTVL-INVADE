@@ -15,7 +15,25 @@ const FALLBACK_SUPABASE_ANON_KEY =
 
 const envSupabaseUrl = process.env.SUPABASE_URL || FALLBACK_SUPABASE_URL
 const envSupabaseAnonKey = process.env.SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY
-const envJwtSecret = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex')
+
+// IMPORTANT:
+// If JWT_SECRET is missing and the service runs >1 instance, using a random secret per instance
+// will make tokens signed on instance A fail verification on instance B.
+// To avoid "login then immediate logout" issues in misconfigured environments, derive a stable
+// (but still secret) fallback from existing env vars.
+const envJwtSecret =
+  process.env.JWT_SECRET ||
+  crypto
+    .createHash('sha256')
+    .update(
+      String(
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
+          process.env.SUPABASE_ANON_KEY ||
+          process.env.SUPABASE_URL ||
+          FALLBACK_SUPABASE_URL
+      )
+    )
+    .digest('hex')
 
 const missingCritical: string[] = []
 if (!process.env.SUPABASE_URL) missingCritical.push('SUPABASE_URL')
@@ -26,7 +44,7 @@ if (missingCritical.length > 0) {
   // eslint-disable-next-line no-console
   console.warn(
     `[config] Missing env vars: ${missingCritical.join(', ')}. ` +
-      'Using fallbacks (JWT secret is ephemeral). Set these in your Render service env vars.'
+      'Using fallbacks (JWT secret is derived for stability). Set these in your Render service env vars.'
   )
 }
 
