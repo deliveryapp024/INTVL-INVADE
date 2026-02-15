@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useAuthStore } from '@/hooks/useAuth'
 import type { User } from '../types'
+import { toast } from 'react-hot-toast'
 
 function resolveBaseUrl() {
   const configured = ((import.meta as any).env?.VITE_API_URL as string | undefined) || ''
@@ -38,6 +39,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const url = error.config?.url || ''
+      const message = error.response?.data?.error?.message || 'Session expired'
+      // Give a visible hint before redirecting.
+      toast.error(`${message}${url ? ` (${url})` : ''}`)
       useAuthStore.getState().logout()
       window.location.href = '/login'
     }
