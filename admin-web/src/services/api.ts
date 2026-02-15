@@ -156,5 +156,5 @@ export const auditApi = {
 
 // Dashboard API
 export const dashboardApi = {
-  getStats: () => api.get('/admin/dashboard/stats')
+  getStats: () => api.get('/admin/stats')
 }

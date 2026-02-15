@@ -207,12 +207,12 @@ export default function DashboardPage() {
             <div className="h-[300px] flex items-center justify-center bg-muted/30 rounded-lg border border-dashed border-border">
               <div className="text-center">
                 <Activity className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
-                <p className="text-muted-foreground">Charts coming in Phase 3</p>
-                <p className="text-xs text-muted-foreground/60 mt-1">Tremor charts integration</p>
-              </div>
+              <p className="text-muted-foreground">Charts will appear as data grows</p>
+              <p className="text-xs text-muted-foreground/60 mt-1">We will wire Tremor charts to analytics endpoints</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
         {/* Quick Stats */}
         <Card>

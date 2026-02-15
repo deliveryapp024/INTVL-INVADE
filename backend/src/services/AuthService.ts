@@ -123,9 +123,25 @@ class AuthService {
       throw new AppError(dbError.message, 500, 'DATABASE_ERROR')
     }
 
-    // Generate tokens
-    const tokens = this.generateTokens(user.id, user.email)
+    // Prefer returning Supabase session tokens so /auth/me and /admin/* (verifySupabaseToken)
+    // work immediately for newly registered users.
+    const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.signInWithPassword({
+      email: data.email,
+      password: data.password
+    })
 
+    if (!sessionError && sessionData.session?.access_token && sessionData.session?.refresh_token) {
+      return {
+        user,
+        tokens: {
+          accessToken: sessionData.session.access_token,
+          refreshToken: sessionData.session.refresh_token
+        }
+      }
+    }
+
+    // Fallback to custom tokens (kept for backward compatibility)
+    const tokens = this.generateTokens(user.id, user.email)
     return { user, tokens }
   }
 
@@ -149,7 +165,17 @@ class AuthService {
         throw new AppError('User profile not found', 404, 'USER_NOT_FOUND')
       }
 
-      const tokens = this.generateTokens(user.id, user.email)
+      // IMPORTANT:
+      // Admin + protected routes use verifySupabaseToken, which expects a Supabase session JWT.
+      // Return Supabase access/refresh tokens so subsequent /api/v1/admin/* calls don't 401.
+      const accessToken = authData.session?.access_token
+      const refreshToken = authData.session?.refresh_token
+
+      if (!accessToken || !refreshToken) {
+        throw new AppError('Auth session not available', 500, 'AUTH_SESSION_MISSING')
+      }
+
+      const tokens: AuthTokens = { accessToken, refreshToken }
       return { user, tokens }
     }
 
