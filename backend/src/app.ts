@@ -47,10 +47,10 @@ app.use(cors({
 // Request ID for tracing
 app.use(requestId)
 
-// Rate limiting
+// Rate limiting (disabled in development)
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.maxRequests,
+  max: config.isDev ? 10000 : config.rateLimit.maxRequests,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -60,18 +60,20 @@ const limiter = rateLimit({
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise IP
     return (req as any).userId || req.ip || 'unknown'
-  }
+  },
+  skip: (req) => config.isDev // Skip rate limiting in development
 })
 app.use(limiter)
 
-// Stricter rate limiting for auth endpoints
+// Stricter rate limiting for auth endpoints (disabled in development)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts
+  max: config.isDev ? 1000 : 50, // 1000 attempts in dev, 50 in production
   message: {
     success: false,
     error: { code: 'AUTH_RATE_LIMIT', message: 'Too many auth attempts, please try again later' }
-  }
+  },
+  skip: (req) => config.isDev // Skip rate limiting entirely in development
 })
 app.use('/api/v1/auth/login', authLimiter)
 app.use('/api/v1/auth/register', authLimiter)
