@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '../config/supabase'
-import { AppError } from '../utils/errors'
+import { AppError } from '../middleware/errorHandler'
 
 export interface UserSettings {
   id?: string
