@@ -125,25 +125,48 @@ class AuthService {
 
   // Login user
   async login(credentials: LoginCredentials): Promise<{ user: User; tokens: AuthTokens }> {
-    // Sign in with Supabase Auth
+    // Try Supabase Auth first
     const { data: authData, error: authError } = await supabaseAdmin.auth.signInWithPassword({
       email: credentials.email,
       password: credentials.password
     })
 
-    if (authError || !authData.user) {
-      throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
+    // If Supabase Auth succeeds, use that user
+    if (!authError && authData.user) {
+      const { data: user, error: dbError } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single()
+
+      if (dbError || !user) {
+        throw new AppError('User profile not found', 404, 'USER_NOT_FOUND')
+      }
+
+      const tokens = this.generateTokens(user.id, user.email)
+      return { user, tokens }
     }
 
-    // Get user profile
+    // Fallback: Try database authentication (for admin users not in Supabase Auth)
     const { data: user, error: dbError } = await supabaseAdmin
       .from('users')
       .select('*')
-      .eq('id', authData.user.id)
+      .eq('email', credentials.email)
       .single()
 
     if (dbError || !user) {
-      throw new AppError('User profile not found', 404, 'USER_NOT_FOUND')
+      throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
+    }
+
+    // Check password hash if it exists
+    if (user.password_hash) {
+      const isValidPassword = await this.comparePassword(credentials.password, user.password_hash)
+      if (!isValidPassword) {
+        throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
+      }
+    } else {
+      // No password hash and Supabase Auth failed
+      throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
     }
 
     // Generate tokens
