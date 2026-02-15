@@ -18,7 +18,12 @@ export default function LoginPage() {
 
     try {
       const response = await authApi.login(email, password)
-      const { user, token } = response.data
+      const user = response.data?.data?.user
+      const token = response.data?.data?.tokens?.accessToken
+
+      if (!user || !token) {
+        throw new Error('Unexpected login response')
+      }
       
       // Check if user has admin role
       if (!['admin', 'superadmin', 'support'].includes(user.role)) {

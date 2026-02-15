@@ -2,8 +2,26 @@ import axios from 'axios'
 import { useAuthStore } from '@/hooks/useAuth'
 import type { User } from '../types'
 
+function resolveBaseUrl() {
+  const configured = ((import.meta as any).env?.VITE_API_URL as string | undefined) || ''
+
+  // Default to deployed backend. This keeps prod working even if .env contains localhost.
+  const prodDefault = 'https://intvl-invade-backend.onrender.com/api/v1'
+
+  if (typeof window === 'undefined') return configured || prodDefault
+
+  const hostname = window.location.hostname
+  const runningLocally = hostname === 'localhost' || hostname === '127.0.0.1'
+  const isLocalApi = configured.includes('localhost') || configured.includes('127.0.0.1')
+
+  // If we are not on localhost but the configured API points to localhost, ignore it.
+  if (!runningLocally && isLocalApi) return prodDefault
+
+  return configured || prodDefault
+}
+
 const api = axios.create({
-  baseURL: ((import.meta as any).env?.VITE_API_URL as string | undefined) || '/api/v1'
+  baseURL: resolveBaseUrl()
 })
 
 // Request interceptor to add auth token

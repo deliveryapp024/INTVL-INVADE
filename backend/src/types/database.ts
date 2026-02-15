@@ -42,6 +42,7 @@ export interface Database {
           name: string
           username: string
           avatar_url?: string | null
+          password_hash?: string | null
           total_distance?: number
           total_runs?: number
           total_duration?: number
@@ -63,6 +64,7 @@ export interface Database {
           name?: string
           username?: string
           avatar_url?: string | null
+          password_hash?: string | null
           total_distance?: number
           total_runs?: number
           total_duration?: number

@@ -24,6 +24,12 @@ interface RegisterData {
 }
 
 class AuthService {
+  private userPublicSelect =
+    'id,email,name,username,avatar_url,total_distance,total_runs,total_duration,streak_days,level,coins,is_verified,role,status,pii_anonymized_at,deleted_at,last_seen_at,created_at,updated_at'
+
+  private userWithPasswordSelect =
+    'id,email,name,username,avatar_url,password_hash,total_distance,total_runs,total_duration,streak_days,level,coins,is_verified,role,status,pii_anonymized_at,deleted_at,last_seen_at,created_at,updated_at'
+
   // Hash password
   private async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, config.security.bcryptSaltRounds)
@@ -108,7 +114,7 @@ class AuthService {
     const { data: user, error: dbError } = await supabaseAdmin
       .from('users')
       .insert(userData)
-      .select()
+      .select(this.userPublicSelect)
       .single()
 
     if (dbError) {
@@ -135,7 +141,7 @@ class AuthService {
     if (!authError && authData.user) {
       const { data: user, error: dbError } = await supabaseAdmin
         .from('users')
-        .select('*')
+        .select(this.userPublicSelect)
         .eq('id', authData.user.id)
         .single()
 
@@ -150,7 +156,7 @@ class AuthService {
     // Fallback: Try database authentication (for admin users not in Supabase Auth)
     const { data: user, error: dbError } = await supabaseAdmin
       .from('users')
-      .select('*')
+      .select(this.userWithPasswordSelect)
       .eq('email', credentials.email)
       .single()
 
@@ -159,8 +165,9 @@ class AuthService {
     }
 
     // Check password hash if it exists
-    if (user.password_hash) {
-      const isValidPassword = await this.comparePassword(credentials.password, user.password_hash)
+    const passwordHash = (user as any).password_hash as string | null | undefined
+    if (passwordHash) {
+      const isValidPassword = await this.comparePassword(credentials.password, passwordHash)
       if (!isValidPassword) {
         throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
       }
@@ -170,9 +177,11 @@ class AuthService {
     }
 
     // Generate tokens
-    const tokens = this.generateTokens(user.id, user.email)
+    const tokens = this.generateTokens((user as any).id, (user as any).email)
 
-    return { user, tokens }
+    // Never return password hash
+    const { password_hash: _password_hash, ...publicUser } = (user as any)
+    return { user: publicUser as User, tokens }
   }
 
   // Refresh tokens
@@ -212,7 +221,7 @@ class AuthService {
   async getCurrentUser(userId: string): Promise<User> {
     const { data: user, error } = await supabaseAdmin
       .from('users')
-      .select('*')
+      .select(this.userPublicSelect)
       .eq('id', userId)
       .single()
 
@@ -252,7 +261,7 @@ class AuthService {
       .from('users')
       .update({ ...filteredUpdates, updated_at: new Date().toISOString() })
       .eq('id', userId)
-      .select()
+      .select(this.userPublicSelect)
       .single()
 
     if (error) {
