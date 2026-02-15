@@ -59,6 +59,10 @@ services:
       - key: VITE_API_URL
         value: "https://invade-api.onrender.com/api/v1"
     autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
 
   # Redis for BullMQ
   - type: redis
