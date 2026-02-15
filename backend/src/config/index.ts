@@ -55,7 +55,12 @@ export const config = {
   
   // CORS
   cors: {
-    origins: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:19006']
+    origins: process.env.CORS_ORIGINS?.split(',') || [
+      'http://localhost:19006',
+      'http://localhost:3000',
+      'https://intvl-invade.onrender.com',
+      'https://intvl-invade-frontend.onrender.com'
+    ]
   },
   
   // Rate Limiting
