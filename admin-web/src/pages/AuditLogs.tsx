@@ -1,20 +1,43 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { auditApi } from '@/services/api'
-import { FileText, Search, User, Calendar, Activity } from 'lucide-react'
+import { FileText, Search, User, Calendar, Activity, Shield, Eye, Edit, UserX, UserCheck, UserCog, Bell, Clock, RefreshCw, Lock } from 'lucide-react'
 import { format } from 'date-fns'
+import {
+  Card,
+  CardContent,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
-const actionColors: Record<string, string> = {
-  'USER_VIEW': 'bg-blue-100 text-blue-800',
-  'USER_UPDATE': 'bg-yellow-100 text-yellow-800',
-  'USER_SUSPEND': 'bg-red-100 text-red-800',
-  'USER_UNSUSPEND': 'bg-green-100 text-green-800',
-  'USER_ANONYMIZE': 'bg-purple-100 text-purple-800',
-  'NOTIFICATION_SEND': 'bg-blue-100 text-blue-800',
-  'NOTIFICATION_JOB_CREATED': 'bg-green-100 text-green-800',
-  'NOTIFICATION_JOB_CANCELLED': 'bg-orange-100 text-orange-800',
-  'RETENTION_RUN': 'bg-gray-100 text-gray-800',
-  'ROLE_CHANGE': 'bg-purple-100 text-purple-800',
+const actionConfig: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
+  'USER_VIEW': { icon: <Eye className="w-3 h-3" />, color: 'bg-primary/10 text-primary border-primary/20', label: 'View User' },
+  'USER_UPDATE': { icon: <Edit className="w-3 h-3" />, color: 'bg-warning/10 text-warning border-warning/20', label: 'Update User' },
+  'USER_SUSPEND': { icon: <UserX className="w-3 h-3" />, color: 'bg-destructive/10 text-destructive border-destructive/20', label: 'Suspend User' },
+  'USER_UNSUSPEND': { icon: <UserCheck className="w-3 h-3" />, color: 'bg-success/10 text-success border-success/20', label: 'Unsuspend User' },
+  'USER_ANONYMIZE': { icon: <Lock className="w-3 h-3" />, color: 'bg-secondary/10 text-secondary border-secondary/20', label: 'Anonymize User' },
+  'NOTIFICATION_SEND': { icon: <Bell className="w-3 h-3" />, color: 'bg-primary/10 text-primary border-primary/20', label: 'Send Notification' },
+  'NOTIFICATION_JOB_CREATED': { icon: <Bell className="w-3 h-3" />, color: 'bg-success/10 text-success border-success/20', label: 'Create Notification' },
+  'NOTIFICATION_JOB_CANCELLED': { icon: <Clock className="w-3 h-3" />, color: 'bg-warning/10 text-warning border-warning/20', label: 'Cancel Notification' },
+  'RETENTION_RUN': { icon: <RefreshCw className="w-3 h-3" />, color: 'bg-muted text-muted-foreground border-border', label: 'Retention Run' },
+  'ROLE_CHANGE': { icon: <UserCog className="w-3 h-3" />, color: 'bg-secondary/10 text-secondary border-secondary/20', label: 'Role Change' },
 }
 
 export default function AuditLogsPage() {
@@ -27,7 +50,7 @@ export default function AuditLogsPage() {
     queryFn: () => auditApi.getLogs({ page, limit: 50, search, action: actionFilter }).then(res => res.data)
   })
 
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['audit-stats'],
     queryFn: () => auditApi.getStats().then(res => res.data)
   })
@@ -36,185 +59,237 @@ export default function AuditLogsPage() {
   const pagination = data?.pagination
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
-          <p className="mt-1 text-gray-600">Track all admin actions for compliance</p>
+          <h1 className="text-3xl font-bold text-foreground">Audit Logs</h1>
+          <p className="mt-1 text-muted-foreground">Track all admin actions for compliance</p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Activity className="w-6 h-6 text-blue-600" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
+                <Activity className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Actions</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-16" /> : stats?.total_actions || 0}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Actions</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.total_actions || 0}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-success/10 border border-success/20">
+                <User className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Unique Admins</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.unique_admins || 0}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <User className="w-6 h-6 text-green-600" />
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-secondary/10 border border-secondary/20">
+                <Calendar className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Today's Actions</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.today_actions || 0}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Unique Admins</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.unique_admins || 0}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-warning/10 border border-warning/20">
+                <FileText className="w-6 h-6 text-warning" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Entity Types</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.entity_types || 0}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Calendar className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Today's Actions</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.today_actions || 0}</p>
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <FileText className="w-6 h-6 text-orange-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Entity Types</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.entity_types || 0}</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters */}
-      <div className="card mb-6">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[300px]">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search logs..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="input-field pl-10"
-              />
+      <Card className="glass-card card-hover">
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[300px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Search logs..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
+            <Select value={actionFilter} onValueChange={setActionFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="All Actions" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All Actions</SelectItem>
+                <SelectItem value="USER_VIEW">View User</SelectItem>
+                <SelectItem value="USER_UPDATE">Update User</SelectItem>
+                <SelectItem value="USER_SUSPEND">Suspend User</SelectItem>
+                <SelectItem value="USER_UNSUSPEND">Unsuspend User</SelectItem>
+                <SelectItem value="NOTIFICATION_SEND">Send Notification</SelectItem>
+                <SelectItem value="RETENTION_RUN">Retention Run</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <select
-            value={actionFilter}
-            onChange={(e) => setActionFilter(e.target.value)}
-            className="input-field w-48"
-          >
-            <option value="">All Actions</option>
-            <option value="USER_VIEW">View User</option>
-            <option value="USER_UPDATE">Update User</option>
-            <option value="USER_SUSPEND">Suspend User</option>
-            <option value="USER_UNSUSPEND">Unsuspend User</option>
-            <option value="NOTIFICATION_SEND">Send Notification</option>
-            <option value="RETENTION_RUN">Retention Run</option>
-          </select>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Logs Table */}
-      <div className="card overflow-hidden">
+      <Card className="glass-card card-hover overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="table-header">Time</th>
-                <th className="table-header">Admin</th>
-                <th className="table-header">Action</th>
-                <th className="table-header">Entity</th>
-                <th className="table-header">Details</th>
-                <th className="table-header">IP Address</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="font-semibold">Time</TableHead>
+                <TableHead className="font-semibold">Admin</TableHead>
+                <TableHead className="font-semibold">Action</TableHead>
+                <TableHead className="font-semibold">Entity</TableHead>
+                <TableHead className="font-semibold">Details</TableHead>
+                <TableHead className="font-semibold">IP Address</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="table-cell text-center py-8">
-                    Loading...
-                  </td>
-                </tr>
-              ) : logs.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="table-cell text-center py-8 text-gray-500">
-                    No audit logs found
-                  </td>
-                </tr>
-              ) : (
-                logs.map((log: any) => (
-                  <tr key={log.id} className="hover:bg-gray-50">
-                    <td className="table-cell whitespace-nowrap">
-                      {format(new Date(log.created_at), 'MMM d, yyyy HH:mm:ss')}
-                    </td>
-                    <td className="table-cell">
-                      <div className="text-sm font-medium text-gray-900">{log.actor_user?.email}</div>
-                      <div className="text-xs text-gray-500">{log.actor_role}</div>
-                    </td>
-                    <td className="table-cell">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        actionColors[log.action] || 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {log.action}
-                      </span>
-                    </td>
-                    <td className="table-cell">
-                      <div className="text-sm text-gray-900">{log.entity_type}</div>
-                      {log.entity_id && (
-                        <div className="text-xs text-gray-500 truncate max-w-[100px]">{log.entity_id}</div>
-                      )}
-                    </td>
-                    <td className="table-cell">
-                      {log.metadata && Object.keys(log.metadata).length > 0 && (
-                        <pre className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-                          {JSON.stringify(log.metadata, null, 2)}
-                        </pre>
-                      )}
-                    </td>
-                    <td className="table-cell text-sm text-gray-500">
-                      {log.ip_address}
-                    </td>
-                  </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-20" />
+                      </div>
+                    </TableCell>
+                    <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-3 w-24" />
+                      </div>
+                    </TableCell>
+                    <TableCell><Skeleton className="h-16 w-48" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  </TableRow>
                 ))
+              ) : logs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                    No audit logs found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                logs.map((log: any) => {
+                  const actionInfo = actionConfig[log.action] || { icon: <Shield className="w-3 h-3" />, color: 'bg-muted text-muted-foreground border-border', label: log.action }
+                  return (
+                    <TableRow key={log.id} className="group hover:bg-muted/50 transition-colors">
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {format(new Date(log.created_at), 'MMM d, yyyy HH:mm:ss')}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-sm font-semibold text-primary">
+                              {log.actor_user?.email?.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="font-medium text-foreground">{log.actor_user?.email}</div>
+                            <div className="text-xs text-muted-foreground">{log.actor_role}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`gap-1 ${actionInfo.color}`}>
+                          {actionInfo.icon}
+                          {actionInfo.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium text-foreground">{log.entity_type}</div>
+                        {log.entity_id && (
+                          <div className="text-xs text-muted-foreground font-mono truncate max-w-[120px]">{log.entity_id}</div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {log.metadata && Object.keys(log.metadata).length > 0 && (
+                          <pre className="text-xs text-muted-foreground bg-muted p-2 rounded-lg max-w-[200px] overflow-x-auto">
+                            {JSON.stringify(log.metadata, null, 2)}
+                          </pre>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground font-mono">
+                        {log.ip_address}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Pagination */}
         {pagination && (
-          <div className="flex items-center justify-between px-6 py-4 border-t">
-            <div className="text-sm text-gray-600">
-              Showing {((page - 1) * 50) + 1} to {Math.min(page * 50, pagination.total)} of {pagination.total} logs
+          <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+            <div className="text-sm text-muted-foreground">
+              Showing <span className="font-medium">{((page - 1) * 50) + 1}</span> to{' '}
+              <span className="font-medium">{Math.min(page * 50, pagination.total)}</span> of{' '}
+              <span className="font-medium">{pagination.total}</span> logs
             </div>
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="btn-secondary"
               >
                 Previous
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => p + 1)}
                 disabled={page * 50 >= pagination.total}
-                className="btn-secondary"
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

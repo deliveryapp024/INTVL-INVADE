@@ -2,8 +2,31 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { usersApi } from '@/services/api'
 import { toast } from 'react-hot-toast'
-import { Search, Filter, UserX, UserCheck, Edit3, Loader2 } from 'lucide-react'
+import { Search, Filter, UserX, UserCheck, Edit3, Users, Shield, Crown, HeadphonesIcon } from 'lucide-react'
 import { format } from 'date-fns'
+import {
+  Card,
+  CardContent,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export default function UsersPage() {
   const [search, setSearch] = useState('')
@@ -38,181 +61,244 @@ export default function UsersPage() {
   const users = data?.users || []
   const pagination = data?.pagination
 
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'superadmin':
+        return <Crown className="w-3 h-3 mr-1" />
+      case 'admin':
+        return <Shield className="w-3 h-3 mr-1" />
+      case 'support':
+        return <HeadphonesIcon className="w-3 h-3 mr-1" />
+      default:
+        return <Users className="w-3 h-3 mr-1" />
+    }
+  }
+
+  const getRoleVariant = (role: string): 'default' | 'secondary' | 'destructive' | 'outline' | 'primary' | 'warning' | 'success' => {
+    switch (role) {
+      case 'superadmin':
+        return 'primary'
+      case 'admin':
+        return 'secondary'
+      case 'support':
+        return 'success'
+      default:
+        return 'outline'
+    }
+  }
+
+  const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' | 'primary' | 'warning' | 'success' => {
+    switch (status) {
+      case 'active':
+        return 'success'
+      case 'suspended':
+        return 'destructive'
+      default:
+        return 'outline'
+    }
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Users Management</h1>
-          <p className="mt-1 text-gray-600">Manage user accounts and permissions</p>
+          <h1 className="text-3xl font-bold text-foreground">Users Management</h1>
+          <p className="mt-1 text-muted-foreground">Manage user accounts and permissions</p>
         </div>
-        <div className="flex gap-2">
-          <button className="btn-secondary flex items-center">
-            <Filter className="w-4 h-4 mr-2" />
-            Export
-          </button>
-        </div>
+        <Button variant="outline" className="gap-2">
+          <Filter className="w-4 h-4" />
+          Export
+        </Button>
       </div>
 
       {/* Filters */}
-      <div className="card mb-6">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[300px]">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="input-field pl-10"
-              />
+      <Card className="glass-card card-hover">
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[300px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Search users..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
+            <Select value={roleFilter} onValueChange={setRoleFilter}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="All Roles" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All Roles</SelectItem>
+                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="support">Support</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="superadmin">Superadmin</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="suspended">Suspended</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-            className="input-field w-40"
-          >
-            <option value="">All Roles</option>
-            <option value="user">User</option>
-            <option value="support">Support</option>
-            <option value="admin">Admin</option>
-            <option value="superadmin">Superadmin</option>
-          </select>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-field w-40"
-          >
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-          </select>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Users Table */}
-      <div className="card overflow-hidden">
+      <Card className="glass-card card-hover overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="table-header">User</th>
-                <th className="table-header">Role</th>
-                <th className="table-header">Status</th>
-                <th className="table-header">Level</th>
-                <th className="table-header">Runs</th>
-                <th className="table-header">Joined</th>
-                <th className="table-header">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="font-semibold">User</TableHead>
+                <TableHead className="font-semibold">Role</TableHead>
+                <TableHead className="font-semibold">Status</TableHead>
+                <TableHead className="font-semibold">Level</TableHead>
+                <TableHead className="font-semibold">Runs</TableHead>
+                <TableHead className="font-semibold">Joined</TableHead>
+                <TableHead className="font-semibold text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={7} className="table-cell text-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary-600" />
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <div className="space-y-1">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
+                  </TableRow>
+                ))
               ) : users.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="table-cell text-center py-8 text-gray-500">
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                     No users found
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 users.map((user: any) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="table-cell">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                          <span className="text-sm font-medium text-primary-600">
+                  <TableRow key={user.id} className="group hover:bg-muted/50 transition-colors">
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                          <span className="text-sm font-semibold text-primary">
                             {user.name?.charAt(0) || user.email?.charAt(0)}
                           </span>
                         </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                        <div>
+                          <div className="font-medium text-foreground">{user.name}</div>
+                          <div className="text-sm text-muted-foreground">{user.email}</div>
                         </div>
                       </div>
-                    </td>
-                    <td className="table-cell">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        user.role === 'superadmin' ? 'bg-purple-100 text-purple-800' :
-                        user.role === 'admin' ? 'bg-blue-100 text-blue-800' :
-                        user.role === 'support' ? 'bg-green-100 text-green-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getRoleVariant(user.role)} className="capitalize">
+                        {getRoleIcon(user.role)}
                         {user.role}
-                      </span>
-                    </td>
-                    <td className="table-cell">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        user.status === 'active' ? 'bg-green-100 text-green-800' :
-                        user.status === 'suspended' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant(user.status)} className="capitalize">
                         {user.status}
-                      </span>
-                    </td>
-                    <td className="table-cell">{user.level}</td>
-                    <td className="table-cell">{user.total_runs}</td>
-                    <td className="table-cell">{format(new Date(user.created_at), 'MMM d, yyyy')}</td>
-                    <td className="table-cell">
-                      <div className="flex gap-2">
-                        <button className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="metric-value text-lg">{user.level}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="metric-value text-lg">{user.total_runs}</span>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {format(new Date(user.created_at), 'MMM d, yyyy')}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-1 justify-end">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                        >
                           <Edit3 className="w-4 h-4" />
-                        </button>
+                        </Button>
                         {user.status === 'active' ? (
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                             onClick={() => suspendMutation.mutate(user.id)}
                             disabled={suspendMutation.isPending}
-                            className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg"
                           >
                             <UserX className="w-4 h-4" />
-                          </button>
+                          </Button>
                         ) : (
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-success hover:bg-success/10"
                             onClick={() => unsuspendMutation.mutate(user.id)}
                             disabled={unsuspendMutation.isPending}
-                            className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg"
                           >
                             <UserCheck className="w-4 h-4" />
-                          </button>
+                          </Button>
                         )}
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Pagination */}
         {pagination && (
-          <div className="flex items-center justify-between px-6 py-4 border-t">
-            <div className="text-sm text-gray-600">
-              Showing {((page - 1) * 20) + 1} to {Math.min(page * 20, pagination.total)} of {pagination.total} users
+          <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+            <div className="text-sm text-muted-foreground">
+              Showing <span className="font-medium">{((page - 1) * 20) + 1}</span> to{' '}
+              <span className="font-medium">{Math.min(page * 20, pagination.total)}</span> of{' '}
+              <span className="font-medium">{pagination.total}</span> users
             </div>
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="btn-secondary"
               >
                 Previous
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => p + 1)}
                 disabled={!pagination || page * 20 >= pagination.total}
-                className="btn-secondary"
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

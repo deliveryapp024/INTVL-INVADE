@@ -2,8 +2,25 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { complianceApi } from '@/services/api'
 import { toast } from 'react-hot-toast'
-import { Shield, Download, Trash2, Clock, Plus } from 'lucide-react'
+import { Shield, Download, Trash2, Clock, Plus, Database, FileArchive, Settings } from 'lucide-react'
 import { format } from 'date-fns'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function CompliancePage() {
   const [activeTab, setActiveTab] = useState('exports')
@@ -19,7 +36,7 @@ export default function CompliancePage() {
     queryFn: () => complianceApi.getRetentionPolicies().then(res => res.data)
   })
 
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['compliance-stats'],
     queryFn: () => complianceApi.getStats().then(res => res.data)
   })
@@ -61,230 +78,284 @@ export default function CompliancePage() {
     createPolicyMutation.mutate({ name, entity, retention_days, action })
   }
 
+  const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' | 'primary' | 'warning' | 'success' => {
+    switch (status) {
+      case 'ready':
+        return 'success'
+      case 'processing':
+        return 'primary'
+      case 'requested':
+        return 'warning'
+      default:
+        return 'outline'
+    }
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Compliance & GDPR</h1>
-          <p className="mt-1 text-gray-600">Data privacy, exports, and retention policies</p>
+          <h1 className="text-3xl font-bold text-foreground">Compliance & GDPR</h1>
+          <p className="mt-1 text-muted-foreground">Data privacy, exports, and retention policies</p>
         </div>
         <div className="flex gap-2">
-          <button
-            className="btn-secondary flex items-center"
+          <Button
+            variant="outline"
             onClick={requestExport}
             disabled={createExportMutation.isPending}
+            className="gap-2"
           >
-            <Download className="w-4 h-4 mr-2" />
+            <Download className="w-4 h-4" />
             Request Export
-          </button>
-          <button
-            className="btn-primary flex items-center"
+          </Button>
+          <Button
             onClick={addPolicy}
             disabled={createPolicyMutation.isPending}
+            className="gap-2"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4" />
             Add Policy
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Download className="w-6 h-6 text-blue-600" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
+                <Download className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Data Exports</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.exports?.total || 0}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Data Exports</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.exports?.total || 0}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-warning/10 border border-warning/20">
+                <Clock className="w-6 h-6 text-warning" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Pending Exports</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.exports?.requested || 0}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Clock className="w-6 h-6 text-yellow-600" />
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-secondary/10 border border-secondary/20">
+                <Shield className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Retention Policies</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-12" /> : stats?.retention?.policies || 0}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Pending Exports</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.exports?.requested || 0}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-success/10 border border-success/20">
+                <Trash2 className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Rows Cleaned</p>
+                <p className="metric-value">
+                  {statsLoading ? <Skeleton className="h-8 w-20" /> : stats?.retention?.total_rows_affected || 0}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Shield className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Retention Policies</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.retention?.policies || 0}</p>
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Trash2 className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Rows Cleaned</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.retention?.total_rows_affected || 0}</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Tabs */}
-      <div className="card">
-        <div className="border-b mb-4">
-          <nav className="flex gap-6">
-            <button
-              onClick={() => setActiveTab('exports')}
-              className={`pb-4 text-sm font-medium border-b-2 ${
-                activeTab === 'exports'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500'
-              }`}
-            >
-              Data Exports
-            </button>
-            <button
-              onClick={() => setActiveTab('policies')}
-              className={`pb-4 text-sm font-medium border-b-2 ${
-                activeTab === 'policies'
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500'
-              }`}
-            >
-              Retention Policies
-            </button>
-          </nav>
-        </div>
+      <Card className="glass-card card-hover">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <CardHeader className="pb-0">
+            <TabsList className="grid w-full max-w-md grid-cols-2">
+              <TabsTrigger value="exports" className="gap-2">
+                <FileArchive className="w-4 h-4" />
+                Data Exports
+              </TabsTrigger>
+              <TabsTrigger value="policies" className="gap-2">
+                <Settings className="w-4 h-4" />
+                Retention Policies
+              </TabsTrigger>
+            </TabsList>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <TabsContent value="exports" className="mt-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent border-b border-border">
+                      <TableHead className="font-semibold">User</TableHead>
+                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold">Requested By</TableHead>
+                      <TableHead className="font-semibold">Created</TableHead>
+                      <TableHead className="font-semibold">Expires</TableHead>
+                      <TableHead className="font-semibold text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {exportsLoading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell>
+                            <div className="space-y-1">
+                              <Skeleton className="h-4 w-32" />
+                              <Skeleton className="h-3 w-24" />
+                            </div>
+                          </TableCell>
+                          <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                          <TableCell><Skeleton className="h-8 w-20 ml-auto" /></TableCell>
+                        </TableRow>
+                      ))
+                    ) : exportJobs?.jobs?.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                          No export jobs yet
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      exportJobs?.jobs?.map((job: any) => (
+                        <TableRow key={job.id} className="group hover:bg-muted/50 transition-colors">
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="text-sm font-semibold text-primary">
+                                  {job.users?.name?.charAt(0)}
+                                </span>
+                              </div>
+                              <div>
+                                <div className="font-medium text-foreground">{job.users?.name}</div>
+                                <div className="text-sm text-muted-foreground">{job.users?.email}</div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={getStatusVariant(job.status)} className="capitalize">
+                              {job.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">{job.requester?.email}</TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {format(new Date(job.created_at), 'MMM d, yyyy')}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {job.expires_at ? format(new Date(job.expires_at), 'MMM d, yyyy') : '-'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {job.status === 'ready' && job.file_url && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-primary hover:text-primary/80 hover:bg-primary/10"
+                                asChild
+                              >
+                                <a href={job.file_url} target="_blank" rel="noopener noreferrer">
+                                  <Download className="w-4 h-4 mr-1" />
+                                  Download
+                                </a>
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
 
-        {activeTab === 'exports' && (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="table-header">User</th>
-                  <th className="table-header">Status</th>
-                  <th className="table-header">Requested By</th>
-                  <th className="table-header">Created</th>
-                  <th className="table-header">Expires</th>
-                  <th className="table-header">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {exportsLoading ? (
-                  <tr>
-                    <td colSpan={6} className="table-cell text-center py-8">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : exportJobs?.jobs?.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="table-cell text-center py-8 text-gray-500">
-                      No export jobs yet
-                    </td>
-                  </tr>
-                ) : (
-                  exportJobs?.jobs?.map((job: any) => (
-                    <tr key={job.id} className="hover:bg-gray-50">
-                      <td className="table-cell">
-                        <div className="text-sm font-medium text-gray-900">{job.users?.name}</div>
-                        <div className="text-sm text-gray-500">{job.users?.email}</div>
-                      </td>
-                      <td className="table-cell">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          job.status === 'ready' ? 'bg-green-100 text-green-800' :
-                          job.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                          job.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          {job.status}
-                        </span>
-                      </td>
-                      <td className="table-cell">{job.requester?.email}</td>
-                      <td className="table-cell">
-                        {format(new Date(job.created_at), 'MMM d, yyyy')}
-                      </td>
-                      <td className="table-cell">
-                        {job.expires_at ? format(new Date(job.expires_at), 'MMM d, yyyy') : '-'}
-                      </td>
-                      <td className="table-cell">
-                        {job.status === 'ready' && job.file_url && (
-                          <a
-                            href={job.file_url}
-                            className="text-primary-600 hover:text-primary-800 font-medium"
-                          >
-                            Download
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'policies' && (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="table-header">Name</th>
-                  <th className="table-header">Entity</th>
-                  <th className="table-header">Retention</th>
-                  <th className="table-header">Action</th>
-                  <th className="table-header">Status</th>
-                  <th className="table-header">Last Run</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {policiesLoading ? (
-                  <tr>
-                    <td colSpan={6} className="table-cell text-center py-8">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : policies?.policies?.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="table-cell text-center py-8 text-gray-500">
-                      No retention policies configured
-                    </td>
-                  </tr>
-                ) : (
-                  policies?.policies?.map((policy: any) => (
-                    <tr key={policy.id} className="hover:bg-gray-50">
-                      <td className="table-cell font-medium">{policy.name}</td>
-                      <td className="table-cell">{policy.entity}</td>
-                      <td className="table-cell">{policy.retention_days} days</td>
-                      <td className="table-cell capitalize">{policy.action}</td>
-                      <td className="table-cell">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          policy.enabled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {policy.enabled ? 'Active' : 'Disabled'}
-                        </span>
-                      </td>
-                      <td className="table-cell">
-                        {policy.last_run_at 
-                          ? format(new Date(policy.last_run_at), 'MMM d, yyyy')
-                          : 'Never'
-                        }
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+            <TabsContent value="policies" className="mt-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent border-b border-border">
+                      <TableHead className="font-semibold">Name</TableHead>
+                      <TableHead className="font-semibold">Entity</TableHead>
+                      <TableHead className="font-semibold">Retention</TableHead>
+                      <TableHead className="font-semibold">Action</TableHead>
+                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold">Last Run</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {policiesLoading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                          <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                        </TableRow>
+                      ))
+                    ) : policies?.policies?.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                          No retention policies configured
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      policies?.policies?.map((policy: any) => (
+                        <TableRow key={policy.id} className="group hover:bg-muted/50 transition-colors">
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <Database className="w-4 h-4 text-primary" />
+                              {policy.name}
+                            </div>
+                          </TableCell>
+                          <TableCell className="font-mono text-sm">{policy.entity}</TableCell>
+                          <TableCell>
+                            <span className="metric-value text-base">{policy.retention_days}</span>
+                            <span className="text-muted-foreground text-sm"> days</span>
+                          </TableCell>
+                          <TableCell className="capitalize">{policy.action}</TableCell>
+                          <TableCell>
+                            <Badge variant={policy.enabled ? 'success' : 'outline'}>
+                              {policy.enabled ? 'Active' : 'Disabled'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {policy.last_run_at
+                              ? format(new Date(policy.last_run_at), 'MMM d, yyyy')
+                              : 'Never'
+                            }
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+          </CardContent>
+        </Tabs>
+      </Card>
     </div>
   )
 }

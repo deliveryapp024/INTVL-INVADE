@@ -1,8 +1,24 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { runsApi } from '@/services/api'
-import { Search, MapPin, Clock, Activity, Route } from 'lucide-react'
+import { Search, MapPin, Clock, Activity, Route, Flag, Timer, Zap } from 'lucide-react'
 import { format } from 'date-fns'
+import {
+  Card,
+  CardContent,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
 
 export default function RunsPage() {
   const [search, setSearch] = useState('')
@@ -16,171 +32,235 @@ export default function RunsPage() {
   const runs = data?.runs || []
   const pagination = data?.pagination
 
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Runs Management</h1>
-          <p className="mt-1 text-gray-600">View and manage user running activities</p>
-        </div>
-      </div>
+  const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' | 'primary' | 'warning' | 'success' => {
+    switch (status) {
+      case 'completed':
+        return 'success'
+      case 'active':
+        return 'primary'
+      case 'abandoned':
+        return 'destructive'
+      default:
+        return 'outline'
+    }
+  }
 
-      {/* Search */}
-      <div className="card mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search runs by user..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input-field pl-10 max-w-md"
-          />
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Runs Management</h1>
+          <p className="mt-1 text-muted-foreground">View and manage user running activities</p>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Activity className="w-6 h-6 text-blue-600" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
+                <Activity className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Runs</p>
+                <p className="metric-value">
+                  {isLoading ? <Skeleton className="h-8 w-16" /> : data?.stats?.total || '-'}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Runs</p>
-              <p className="text-2xl font-bold text-gray-900">{data?.stats?.total || '-'}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-success/10 border border-success/20">
+                <Route className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Distance</p>
+                <p className="metric-value">
+                  {isLoading ? <Skeleton className="h-8 w-20" /> : data?.stats?.distance ? `${(data.stats.distance / 1000).toFixed(1)} km` : '-'}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Route className="w-6 h-6 text-green-600" />
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-secondary/10 border border-secondary/20">
+                <Clock className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Duration</p>
+                <p className="metric-value">
+                  {isLoading ? <Skeleton className="h-8 w-16" /> : data?.stats?.duration ? `${Math.floor(data.stats.duration / 3600)}h` : '-'}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Distance</p>
-              <p className="text-2xl font-bold text-gray-900">{data?.stats?.distance ? `${(data.stats.distance / 1000).toFixed(1)} km` : '-'}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card card-hover">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-warning/10 border border-warning/20">
+                <MapPin className="w-6 h-6 text-warning" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Zones Captured</p>
+                <p className="metric-value">
+                  {isLoading ? <Skeleton className="h-8 w-16" /> : data?.stats?.zones || '-'}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Clock className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Duration</p>
-              <p className="text-2xl font-bold text-gray-900">{data?.stats?.duration ? `${Math.floor(data.stats.duration / 3600)}h` : '-'}</p>
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <MapPin className="w-6 h-6 text-orange-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Zones Captured</p>
-              <p className="text-2xl font-bold text-gray-900">{data?.stats?.zones || '-'}</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
+      {/* Search */}
+      <Card className="glass-card card-hover">
+        <CardContent className="pt-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              type="text"
+              placeholder="Search runs by user..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Runs Table */}
-      <div className="card overflow-hidden">
+      <Card className="glass-card card-hover overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="table-header">User</th>
-                <th className="table-header">Distance</th>
-                <th className="table-header">Duration</th>
-                <th className="table-header">Avg Speed</th>
-                <th className="table-header">Status</th>
-                <th className="table-header">Date</th>
-                <th className="table-header">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="font-semibold">User</TableHead>
+                <TableHead className="font-semibold">Distance</TableHead>
+                <TableHead className="font-semibold">Duration</TableHead>
+                <TableHead className="font-semibold">Avg Speed</TableHead>
+                <TableHead className="font-semibold">Status</TableHead>
+                <TableHead className="font-semibold">Date</TableHead>
+                <TableHead className="font-semibold text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={7} className="table-cell text-center py-8">
-                    Loading...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-24" />
+                      </div>
+                    </TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-28" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
+                  </TableRow>
+                ))
               ) : runs.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="table-cell text-center py-8 text-gray-500">
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                     No runs found
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 runs.map((run: any) => (
-                  <tr key={run.id} className="hover:bg-gray-50">
-                    <td className="table-cell">
-                      <div className="text-sm font-medium text-gray-900">{run.user?.name || 'Unknown'}</div>
-                      <div className="text-sm text-gray-500">{run.user?.email}</div>
-                    </td>
-                    <td className="table-cell">
-                      {(run.distance / 1000).toFixed(2)} km
-                    </td>
-                    <td className="table-cell">
-                      {Math.floor(run.duration / 60)}m {run.duration % 60}s
-                    </td>
-                    <td className="table-cell">
-                      {run.average_speed?.toFixed(1)} km/h
-                    </td>
-                    <td className="table-cell">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        run.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        run.status === 'active' ? 'bg-blue-100 text-blue-800' :
-                        run.status === 'abandoned' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                  <TableRow key={run.id} className="group hover:bg-muted/50 transition-colors">
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Flag className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-foreground">{run.user?.name || 'Unknown'}</div>
+                          <div className="text-sm text-muted-foreground">{run.user?.email}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Route className="w-4 h-4 text-muted-foreground" />
+                        <span className="metric-value text-base">{(run.distance / 1000).toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground">km</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Timer className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">{Math.floor(run.duration / 60)}m {run.duration % 60}s</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">{run.average_speed?.toFixed(1)} km/h</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant(run.status)} className="capitalize">
                         {run.status}
-                      </span>
-                    </td>
-                    <td className="table-cell">
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {format(new Date(run.created_at), 'MMM d, yyyy HH:mm')}
-                    </td>
-                    <td className="table-cell">
-                      <button className="text-primary-600 hover:text-primary-800 font-medium">
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary hover:text-primary/80 hover:bg-primary/10"
+                      >
                         View
-                      </button>
-                    </td>
-                  </tr>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Pagination */}
         {pagination && (
-          <div className="flex items-center justify-between px-6 py-4 border-t">
-            <div className="text-sm text-gray-600">
-              Page {page} of {Math.ceil(pagination.total / 20)}
+          <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+            <div className="text-sm text-muted-foreground">
+              Page <span className="font-medium">{page}</span> of{' '}
+              <span className="font-medium">{Math.ceil(pagination.total / 20)}</span>
             </div>
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="btn-secondary"
               >
                 Previous
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage(p => p + 1)}
                 disabled={page * 20 >= pagination.total}
-                className="btn-secondary"
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }
