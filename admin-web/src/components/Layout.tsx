@@ -1,5 +1,5 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/hooks/useAuth'
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { useAuthStore } from '@/hooks/useAuth';
 import { 
   LayoutDashboard, 
   Users, 
@@ -9,119 +9,213 @@ import {
   FileText,
   LogOut,
   Menu,
-  X
-} from 'lucide-react'
-import { useState } from 'react'
+  Search,
+  Command,
+  Zap,
+  ChevronRight
+} from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Users', href: '/users', icon: Users },
-  { name: 'Runs', href: '/runs', icon: Activity },
-  { name: 'Notifications', href: '/notifications', icon: Bell },
-  { name: 'Compliance', href: '/compliance', icon: Shield },
-  { name: 'Audit Logs', href: '/audit-logs', icon: FileText },
-]
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, badge: null },
+  { name: 'Users', href: '/users', icon: Users, badge: null },
+  { name: 'Runs', href: '/runs', icon: Activity, badge: 'Live' },
+  { name: 'Notifications', href: '/notifications', icon: Bell, badge: null },
+  { name: 'Compliance', href: '/compliance', icon: Shield, badge: null },
+  { name: 'Audit Logs', href: '/audit-logs', icon: FileText, badge: null },
+];
 
-export default function Layout({ children }: { children?: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+export default function Layout() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+    logout();
+    navigate('/login');
+  };
+
+  const getInitials = (name: string) => {
+    return name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'A';
+  };
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(href);
+  };
+
+  const NavContent = () => (
+    <>
+      {/* Logo */}
+      <div className="flex items-center h-16 px-6 border-b border-border/50">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/30">
+            <Zap className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <span className="text-xl font-bold font-display tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              INVADE
+            </span>
+            <span className="block text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+              Admin
+            </span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+        <div className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          Main Menu
+        </div>
+        {navigation.map((item) => (
+          <Link
+            key={item.name}
+            to={item.href}
+            onClick={() => setMobileOpen(false)}
+            className={`
+              group flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+              ${isActive(item.href)
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              }
+            `}
+          >
+            <div className="flex items-center gap-3">
+              <item.icon className={`
+                w-5 h-5 transition-colors
+                ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}
+              `} />
+              <span>{item.name}</span>
+            </div>
+            {item.badge && (
+              <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-success/10 text-success border-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-success mr-1 animate-pulse" />
+                {item.badge}
+              </Badge>
+            )}
+          </Link>
+        ))}
+
+        <Separator className="my-4" />
+
+        <div className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          Quick Actions
+        </div>
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
+        >
+          <Command className="w-4 h-4" />
+          <span className="text-sm">Command Palette</span>
+          <kbd className="ml-auto text-[10px] bg-muted px-1.5 py-0.5 rounded">⌘K</kbd>
+        </Button>
+      </nav>
+
+      {/* User Section */}
+      <div className="p-4 border-t border-border/50">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start p-2 h-auto hover:bg-muted">
+              <Avatar className="w-9 h-9 border-2 border-primary/20">
+                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20 text-primary font-semibold text-sm">
+                  {getInitials(user?.name || user?.email || 'A')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-3 text-left flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{user?.name || user?.email}</p>
+                <p className="text-xs text-muted-foreground capitalize flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                  {user?.role}
+                </p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="text-error focus:text-error">
+              <LogOut className="w-4 h-4 mr-2" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar */}
-      <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? '' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-900/80" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 w-64 bg-white">
-          <div className="flex items-center justify-between p-4 border-b">
-            <span className="text-xl font-bold text-primary-600">INVADE Admin</span>
-            <button onClick={() => setSidebarOpen(false)}>
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          <nav className="p-4 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  location.pathname === item.href
-                    ? 'bg-primary-50 text-primary-600'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <item.icon className="w-5 h-5 mr-3" />
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 border-r border-border/50 bg-card/50 backdrop-blur-sm">
+        <NavContent />
+      </aside>
 
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-1 bg-white border-r">
-          <div className="flex items-center h-16 px-6 border-b">
-            <span className="text-xl font-bold text-primary-600">INVADE Admin</span>
-          </div>
-          <nav className="flex-1 px-4 py-4 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  location.pathname === item.href
-                    ? 'bg-primary-50 text-primary-600'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className="w-5 h-5 mr-3" />
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-          <div className="p-4 border-t">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                <span className="text-sm font-medium text-primary-600">
-                  {user?.name?.charAt(0) || user?.email?.charAt(0)}
-                </span>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium">{user?.name || user?.email}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+      {/* Mobile Sidebar */}
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetTrigger asChild className="lg:hidden">
+          <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
+            <Menu className="w-5 h-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-72 p-0">
+          <NavContent />
+        </SheetContent>
+      </Sheet>
+
+      {/* Main Content Area */}
+      <div className="lg:pl-72">
+        {/* Header */}
+        <header className="sticky top-0 z-30 h-16 border-b border-border/50 bg-background/80 backdrop-blur-md">
+          <div className="flex items-center justify-between h-full px-4 lg:px-8">
+            {/* Search & Breadcrumb */}
+            <div className="flex items-center gap-4">
+              <div className="relative hidden md:block">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-64 pl-9 pr-4 py-2 bg-muted/50 border border-border rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                />
+                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground hidden lg:block">
+                  ⌘K
+                </kbd>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-4 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Main content */}
-      <div className="lg:pl-64">
-        <div className="sticky top-0 z-40 flex items-center h-16 px-4 bg-white border-b lg:hidden">
-          <button onClick={() => setSidebarOpen(true)} className="mr-4">
-            <Menu className="w-6 h-6" />
-          </button>
-          <span className="text-lg font-semibold">INVADE Admin</span>
-        </div>
-        <main className="p-6">
-          {children}
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="p-4 lg:p-8">
+          <Outlet />
         </main>
       </div>
     </div>
-  )
+  );
 }
