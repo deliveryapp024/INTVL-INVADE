@@ -1,11 +1,21 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface User {
+export interface User {
   id: string
   email: string
   name: string
+  username?: string
   role: 'user' | 'support' | 'admin' | 'superadmin'
+  status?: 'active' | 'suspended' | 'pii_anonymized'
+  avatar_url?: string | null
+  level?: number
+  total_runs?: number
+  total_distance?: number
+  streak_days?: number
+  coins?: number
+  created_at?: string
+  updated_at?: string
 }
 
 interface AuthState {

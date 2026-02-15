@@ -9,6 +9,8 @@ import RunsPage from '@/pages/Runs';
 import NotificationsPage from '@/pages/Notifications';
 import CompliancePage from '@/pages/Compliance';
 import AuditLogsPage from '@/pages/AuditLogs';
+import ProfilePage from '@/pages/Profile';
+import SettingsPage from '@/pages/Settings';
 import { Toaster } from 'react-hot-toast';
 import './index.css';
 
@@ -34,6 +36,8 @@ function App() {
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="compliance" element={<CompliancePage />} />
             <Route path="audit-logs" element={<AuditLogsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
