@@ -42,7 +42,7 @@ const actionConfig: Record<string, { icon: React.ReactNode; color: string; label
 
 export default function AuditLogsPage() {
   const [search, setSearch] = useState('')
-  const [actionFilter, setActionFilter] = useState('')
+  const [actionFilter, setActionFilter] = useState('all')
   const [page, setPage] = useState(1)
 
   const { data, isLoading } = useQuery({
@@ -155,7 +155,7 @@ export default function AuditLogsPage() {
                 <SelectValue placeholder="All Actions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Actions</SelectItem>
+                <SelectItem value="all">All Actions</SelectItem>
                 <SelectItem value="USER_VIEW">View User</SelectItem>
                 <SelectItem value="USER_UPDATE">Update User</SelectItem>
                 <SelectItem value="USER_SUSPEND">Suspend User</SelectItem>
