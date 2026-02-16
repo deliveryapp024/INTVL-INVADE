@@ -27,8 +27,9 @@
     
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.invade.app",
+      "bundleIdentifier": "com.intvlinvade.app",
       "buildNumber": "1.0.0",
+      "googleServicesFile": "./ios/GoogleService-Info.plist",
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch", "remote-notification"],
         "NSLocationWhenInUseUsageDescription": "INVADE needs your location to track your runs and capture zones on the map.",
@@ -37,7 +38,19 @@
         "NSMotionUsageDescription": "INVADE uses motion data to track your running activity.",
         "NSCameraUsageDescription": "INVADE uses the camera to capture photos of your runs to share.",
         "NSPhotoLibraryUsageDescription": "INVADE accesses your photos to let you share run memories.",
-        "NSUserNotificationUsageDescription": "INVADE sends you notifications about your runs, achievements, and friend activity."
+        "NSUserNotificationUsageDescription": "INVADE sends you notifications about your runs, achievements, and friend activity.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.914047828656-c34ea9435275cead097175"
+            ]
+          },
+          {
+            "CFBundleURLSchemes": [
+              "com.intvlinvade.app"
+            ]
+          }
+        ]
       },
       "associatedDomains": [
         "applinks:invadetheland.app",
@@ -46,8 +59,9 @@
     },
     
     "android": {
-      "package": "com.invade.app",
+      "package": "com.intvlinvade.app",
       "versionCode": 1,
+      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#6C5CE7"
@@ -76,6 +90,11 @@
               "scheme": "https",
               "host": "www.invadetheland.app",
               "pathPrefix": "/"
+            },
+            {
+              "scheme": "com.intvlinvade.app",
+              "host": "auth",
+              "pathPrefix": "/callback"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
