@@ -129,6 +129,17 @@ export default function DashboardPage() {
     refetchInterval: 30000, // 30 seconds
   });
 
+  const { data: activityData, isLoading: isActivityLoading } = useQuery({
+    queryKey: ['dashboard-activity'],
+    queryFn: async () => {
+      const response = await dashboardApi.getActivity();
+      return response.data;
+    },
+    refetchInterval: 30000,
+  });
+
+  const activities = activityData?.data || [];
+
   const metrics = [
     { 
       title: 'Total Users', 
@@ -278,20 +289,48 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary" />
+            {isActivityLoading ? (
+              // Loading skeletons
+              [1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-4 p-3">
+                  <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-muted rounded animate-pulse w-1/3" />
+                    <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">New user registered</p>
-                  <p className="text-xs text-muted-foreground">user{i}@example.com • {i} minutes ago</p>
-                </div>
-                <Badge variant="secondary" className="bg-success/10 text-success border-0">
-                  Active
-                </Badge>
+              ))
+            ) : activities.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <Activity className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No recent activity</p>
               </div>
-            ))}
+            ) : (
+              activities.map((activity: any) => (
+                <div key={activity.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
+                    {activity.actor_avatar_url ? (
+                      <img 
+                        src={activity.actor_avatar_url} 
+                        alt={activity.actor_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Users className="w-5 h-5 text-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{activity.action_description}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {activity.actor_email} • {new Date(activity.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                  <Badge variant="secondary" className="bg-success/10 text-success border-0 shrink-0">
+                    {activity.action_type}
+                  </Badge>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>

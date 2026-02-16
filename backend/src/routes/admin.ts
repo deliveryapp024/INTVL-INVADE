@@ -6,6 +6,7 @@ import { asyncHandler } from '../middleware/errorHandler'
 import { memoryCache } from '../middleware/cache'
 import { metrics } from '../middleware/metrics'
 import { auditService } from '../services/AuditService'
+import { activityService } from '../services/ActivityService'
 import { AuthenticatedRequest } from '../types'
 
 const router = Router()
@@ -619,6 +620,34 @@ router.patch('/features/:name', requireAdmin, asyncHandler(async (req: Authentic
       message: `Feature ${name} ${enabled ? 'enabled' : 'disabled'}`,
       note: 'In production, persist this to database'
     }
+  })
+}))
+
+// ============================================
+// ACTIVITY FEED (Admin+)
+// ============================================
+
+// Get recent activity feed
+router.get('/activity', requireStaff, asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { limit = 10 } = req.query
+
+  const activities = await activityService.getRecentActivity(parseInt(limit as string))
+
+  res.json({
+    success: true,
+    data: activities
+  })
+}))
+
+// Get activity stats
+router.get('/activity/stats', requireAdmin, asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { days = 7 } = req.query
+
+  const stats = await activityService.getActivityStats(parseInt(days as string))
+
+  res.json({
+    success: true,
+    data: stats
   })
 }))
 

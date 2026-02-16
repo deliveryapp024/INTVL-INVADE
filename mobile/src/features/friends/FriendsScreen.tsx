@@ -21,36 +21,29 @@ import {
   FadeIn,
 } from '../../components/animations';
 
-// Mock friends data
-const MOCK_FRIENDS = [
-  { id: '1', name: 'Rahul M.', username: '@rahulruns', zones: 45, isRunning: true },
-  { id: '2', name: 'Priya K.', username: '@priyafit', zones: 38, isRunning: false },
-  { id: '3', name: 'Arjun S.', username: '@arjunzone', zones: 32, isRunning: true },
-  { id: '4', name: 'Neha P.', username: '@nehaactive', zones: 28, isRunning: false },
-];
+interface Friend {
+  id: string;
+  name: string;
+  username: string;
+  zones: number;
+  isRunning: boolean;
+}
 
-const MOCK_SQUADS = [
-  { 
-    id: '1', 
-    name: 'Koramangala Runners', 
-    members: 12, 
-    totalZones: 234,
-    rank: 3,
-  },
-  { 
-    id: '2', 
-    name: 'Indiranagar Squad', 
-    members: 8, 
-    totalZones: 189,
-    rank: 5,
-  },
-];
+interface Squad {
+  id: string;
+  name: string;
+  members: number;
+  totalZones: number;
+  rank: number;
+}
 
 export default function FriendsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<'friends' | 'squads'>('friends');
   const [searchQuery, setSearchQuery] = useState('');
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [squads, setSquads] = useState<Squad[]>([]);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -75,7 +68,7 @@ export default function FriendsScreen() {
           onPress={() => setActiveTab('friends')}
         >
           <Text style={[styles.tabText, activeTab === 'friends' && styles.activeTabText]}>
-            Friends ({MOCK_FRIENDS.length})
+            Friends ({friends.length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -83,7 +76,7 @@ export default function FriendsScreen() {
           onPress={() => setActiveTab('squads')}
         >
           <Text style={[styles.tabText, activeTab === 'squads' && styles.activeTabText]}>
-            Squads ({MOCK_SQUADS.length})
+            Squads ({squads.length})
           </Text>
         </TouchableOpacity>
       </View>
@@ -108,7 +101,7 @@ export default function FriendsScreen() {
           <View style={styles.list}>
             {/* Friends Online Section */}
             <Text style={styles.sectionTitle}>Running Now</Text>
-            {MOCK_FRIENDS.filter(f => f.isRunning).map(friend => (
+            {friends.filter((f: Friend) => f.isRunning).map((friend: Friend) => (
               <Card key={friend.id} style={styles.friendCard} elevation="small">
                 <View style={styles.friendAvatar}>
                   <Text style={styles.friendAvatarText}>{friend.name.charAt(0)}</Text>
@@ -129,7 +122,7 @@ export default function FriendsScreen() {
 
             {/* All Friends */}
             <Text style={[styles.sectionTitle, { marginTop: Spacing.lg }]}>All Friends</Text>
-            {MOCK_FRIENDS.filter(f => !f.isRunning).map(friend => (
+            {friends.filter((f: Friend) => !f.isRunning).map((friend: Friend) => (
               <Card key={friend.id} style={styles.friendCard} elevation="small">
                 <View style={styles.friendAvatar}>
                   <Text style={styles.friendAvatarText}>{friend.name.charAt(0)}</Text>
@@ -156,7 +149,7 @@ export default function FriendsScreen() {
 
             {/* Squads List */}
             <Text style={[styles.sectionTitle, { marginTop: Spacing.lg }]}>Your Squads</Text>
-            {MOCK_SQUADS.map(squad => (
+            {squads.map((squad: Squad) => (
               <Card key={squad.id} style={styles.squadCard} elevation="medium">
                 <View style={styles.squadHeader}>
                   <View style={styles.squadAvatar}>

@@ -1,9 +1,5 @@
 // API Configuration
-// For development with local backend
-const DEV_API_URL = 'http://192.168.1.104:3001/api';
-
-// Fallback mock mode for when backend is not available
-export const API_BASE_URL = DEV_API_URL;
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://intvl-invade-backend.onrender.com/api/v1';
 
 // Helper to handle network errors gracefully
 export async function fetchWithFallback<T>(

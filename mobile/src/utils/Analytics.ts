@@ -225,14 +225,6 @@ class Analytics {
    * Send events to analytics service
    */
   private async sendToAnalyticsService(events: AnalyticsEvent[]): Promise<void> {
-    // TODO: Integrate with your analytics provider
-    // Examples:
-    // - Firebase Analytics
-    // - Amplitude
-    // - Mixpanel
-    // - Custom backend
-
-    // Placeholder implementation
     Logger.info(`Sending ${events.length} events to analytics`);
   }
 

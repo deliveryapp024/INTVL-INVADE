@@ -34,43 +34,43 @@ import {
   Animated,
 } from '../../components/animations';
 
-// Mock user data
-const USER = {
-  id: '1',
-  name: 'Champion Runner',
-  username: '@champion_runner',
-  avatar: null,
-  level: 12,
-  xp: 3450,
-  xpToNext: 5000,
-  totalRuns: 47,
-  totalDistance: 345.2, // km
-  totalZones: 23,
-  totalTime: 182, // hours
-  badges: [
-    { id: '1', name: 'Early Bird', icon: 'time', color: '#F39C12', unlocked: true },
-    { id: '2', name: 'Zone Master', icon: 'flag', color: '#6C5CE7', unlocked: true },
-    { id: '3', name: 'Marathoner', icon: 'run-fast', color: '#00B894', unlocked: true },
-    { id: '4', name: 'Speed Demon', icon: 'flash', color: '#E17055', unlocked: false },
-    { id: '5', name: 'Social Star', icon: 'people', color: '#0984E3', unlocked: true },
-    { id: '6', name: 'Century Club', icon: 'trophy', color: '#FDCB6E', unlocked: false },
-  ],
-  achievements: [
-    { id: '1', title: 'First Capture', description: 'Capture your first zone', completed: true, date: '2024-01-15' },
-    { id: '2', title: 'Zone Streak', description: 'Capture 5 zones in a row', completed: true, date: '2024-01-20' },
-    { id: '3', title: 'Speed King', description: 'Run under 4 min/km pace', completed: false },
-    { id: '4', title: 'Marathon Ready', description: 'Run 42km total distance', completed: true, date: '2024-02-01' },
-  ],
+// User data interface
+interface UserProfile {
+  id: string;
+  name: string;
+  username: string;
+  avatar: string | null;
+  level: number;
+  xp: number;
+  xpToNext: number;
+  totalRuns: number;
+  totalDistance: number;
+  totalZones: number;
+  totalTime: number;
+  badges: Array<{
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+    unlocked: boolean;
+  }>;
+  achievements: Array<{
+    id: string;
+    title: string;
+    description: string;
+    completed: boolean;
+    date?: string;
+  }>;
   stats: {
-    thisWeek: { distance: 23.5, time: 145, zones: 4 },
-    thisMonth: { distance: 98.3, time: 620, zones: 12 },
-    allTime: { distance: 345.2, time: 182 * 60, zones: 23 },
-  },
+    thisWeek: { distance: number; time: number; zones: number };
+    thisMonth: { distance: number; time: number; zones: number };
+    allTime: { distance: number; time: number; zones: number };
+  };
   streaks: {
-    current: 7,
-    best: 14,
-  },
-};
+    current: number;
+    best: number;
+  };
+}
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -78,6 +78,7 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<'stats' | 'badges' | 'achievements'>('stats');
   const [autoStart, setAutoStart] = useState(false);
   const [voiceCoach, setVoiceCoach] = useState(true);
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   const handleShareProfile = async () => {
     await FeedbackService.buttonPress('medium');
@@ -109,7 +110,15 @@ export default function ProfileScreen() {
     );
   };
 
-  const progress = (USER.xp / USER.xpToNext) * 100;
+  if (!user) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: Colors.text }}>Loading profile...</Text>
+      </View>
+    );
+  }
+
+  const progress = (user.xp / user.xpToNext) * 100;
 
   return (
     <View style={styles.container}>
@@ -150,18 +159,18 @@ export default function ProfileScreen() {
                 <Icon name="person" size={40} color={Colors.primary} />
               </View>
               <View style={styles.levelBadge}>
-                <Text style={styles.levelText}>LVL {USER.level}</Text>
+                <Text style={styles.levelText}>LVL {user.level}</Text>
               </View>
             </View>
 
-            <Text style={styles.userName}>{USER.name}</Text>
-            <Text style={styles.userHandle}>{USER.username}</Text>
+            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.userHandle}>{user.username}</Text>
 
             {/* XP Progress */}
             <View style={styles.xpContainer}>
               <View style={styles.xpHeader}>
                 <Text style={styles.xpLabel}>XP Progress</Text>
-                <Text style={styles.xpValue}>{USER.xp} / {USER.xpToNext}</Text>
+                <Text style={styles.xpValue}>{user.xp} / {user.xpToNext}</Text>
               </View>
               <AnimatedProgressBar
                 progress={progress}
@@ -177,8 +186,8 @@ export default function ProfileScreen() {
             {/* Streak Badge */}
             <View style={styles.streakContainer}>
               <Icon name="flame" size={20} color={Colors.warning} />
-              <Text style={styles.streakText}>{USER.streaks.current} Day Streak</Text>
-              <Text style={styles.bestStreak}>(Best: {USER.streaks.best})</Text>
+              <Text style={styles.streakText}>{user.streaks.current} Day Streak</Text>
+              <Text style={styles.bestStreak}>(Best: {user.streaks.best})</Text>
             </View>
           </Card>
         </ScaleIn>
@@ -188,22 +197,22 @@ export default function ProfileScreen() {
           <View style={styles.statsGrid}>
             <Card style={styles.statCard}>
               <Icon name="run-fast" size={24} color={Colors.primary} />
-              <Text style={styles.statValue}>{USER.totalRuns}</Text>
+              <Text style={styles.statValue}>{user.totalRuns}</Text>
               <Text style={styles.statLabel}>Runs</Text>
             </Card>
             <Card style={styles.statCard}>
               <Icon name="map" size={24} color={Colors.secondary} />
-              <Text style={styles.statValue}>{USER.totalDistance.toFixed(1)}</Text>
+              <Text style={styles.statValue}>{user.totalDistance.toFixed(1)}</Text>
               <Text style={styles.statLabel}>Km</Text>
             </Card>
             <Card style={styles.statCard}>
               <Icon name="flag" size={24} color={Colors.success} />
-              <Text style={styles.statValue}>{USER.totalZones}</Text>
+              <Text style={styles.statValue}>{user.totalZones}</Text>
               <Text style={styles.statLabel}>Zones</Text>
             </Card>
             <Card style={styles.statCard}>
               <Icon name="time" size={24} color={Colors.warning} />
-              <Text style={styles.statValue}>{USER.totalTime}h</Text>
+              <Text style={styles.statValue}>{user.totalTime}h</Text>
               <Text style={styles.statLabel}>Time</Text>
             </Card>
           </View>
@@ -237,15 +246,15 @@ export default function ProfileScreen() {
                 <Text style={styles.sectionTitle}>This Week</Text>
                 <View style={styles.statRow}>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{USER.stats.thisWeek.distance} km</Text>
+                    <Text style={styles.statItemValue}>{user.stats.thisWeek.distance} km</Text>
                     <Text style={styles.statItemLabel}>Distance</Text>
                   </View>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{USER.stats.thisWeek.time} min</Text>
+                    <Text style={styles.statItemValue}>{user.stats.thisWeek.time} min</Text>
                     <Text style={styles.statItemLabel}>Time</Text>
                   </View>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{USER.stats.thisWeek.zones}</Text>
+                    <Text style={styles.statItemValue}>{user.stats.thisWeek.zones}</Text>
                     <Text style={styles.statItemLabel}>Zones</Text>
                   </View>
                 </View>
@@ -255,15 +264,15 @@ export default function ProfileScreen() {
                 <Text style={styles.sectionTitle}>This Month</Text>
                 <View style={styles.statRow}>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{USER.stats.thisMonth.distance} km</Text>
+                    <Text style={styles.statItemValue}>{user.stats.thisMonth.distance} km</Text>
                     <Text style={styles.statItemLabel}>Distance</Text>
                   </View>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{Math.floor(USER.stats.thisMonth.time / 60)}h</Text>
+                    <Text style={styles.statItemValue}>{Math.floor(user.stats.thisMonth.time / 60)}h</Text>
                     <Text style={styles.statItemLabel}>Time</Text>
                   </View>
                   <View style={styles.statItem}>
-                    <Text style={styles.statItemValue}>{USER.stats.thisMonth.zones}</Text>
+                    <Text style={styles.statItemValue}>{user.stats.thisMonth.zones}</Text>
                     <Text style={styles.statItemLabel}>Zones</Text>
                   </View>
                 </View>
@@ -273,7 +282,7 @@ export default function ProfileScreen() {
 
           {activeTab === 'badges' && (
             <View style={styles.badgesGrid}>
-              {USER.badges.map((badge, index) => (
+              {user.badges.map((badge, index) => (
                 <ScaleIn key={badge.id} delay={index * 50}>
                   <Badge {...badge} />
                 </ScaleIn>
@@ -283,7 +292,7 @@ export default function ProfileScreen() {
 
           {activeTab === 'achievements' && (
             <View>
-              {USER.achievements.map((achievement, index) => (
+              {user.achievements.map((achievement, index) => (
                 <ScaleIn key={achievement.id} delay={index * 100}>
                   <Card style={[styles.achievementCard, ...(achievement.completed ? [] : [styles.achievementLocked])]}>
                     <View style={styles.achievementLeft}>

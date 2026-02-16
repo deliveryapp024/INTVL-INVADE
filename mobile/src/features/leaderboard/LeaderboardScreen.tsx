@@ -14,13 +14,11 @@ import { Typography } from '../../theme/Typography';
 import { Spacing, Layout } from '../../theme/Spacing';
 import { Card } from '../../components/Card';
 import { Icon } from '../../components/Icon';
-import { API_BASE_URL, fetchWithFallback } from '../../services/api';
+import { fetchWithFallback, API_BASE_URL } from '../../services/api';
 import {
   FadeIn,
   BounceIn,
 } from '../../components/animations';
-
-const USER_ID = 'test-user-id';
 
 type LeaderboardTab = 'weekly' | 'allTime' | 'local';
 
@@ -33,20 +31,6 @@ interface LeaderboardEntry {
   totalDistance: number;
   isCurrentUser?: boolean;
 }
-
-// Mock data for when backend is unavailable
-const MOCK_LEADERBOARD: LeaderboardEntry[] = [
-  { rank: 1, userId: 'user1', name: 'Vikram R.', zonesCaptured: 47, totalDistance: 125000 },
-  { rank: 2, userId: 'user2', name: 'Priya M.', zonesCaptured: 42, totalDistance: 108000 },
-  { rank: 3, userId: 'user3', name: 'Arjun K.', zonesCaptured: 38, totalDistance: 95000 },
-  { rank: 4, userId: 'user4', name: 'Neha S.', zonesCaptured: 35, totalDistance: 89000 },
-  { rank: 5, userId: USER_ID, name: 'You', zonesCaptured: 12, totalDistance: 45000, isCurrentUser: true },
-  { rank: 6, userId: 'user5', name: 'Rahul P.', zonesCaptured: 11, totalDistance: 42000 },
-  { rank: 7, userId: 'user6', name: 'Ananya G.', zonesCaptured: 9, totalDistance: 38000 },
-  { rank: 8, userId: 'user7', name: 'Karan B.', zonesCaptured: 8, totalDistance: 35000 },
-  { rank: 9, userId: 'user8', name: 'Divya T.', zonesCaptured: 6, totalDistance: 28000 },
-  { rank: 10, userId: 'user9', name: 'Rohan M.', zonesCaptured: 4, totalDistance: 22000 },
-];
 
 const TABS: { key: LeaderboardTab; label: string }[] = [
   { key: 'weekly', label: 'This Week' },
@@ -202,7 +186,7 @@ export default function LeaderboardScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<LeaderboardTab>('weekly');
-  const [entries, setEntries] = useState<LeaderboardEntry[]>(MOCK_LEADERBOARD);
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -212,9 +196,7 @@ export default function LeaderboardScreen() {
       status: string; 
       data: { entries: LeaderboardEntry[] } 
     }>(
-      `${API_BASE_URL}/leaderboard/${activeTab}?userId=${USER_ID}`,
-      {},
-      { status: 'success', data: { entries: MOCK_LEADERBOARD } }
+      `${API_BASE_URL}/leaderboard/${activeTab}`
     );
     
     if (data?.data?.entries) {

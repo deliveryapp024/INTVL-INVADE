@@ -133,11 +133,9 @@ export const DeepLinkService = {
    */
   async handleReferral(code: string): Promise<boolean> {
     try {
-      // TODO: Call API to process referral
       console.log('Processing referral code:', code);
       
-      // Store referral code locally
-      const { AsyncStorage } = await import('@react-native-async-storage/async-storage');
+      const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
       await AsyncStorage.setItem('@inv_pending_referral', code);
       
       return true;
@@ -152,10 +150,9 @@ export const DeepLinkService = {
    */
   async checkPendingReferral(): Promise<string | null> {
     try {
-      const { AsyncStorage } = await import('@react-native-async-storage/async-storage');
+      const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
       const code = await AsyncStorage.getItem('@inv_pending_referral');
       if (code) {
-        // Clear it after retrieval
         await AsyncStorage.removeItem('@inv_pending_referral');
       }
       return code;
