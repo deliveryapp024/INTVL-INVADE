@@ -10,6 +10,7 @@ import config from './config'
 import { requestLogger } from './utils/logger'
 import routes from './routes'
 import healthRoutes from './routes/health'
+import debugRoutes from './routes/debug'
 import { errorHandler, notFoundHandler } from './middleware/errorHandler'
 import { requestId } from './middleware/requestId'
 import { metricsMiddleware, metricsEndpoint } from './middleware/metrics'
@@ -160,6 +161,9 @@ app.get('/api/openapi.json', cache(300), (req, res) => {
 
 // Health checks
 app.use('/health', healthRoutes)
+
+// Debug endpoints
+app.use('/debug', debugRoutes)
 
 // Metrics endpoint (for monitoring)
 app.get('/metrics', metricsEndpoint)
