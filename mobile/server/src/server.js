@@ -14,7 +14,7 @@ const supabaseUrl = process.env.SUPABASE_URL || 'https://dawowfbfqfygjkugpdwq.su
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseKey) {
-  console.error('❌ ERROR: SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY is required');
+  console.error('ERROR: SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY is required');
   console.error('Please set the environment variable in Render Dashboard');
   process.exit(1);
 }
@@ -42,24 +42,7 @@ app.get('/health', (req, res) => {
 // Get all users
 app.get('/api/users', async (req, res) => {
   try {
-    console.log('📊 [API] GET /api/users - Fetching users...');
-    console.log('📍 Request from:', req.headers.origin || 'unknown');
-    console.log('🔑 Auth header:', req.headers.authorization ? 'Present' : 'Missing');
-    
-    // Test Supabase connection first
-    const { data: testData, error: testError } = await supabase
-      .from('users')
-      .select('count', { count: 'exact', head: true });
-    
-    if (testError) {
-      console.error('❌ Supabase connection test failed:', testError);
-      return res.status(500).json({ 
-        error: 'Database connection failed',
-        details: testError.message 
-      });
-    }
-    
-    console.log('✅ Supabase connected, fetching users...');
+    console.log('[API] GET /api/users - Fetching users...');
     
     const { data: users, error } = await supabase
       .from('users')
@@ -74,12 +57,7 @@ app.get('/api/users', async (req, res) => {
       });
     }
 
-    console.log(`✅ Found ${users?.length || 0} users`);
-    console.log('📋 First user:', users[0] ? { 
-      id: users[0].id, 
-      email: users[0].email,
-      username: users[0].username 
-    } : 'None');
+    console.log(`Found ${users?.length || 0} users`);
     
     // Transform data for admin dashboard
     const formattedUsers = users.map(user => ({
@@ -97,7 +75,6 @@ app.get('/api/users', async (req, res) => {
       streak_days: user.streak_days || 0
     }));
 
-    console.log(`📤 Sending ${formattedUsers.length} formatted users to client`);
     res.json(formattedUsers);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -214,10 +191,9 @@ app.get('/api/test-connection', async (req, res) => {
   }
 });
 
-// Debug endpoint for admin panel
+// Debug endpoint
 app.get('/api/debug', async (req, res) => {
   try {
-    // Check Supabase connection
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -255,25 +231,26 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`
-╔══════════════════════════════════════════╗
-║                                          ║
-║     🚀 INVADE Backend Server             ║
-║                                          ║
-║     Running on port ${PORT}                 ║
-║                                          ║
-╚══════════════════════════════════════════╝
-  `);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Supabase URL: ${supabaseUrl}`);
-  console.log(`\n📍 Available endpoints:`);
-  console.log(`   • GET  /health           - Health check`);
-  console.log(`   • GET  /api/test-connection - Test Supabase connection`);
-  console.log(`   • GET  /api/users        - Get all users`);
-  console.log(`   • GET  /api/users/:id    - Get user by ID`);
-  console.log(`   • GET  /api/runs         - Get all runs`);
-  console.log(`   • GET  /api/stats        - Get dashboard stats`);
-  console.log(`\n✨ Server is ready!\n`);
+  console.log('========================================');
+  console.log('');
+  console.log('    INVADE Backend Server');
+  console.log('');
+  console.log(`    Running on port ${PORT}`);
+  console.log('');
+  console.log('========================================');
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Supabase URL: ${supabaseUrl}`);
+  console.log('');
+  console.log('Available endpoints:');
+  console.log('  GET  /health           - Health check');
+  console.log('  GET  /api/test-connection - Test Supabase connection');
+  console.log('  GET  /api/users        - Get all users');
+  console.log('  GET  /api/users/:id    - Get user by ID');
+  console.log('  GET  /api/runs         - Get all runs');
+  console.log('  GET  /api/stats        - Get dashboard stats');
+  console.log('  GET  /api/debug        - Debug info');
+  console.log('');
+  console.log('Server is ready!');
 });
 
 module.exports = app;
