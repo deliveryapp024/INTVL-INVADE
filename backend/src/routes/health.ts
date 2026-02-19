@@ -123,6 +123,39 @@ router.get('/live', (req, res) => {
   res.json({ alive: true })
 })
 
+// Public debug endpoint - returns user count (no auth required)
+router.get('/debug', async (req, res) => {
+  try {
+    const { data: users, error } = await supabaseAdmin
+      .from('users')
+      .select('id, email, username, name, role, created_at')
+      .limit(10)
+    
+    const { count: totalCount, error: countError } = await supabaseAdmin
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+
+    if (error || countError) {
+      return res.status(500).json({
+        success: false,
+        error: error?.message || countError?.message
+      })
+    }
+
+    res.json({
+      success: true,
+      totalUsers: totalCount,
+      sampleUsers: users,
+      timestamp: new Date().toISOString()
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: (error as Error).message
+    })
+  }
+})
+
 async function checkDatabase() {
   const start = Date.now()
   try {
