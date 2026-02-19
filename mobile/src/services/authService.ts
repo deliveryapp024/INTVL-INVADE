@@ -122,14 +122,27 @@ class AuthService {
   // Sign in with Google
   async signInWithGoogle(): Promise<AuthResponse> {
     try {
+      // Use Supabase's hosted redirect which handles mobile deep linking
+      const redirectUrl = 'https://dawowfbfqfygjkugpdwq.supabase.co/auth/v1/callback'
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'com.intvlinvade.app://auth/callback',
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: true, // We'll handle the redirect manually
         },
       })
 
       if (error) throw error
+      
+      // Open the OAuth URL in the browser
+      if (data?.url) {
+        console.log('Opening OAuth URL:', data.url)
+        const { Linking } = await import('react-native')
+        await Linking.openURL(data.url)
+      } else {
+        throw new Error('No OAuth URL returned')
+      }
 
       // The OAuth flow will redirect back to the app
       // The actual user data will be handled by onAuthStateChange
@@ -150,12 +163,27 @@ class AuthService {
   // Sign in with Apple
   async signInWithApple(): Promise<AuthResponse> {
     try {
+      // Use Supabase's hosted redirect which handles mobile deep linking
+      const redirectUrl = 'https://dawowfbfqfygjkugpdwq.supabase.co/auth/v1/callback'
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
-          redirectTo: 'com.intvlinvade.app://auth/callback',
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: true,
         },
       })
+
+      if (error) throw error
+      
+      // Open the OAuth URL in the browser
+      if (data?.url) {
+        console.log('Opening Apple OAuth URL:', data.url)
+        const { Linking } = await import('react-native')
+        await Linking.openURL(data.url)
+      } else {
+        throw new Error('No OAuth URL returned')
+      }
 
       if (error) throw error
 
@@ -274,14 +302,53 @@ class AuthService {
   async getCurrentUser(): Promise<{ user: User | null; error?: Error }> {
     try {
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
+      
+      // No session - user is not logged in (this is normal, not an error)
+      if (authError?.message?.includes('Auth session missing')) {
+        return { user: null }
+      }
+      
       if (authError) throw authError
       if (!authUser) return { user: null }
 
+      // Try to get user profile
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('*')
         .eq('id', authUser.id)
         .single()
+
+      // If profile doesn't exist, create it from auth data
+      if (userError && userError.code === 'PGRST116') {
+        console.log('Profile not found, creating from auth data...')
+        
+        // Create profile from auth user data
+        const { data: newUser, error: createError } = await supabase
+          .from('users')
+          .insert({
+            id: authUser.id,
+            email: authUser.email,
+            name: authUser.user_metadata?.full_name || authUser.user_metadata?.name || '',
+            username: this.generateUsername(authUser.email),
+            avatar_url: authUser.user_metadata?.avatar_url || null,
+            total_distance: 0,
+            total_runs: 0,
+            total_duration: 0,
+            streak_days: 0,
+            level: 1,
+            coins: 0,
+            is_verified: true,
+          })
+          .select()
+          .single()
+
+        if (createError) {
+          console.error('Failed to create profile:', createError)
+          throw createError
+        }
+
+        return { user: newUser }
+      }
 
       if (userError) throw userError
 

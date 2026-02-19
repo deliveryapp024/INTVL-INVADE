@@ -21,6 +21,7 @@ import { Button } from '../../src/components/Button';
 import { Icon } from '../../src/components/Icon';
 import { useAuth } from '../../src/context/AuthContext';
 import { FeedbackService } from '../../src/services/FeedbackService';
+import authService from '../../src/services/authService';
 
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
@@ -63,16 +64,43 @@ export default function LoginScreen() {
     FeedbackService.buttonPress('medium');
 
     try {
+      console.log('Attempting login with:', email.trim());
       const { error } = await signIn({ email: email.trim(), password });
 
       if (error) {
-        Alert.alert('Login Failed', error.message || 'Invalid email or password');
+        console.error('Login error details:', error);
+        // Show more specific error message
+        let errorMessage = 'Invalid email or password';
+        let showSignupButton = false;
+        
+        if (error.message?.includes('Invalid login credentials')) {
+          errorMessage = 'We couldn\'t find an account with that email and password. Would you like to create a new account?';
+          showSignupButton = true;
+        } else if (error.message?.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and confirm your address before logging in.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        if (showSignupButton) {
+          Alert.alert(
+            'Account Not Found',
+            errorMessage,
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Sign Up', onPress: () => router.push('/auth/signup') }
+            ]
+          );
+        } else {
+          Alert.alert('Login Failed', errorMessage);
+        }
         FeedbackService.error();
       } else {
         FeedbackService.success();
         // Navigation will be handled by auth state change
       }
     } catch (error) {
+      console.error('Unexpected login error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
       FeedbackService.error();
     } finally {
@@ -82,8 +110,26 @@ export default function LoginScreen() {
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
     FeedbackService.buttonPress('medium');
-    // TODO: Implement social login
-    Alert.alert('Coming Soon', `${provider === 'google' ? 'Google' : 'Apple'} login will be available soon!`);
+    setIsLoading(true);
+    
+    try {
+      if (provider === 'google') {
+        const { error } = await authService.signInWithGoogle();
+        if (error) {
+          Alert.alert('Google Sign In Failed', error.message || 'Unable to sign in with Google. Please try again.');
+        }
+        // OAuth flow will redirect and handle session via deep link
+      } else {
+        const { error } = await authService.signInWithApple();
+        if (error) {
+          Alert.alert('Apple Sign In Failed', error.message || 'Unable to sign in with Apple. Please try again.');
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const navigateToSignup = () => {

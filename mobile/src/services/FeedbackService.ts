@@ -126,6 +126,23 @@ export const FeedbackService = {
   },
 
   /**
+   * Generic notification feedback
+   * Use for: Dynamic notification types
+   */
+  async notification(type: 'success' | 'error' | 'warning'): Promise<void> {
+    if (!hapticsEnabled) return;
+    try {
+      const notificationType = 
+        type === 'success' ? Haptics.NotificationFeedbackType.Success :
+        type === 'error' ? Haptics.NotificationFeedbackType.Error :
+        Haptics.NotificationFeedbackType.Warning;
+      await Haptics.notificationAsync(notificationType);
+    } catch {
+      // Ignore haptic errors
+    }
+  },
+
+  /**
    * Selection feedback
    * Use for: Picker selection, scrolling
    */

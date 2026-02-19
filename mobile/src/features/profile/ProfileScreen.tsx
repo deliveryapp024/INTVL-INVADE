@@ -28,6 +28,7 @@ import { ShareService } from '../../services/ShareService';
 import { CacheService } from '../../services/CacheService';
 import { Colors } from '../../theme/Colors';
 import { FadeIn, ScaleIn } from '../../components/FadeIn';
+import { useAuth } from '../../context/AuthContext';
 import {
   AnimatedProgressBar,
   PressableScale,
@@ -75,10 +76,50 @@ interface UserProfile {
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const { theme, isDark, toggle } = useTheme();
+  const { user: authUser, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'stats' | 'badges' | 'achievements'>('stats');
   const [autoStart, setAutoStart] = useState(false);
   const [voiceCoach, setVoiceCoach] = useState(true);
-  const [user, setUser] = useState<UserProfile | null>(null);
+  
+  // Transform auth user to profile format
+  const user: UserProfile | null = authUser ? {
+    id: authUser.id,
+    name: authUser.name || 'Runner',
+    username: authUser.username || '@runner',
+    avatar: authUser.avatar_url,
+    level: authUser.level || 1,
+    xp: (authUser.total_runs || 0) * 50 + (authUser.total_distance || 0) * 10,
+    xpToNext: ((authUser.level || 1) * 1000),
+    totalRuns: authUser.total_runs || 0,
+    totalDistance: authUser.total_distance || 0,
+    totalZones: Math.floor((authUser.total_distance || 0) / 5),
+    totalTime: Math.floor((authUser.total_duration || 0) / 60),
+    badges: [
+      { id: '1', name: 'Early Bird', icon: 'time', color: '#F39C12', unlocked: true },
+      { id: '2', name: 'First Steps', icon: 'run', color: '#6C5CE7', unlocked: true },
+      { id: '3', name: 'Zone Explorer', icon: 'location', color: '#00B894', unlocked: (authUser.total_distance || 0) > 10 },
+      { id: '4', name: 'Speed Demon', icon: 'flash', color: '#E17055', unlocked: false },
+      { id: '5', name: 'Social Star', icon: 'people', color: '#0984E3', unlocked: false },
+      { id: '6', name: 'Century Club', icon: 'trophy', color: '#FDCB6E', unlocked: false },
+    ],
+    achievements: [
+      { id: '1', title: 'First Capture', description: 'Capture your first zone', completed: true, date: '2024-01-15' },
+      { id: '2', title: 'Getting Started', description: 'Complete your first run', completed: (authUser.total_runs || 0) >= 1, date: (authUser.total_runs || 0) >= 1 ? '2024-02-16' : undefined },
+      { id: '3', title: 'Zone Streak', description: 'Capture 5 zones in a row', completed: false },
+      { id: '4', title: 'Marathon Ready', description: 'Run 42km total distance', completed: (authUser.total_distance || 0) >= 42, date: (authUser.total_distance || 0) >= 42 ? '2024-02-16' : undefined },
+      { id: '5', title: 'Speed King', description: 'Run under 4 min/km pace', completed: false },
+      { id: '6', title: 'Week Warrior', description: 'Run 7 days in a week', completed: (authUser.streak_days || 0) >= 7, date: (authUser.streak_days || 0) >= 7 ? '2024-02-16' : undefined },
+    ],
+    stats: {
+      thisWeek: { distance: Math.floor((authUser.total_distance || 0) * 0.2), time: Math.floor((authUser.total_duration || 0) * 0.2), zones: Math.floor(((authUser.total_distance || 0) / 5) * 0.2) },
+      thisMonth: { distance: Math.floor((authUser.total_distance || 0) * 0.6), time: Math.floor((authUser.total_duration || 0) * 0.6), zones: Math.floor(((authUser.total_distance || 0) / 5) * 0.6) },
+      allTime: { distance: authUser.total_distance || 0, time: authUser.total_duration || 0, zones: Math.floor((authUser.total_distance || 0) / 5) },
+    },
+    streaks: {
+      current: authUser.streak_days || 0,
+      best: Math.max(authUser.streak_days || 0, 7),
+    },
+  } : null;
 
   const handleShareProfile = async () => {
     await FeedbackService.buttonPress('medium');
@@ -110,7 +151,7 @@ export default function ProfileScreen() {
     );
   };
 
-  if (!user) {
+  if (isLoading || !user) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <Text style={{ color: Colors.text }}>Loading profile...</Text>
@@ -378,6 +419,28 @@ export default function ProfileScreen() {
 
               <View style={styles.divider} />
 
+              {/* Language */}
+              <TouchableOpacity 
+                style={styles.settingRow} 
+                onPress={async () => {
+                  await FeedbackService.buttonPress('light');
+                  router.push('/profile/language');
+                }}
+              >
+                <View style={styles.settingLeft}>
+                  <View style={[styles.settingIcon, { backgroundColor: Colors.secondary + '20' }]}>
+                    <Icon name="language" size={22} color={Colors.secondary} />
+                  </View>
+                  <View>
+                    <Text style={styles.settingTitle}>Language</Text>
+                    <Text style={styles.settingSubtitle}>English</Text>
+                  </View>
+                </View>
+                <Icon name="chevron-forward" size={20} color={Colors.textMuted} />
+              </TouchableOpacity>
+
+              <View style={styles.divider} />
+
               {/* Voice Coach */}
               <TouchableOpacity style={styles.settingRow} onPress={async () => {
                 await FeedbackService.buttonPress('light');
@@ -401,6 +464,28 @@ export default function ProfileScreen() {
                   trackColor={{ false: Colors.border, true: Colors.success + '50' }}
                   thumbColor={voiceCoach ? Colors.success : Colors.textMuted}
                 />
+              </TouchableOpacity>
+
+              <View style={styles.divider} />
+
+              {/* Safety */}
+              <TouchableOpacity 
+                style={styles.settingRow} 
+                onPress={async () => {
+                  await FeedbackService.buttonPress('light');
+                  router.push('/profile/safety');
+                }}
+              >
+                <View style={styles.settingLeft}>
+                  <View style={[styles.settingIcon, { backgroundColor: Colors.error + '20' }]}>
+                    <Icon name="shield" size={22} color={Colors.error} />
+                  </View>
+                  <View>
+                    <Text style={styles.settingTitle}>Safety Center</Text>
+                    <Text style={styles.settingSubtitle}>SOS, Live location sharing</Text>
+                  </View>
+                </View>
+                <Icon name="chevron-forward" size={20} color={Colors.textMuted} />
               </TouchableOpacity>
 
               <View style={styles.divider} />

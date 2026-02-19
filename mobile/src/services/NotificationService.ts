@@ -4,21 +4,40 @@
  * All notifications are scheduled and managed on the device
  */
 
-import { Platform, Alert } from 'react-native';
-import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Configure how notifications appear when app is in foreground
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+// Lazy import expo-notifications to avoid Expo Go issues
+let Notifications: typeof import('expo-notifications') | null = null;
+
+// Initialize notifications module lazily
+async function getNotifications() {
+  if (!Notifications) {
+    try {
+      Notifications = await import('expo-notifications');
+      // Configure handler after import
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+          shouldShowBanner: true,
+          shouldShowList: true,
+        }),
+      });
+    } catch (error) {
+      console.log('expo-notifications not available');
+      return null;
+    }
+  }
+  return Notifications;
+}
+
+// Check if notifications are available
+async function isNotificationsAvailable(): Promise<boolean> {
+  const notifs = await getNotifications();
+  return notifs !== null && Device.isDevice && Platform.OS !== 'web';
+}
 
 // Notification categories/types
 export enum NotificationType {
@@ -43,7 +62,7 @@ export interface NotificationPreferences {
   [NotificationType.WEEKLY_SUMMARY]: boolean;
   [NotificationType.CHALLENGE]: boolean;
   [NotificationType.INACTIVITY]: boolean;
-  reminderTime: { hour: number; minute: number }; // Daily reminder time
+  reminderTime: { hour: number; minute: number };
 }
 
 const DEFAULT_PREFERENCES: NotificationPreferences = {
@@ -52,11 +71,11 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
   [NotificationType.STREAK_WARNING]: true,
   [NotificationType.ACHIEVEMENT]: true,
   [NotificationType.ZONE_CAPTURED]: true,
-  [NotificationType.FRIEND_ACTIVITY]: false, // Off by default
+  [NotificationType.FRIEND_ACTIVITY]: false,
   [NotificationType.WEEKLY_SUMMARY]: true,
   [NotificationType.CHALLENGE]: true,
   [NotificationType.INACTIVITY]: true,
-  reminderTime: { hour: 7, minute: 0 }, // 7:00 AM default
+  reminderTime: { hour: 7, minute: 0 },
 };
 
 const PREFS_KEY = '@inv_notification_prefs';
@@ -71,11 +90,14 @@ export const NotificationService = {
       return false;
     }
 
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const notifs = await getNotifications();
+    if (!notifs) return false;
+
+    const { status: existingStatus } = await notifs.getPermissionsAsync();
     let finalStatus = existingStatus;
 
     if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
+      const { status } = await notifs.requestPermissionsAsync();
       finalStatus = status;
     }
 
@@ -91,7 +113,10 @@ export const NotificationService = {
    * Check if notifications are enabled
    */
   async checkPermissions(): Promise<boolean> {
-    const { status } = await Notifications.getPermissionsAsync();
+    const notifs = await getNotifications();
+    if (!notifs) return false;
+
+    const { status } = await notifs.getPermissionsAsync();
     return status === 'granted';
   },
 
@@ -118,7 +143,7 @@ export const NotificationService = {
       const current = await this.getPreferences();
       const updated = { ...current, ...prefs };
       await AsyncStorage.setItem(PREFS_KEY, JSON.stringify(updated));
-      
+
       // Reschedule notifications based on new preferences
       await this.rescheduleAllNotifications();
     } catch (error) {
@@ -132,19 +157,22 @@ export const NotificationService = {
   async scheduleNotification(
     title: string,
     body: string,
-    trigger: Notifications.NotificationTriggerInput,
+    trigger: any,
     type: NotificationType,
     data?: Record<string, any>
   ): Promise<string | null> {
+    const notifs = await getNotifications();
+    if (!notifs) return null;
+
     const prefs = await this.getPreferences();
-    
+
     // Check if this notification type is enabled
     if (!prefs.enabled || !prefs[type]) {
       return null;
     }
 
     try {
-      const id = await Notifications.scheduleNotificationAsync({
+      const id = await notifs.scheduleNotificationAsync({
         content: {
           title,
           body,
@@ -165,21 +193,30 @@ export const NotificationService = {
    * Cancel a specific notification
    */
   async cancelNotification(notificationId: string): Promise<void> {
-    await Notifications.cancelScheduledNotificationAsync(notificationId);
+    const notifs = await getNotifications();
+    if (!notifs) return;
+
+    await notifs.cancelScheduledNotificationAsync(notificationId);
   },
 
   /**
    * Cancel all scheduled notifications
    */
   async cancelAllNotifications(): Promise<void> {
-    await Notifications.cancelAllScheduledNotificationsAsync();
+    const notifs = await getNotifications();
+    if (!notifs) return;
+
+    await notifs.cancelAllScheduledNotificationsAsync();
   },
 
   /**
    * Get all scheduled notifications
    */
-  async getScheduledNotifications(): Promise<Notifications.NotificationRequest[]> {
-    return await Notifications.getAllScheduledNotificationsAsync();
+  async getScheduledNotifications(): Promise<any[]> {
+    const notifs = await getNotifications();
+    if (!notifs) return [];
+
+    return await notifs.getAllScheduledNotificationsAsync();
   },
 
   // ============== SMART NOTIFICATION SCHEDULING ==============
@@ -188,6 +225,9 @@ export const NotificationService = {
    * Schedule daily run reminder
    */
   async scheduleDailyReminder(hour: number = 7, minute: number = 0): Promise<void> {
+    const notifs = await getNotifications();
+    if (!notifs) return;
+
     // Cancel existing daily reminders first
     await this.cancelNotificationsByType(NotificationType.DAILY_REMINDER);
 
@@ -197,7 +237,7 @@ export const NotificationService = {
       { title: '🌅 Morning Runner?', body: 'Start your day with a zone capture!' },
       { title: '💪 Fitness Check', body: 'Ready to conquer some zones today?' },
     ];
-    
+
     // Pick random message
     const msg = messages[Math.floor(Math.random() * messages.length)];
 
@@ -205,7 +245,7 @@ export const NotificationService = {
       msg.title,
       msg.body,
       {
-        type: Notifications.SchedulableTriggerInputTypes.DAILY,
+        type: notifs.SchedulableTriggerInputTypes?.DAILY || 'daily',
         hour,
         minute,
       },
@@ -217,7 +257,10 @@ export const NotificationService = {
    * Schedule streak warning (if user hasn't run by evening)
    */
   async scheduleStreakWarning(currentStreak: number): Promise<void> {
-    if (currentStreak < 2) return; // Only warn if streak is worth saving
+    if (currentStreak < 2) return;
+
+    const notifs = await getNotifications();
+    if (!notifs) return;
 
     await this.cancelNotificationsByType(NotificationType.STREAK_WARNING);
 
@@ -225,8 +268,8 @@ export const NotificationService = {
       '🔥 Streak in Danger!',
       `Your ${currentStreak}-day streak ends tonight! Run now to save it!`,
       {
-        type: Notifications.SchedulableTriggerInputTypes.DAILY,
-        hour: 19, // 7 PM
+        type: notifs.SchedulableTriggerInputTypes?.DAILY || 'daily',
+        hour: 19,
         minute: 0,
       },
       NotificationType.STREAK_WARNING,
@@ -241,7 +284,7 @@ export const NotificationService = {
     await this.scheduleNotification(
       '🏆 Achievement Unlocked!',
       `Congratulations! You've earned: ${achievementName}`,
-      null, // Immediate
+      null,
       NotificationType.ACHIEVEMENT,
       { achievementName }
     );
@@ -254,7 +297,7 @@ export const NotificationService = {
     await this.scheduleNotification(
       '🎯 Zone Captured!',
       `You've captured ${zoneName}! Keep running to claim more!`,
-      null, // Immediate
+      null,
       NotificationType.ZONE_CAPTURED,
       { zoneName }
     );
@@ -264,12 +307,15 @@ export const NotificationService = {
    * Schedule weekly summary
    */
   async scheduleWeeklySummary(totalRuns: number, totalDistance: number): Promise<void> {
+    const notifs = await getNotifications();
+    if (!notifs) return;
+
     await this.scheduleNotification(
       '📊 Weekly Summary',
       `You completed ${totalRuns} runs this week covering ${(totalDistance / 1000).toFixed(1)}km! Amazing!`,
       {
-        type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-        weekday: 1, // Monday
+        type: notifs.SchedulableTriggerInputTypes?.WEEKLY || 'weekly',
+        weekday: 1,
         hour: 9,
         minute: 0,
       },
@@ -285,7 +331,7 @@ export const NotificationService = {
     await this.scheduleNotification(
       '🎯 New Challenge Available!',
       challengeTitle,
-      null, // Immediate
+      null,
       NotificationType.CHALLENGE
     );
   },
@@ -301,7 +347,7 @@ export const NotificationService = {
       '👋 We Miss You!',
       "It's been 3 days since your last run. Ready to get back out there?",
       {
-        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        type: 'date',
         date: threeDaysFromNow,
       },
       NotificationType.INACTIVITY
@@ -314,7 +360,7 @@ export const NotificationService = {
   async cancelNotificationsByType(type: NotificationType): Promise<void> {
     const notifications = await this.getScheduledNotifications();
     for (const notification of notifications) {
-      if (notification.content.data?.type === type) {
+      if (notification.content?.data?.type === type) {
         await this.cancelNotification(notification.identifier);
       }
     }
@@ -325,19 +371,19 @@ export const NotificationService = {
    */
   async rescheduleAllNotifications(): Promise<void> {
     const prefs = await this.getPreferences();
-    
+
     // Cancel all first
     await this.cancelAllNotifications();
-    
+
     if (!prefs.enabled) return;
 
     // Reschedule based on preferences
     if (prefs[NotificationType.DAILY_REMINDER]) {
       await this.scheduleDailyReminder(prefs.reminderTime.hour, prefs.reminderTime.minute);
     }
-    
+
     if (prefs[NotificationType.WEEKLY_SUMMARY]) {
-      await this.scheduleWeeklySummary(0, 0); // Will be updated with real data
+      await this.scheduleWeeklySummary(0, 0);
     }
   },
 
@@ -346,23 +392,27 @@ export const NotificationService = {
   /**
    * Listen for incoming notifications
    */
-  addNotificationListener(callback: (notification: Notifications.Notification) => void) {
-    return Notifications.addNotificationReceivedListener(callback);
+  async addNotificationListener(callback: (notification: any) => void) {
+    const notifs = await getNotifications();
+    if (!notifs) return { remove: () => {} };
+
+    return notifs.addNotificationReceivedListener(callback);
   },
 
   /**
    * Listen for notification responses (user taps)
    */
-  addNotificationResponseListener(
-    callback: (response: Notifications.NotificationResponse) => void
-  ) {
-    return Notifications.addNotificationResponseReceivedListener(callback);
+  async addNotificationResponseListener(callback: (response: any) => void) {
+    const notifs = await getNotifications();
+    if (!notifs) return { remove: () => {} };
+
+    return notifs.addNotificationResponseReceivedListener(callback);
   },
 
   /**
    * Remove notification listener
    */
-  removeNotificationListener(subscription: Notifications.Subscription) {
+  removeNotificationListener(subscription: { remove: () => void }) {
     subscription.remove();
   },
 
@@ -372,7 +422,10 @@ export const NotificationService = {
    * Clear badge count
    */
   async clearBadge(): Promise<void> {
-    await Notifications.setBadgeCountAsync(0);
+    const notifs = await getNotifications();
+    if (!notifs) return;
+
+    await notifs.setBadgeCountAsync(0);
   },
 
   /**

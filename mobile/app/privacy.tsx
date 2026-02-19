@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'r
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Colors } from '../../src/theme/Colors';
-import { Typography } from '../../src/theme/Typography';
-import { Spacing } from '../../src/theme/Spacing';
-import { Button } from '../../src/components/Button';
-import { Icon } from '../../src/components/Icon';
+import { Colors } from '../src/theme/Colors';
+import { Typography } from '../src/theme/Typography';
+import { Spacing } from '../src/theme/Spacing';
+import { Button } from '../src/components/Button';
+import { Icon } from '../src/components/Icon';
 
 export default function PrivacyScreen() {
   const insets = useSafeAreaInsets();

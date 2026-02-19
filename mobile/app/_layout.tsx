@@ -1,7 +1,7 @@
 // Import polyfills first
 import '../polyfills';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,12 +11,13 @@ import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { FeedbackService } from '../src/services/FeedbackService';
 import { NotificationService } from '../src/services/NotificationService';
 import { DeepLinkService } from '../src/services/DeepLinkService';
+import authService from '../src/services/authService';
 import { CacheService } from '../src/services/CacheService';
 import { pushTokenService } from '../src/services/PushTokenService';
 import { Onboarding } from '../src/components/Onboarding';
 import { OfflineIndicator } from '../src/components/OfflineIndicator';
 import { ErrorBoundary } from '../src/components/ErrorBoundary';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, AppState } from 'react-native';
 import { Colors } from '../src/theme/Colors';
 
 // Auth guard component to handle routing based on auth state
@@ -29,7 +30,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoading || hasNavigated) return;
 
-    const inAuthGroup = segments[0] === 'auth';
+    const inAuthGroup = segments[0] === 'auth' || segments[0]?.startsWith('auth/');
     const inTermsGroup = segments[0] === 'terms' || segments[0] === 'privacy';
 
     if (!isAuthenticated && !inAuthGroup && !inTermsGroup) {
@@ -37,8 +38,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       router.replace('/auth');
       setHasNavigated(true);
     } else if (isAuthenticated && inAuthGroup) {
-      // Redirect to home if authenticated and trying to access auth screens
-      router.replace('/');
+      // Redirect to home (tabs) if authenticated and trying to access auth screens
+      router.replace('/(tabs)');
       setHasNavigated(true);
     }
   }, [isAuthenticated, isLoading, segments, hasNavigated]);
@@ -55,15 +56,32 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
 function RootLayoutNav() {
   const { isDark } = useTheme();
-  const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { isLoading: authLoading, isAuthenticated, refreshUser } = useAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const appState = useRef(AppState.currentState);
   
   // Initialize all services on app start
   useEffect(() => {
     initializeApp();
   }, []);
+
+  // Check for auth session when app comes back from background (for OAuth flows)
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App came to foreground - checking for auth session...');
+        // Refresh user data in case OAuth just completed
+        refreshUser();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [refreshUser]);
 
   const initializeApp = async () => {
     try {
@@ -86,26 +104,31 @@ function RootLayoutNav() {
         await NotificationService.scheduleWeeklySummary(0, 0);
       }
       
-      // Setup push notification listeners
-      const notificationSubscription = pushTokenService.setupNotificationListeners(
-        (notification) => {
-          console.log('Push notification received:', notification);
-          // Handle notification data
-          if (notification.request.content.data) {
-            pushTokenService.handleNotificationData(notification.request.content.data);
+      // Setup push notification listeners (async)
+      let notificationSubscription = { remove: () => {} };
+      try {
+        notificationSubscription = await pushTokenService.setupNotificationListeners(
+          (notification) => {
+            console.log('Push notification received:', notification);
+            // Handle notification data
+            if (notification.request?.content?.data) {
+              pushTokenService.handleNotificationData(notification.request.content.data);
+            }
+          },
+          (response) => {
+            console.log('Push notification tapped:', response);
+            const data = response.notification?.request?.content?.data;
+            // Handle navigation based on notification type
+            if (data?.type === 'achievement_unlocked') {
+              router.push('/profile');
+            } else if (data?.type === 'friend_activity') {
+              router.push('/friends');
+            }
           }
-        },
-        (response) => {
-          console.log('Push notification tapped:', response);
-          const data = response.notification.request.content.data;
-          // Handle navigation based on notification type
-          if (data?.type === 'achievement_unlocked') {
-            router.push('/profile');
-          } else if (data?.type === 'friend_activity') {
-            router.push('/friends');
-          }
-        }
-      );
+        );
+      } catch (e) {
+        console.log('Push notifications not available in Expo Go');
+      }
       
       // Set up deep link handling
       const subscription = DeepLinkService.subscribe((data) => {
@@ -120,8 +143,17 @@ function RootLayoutNav() {
           case 'auth':
             // Handle OAuth callback
             if (data.access_token && data.refresh_token) {
-              // Auth callback will be handled by Supabase
-              console.log('Auth callback received');
+              console.log('Auth callback received, handling OAuth...');
+              // Handle the OAuth callback to set session and create profile
+              authService.handleOAuthCallback(data.access_token, data.refresh_token)
+                .then((result: { error?: Error }) => {
+                  if (result.error) {
+                    console.error('OAuth callback error:', result.error);
+                  } else {
+                    console.log('OAuth callback successful');
+                    // Auth state change will handle navigation
+                  }
+                });
             }
             break;
           case 'run':
@@ -184,30 +216,46 @@ function RootLayoutNav() {
         }}
       >
         <AuthGuard>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: 'slide_from_right',
-              contentStyle: {
-                backgroundColor: isDark ? '#0A0A0F' : '#F8F9FA',
-              },
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="run" />
-            <Stack.Screen name="activity-route" />
-            <Stack.Screen name="leaderboard" />
-            <Stack.Screen name="profile" />
-            <Stack.Screen name="profile/notifications" />
-            <Stack.Screen name="referral" />
-            <Stack.Screen name="friends" />
-            <Stack.Screen name="terms" />
-            <Stack.Screen name="privacy" />
-            <Stack.Screen name="auth" options={{ animation: 'fade' }} />
-            <Stack.Screen name="auth/login" options={{ animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="auth/signup" options={{ animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="auth/forgot-password" options={{ animation: 'slide_from_bottom' }} />
-          </Stack>
+          {isAuthenticated ? (
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: 'slide_from_right',
+                contentStyle: {
+                  backgroundColor: isDark ? '#0A0A0F' : '#F8F9FA',
+                },
+              }}
+            >
+              {/* Main Tab Navigation */}
+              <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+              
+              {/* Full Screen Modals */}
+              <Stack.Screen name="run" options={{ presentation: 'fullScreenModal' }} />
+              <Stack.Screen name="activity-route" />
+              <Stack.Screen name="leaderboard" />
+              <Stack.Screen name="referral" />
+              <Stack.Screen name="terms" />
+              <Stack.Screen name="privacy" />
+            </Stack>
+          ) : (
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: 'slide_from_right',
+                contentStyle: {
+                  backgroundColor: isDark ? '#0A0A0F' : '#F8F9FA',
+                },
+              }}
+            >
+              {/* Auth Screens */}
+              <Stack.Screen name="auth" options={{ animation: 'fade' }} />
+              <Stack.Screen name="auth/login" options={{ animation: 'slide_from_bottom' }} />
+              <Stack.Screen name="auth/signup" options={{ animation: 'slide_from_bottom' }} />
+              <Stack.Screen name="auth/forgot-password" options={{ animation: 'slide_from_bottom' }} />
+              <Stack.Screen name="terms" />
+              <Stack.Screen name="privacy" />
+            </Stack>
+          )}
         </AuthGuard>
       </ErrorBoundary>
     </SafeAreaProvider>

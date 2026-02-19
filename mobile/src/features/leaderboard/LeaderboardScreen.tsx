@@ -20,7 +20,7 @@ import {
   BounceIn,
 } from '../../components/animations';
 
-type LeaderboardTab = 'weekly' | 'allTime' | 'local';
+type LeaderboardTab = 'weekly' | 'allTime' | 'local' | 'city';
 
 interface LeaderboardEntry {
   rank: number;
@@ -29,12 +29,16 @@ interface LeaderboardEntry {
   avatar?: string;
   zonesCaptured: number;
   totalDistance: number;
+  totalRuns: number;
+  xp: number;
   isCurrentUser?: boolean;
 }
 
+const CITIES = ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Chennai', 'Hyderabad'];
+
 const TABS: { key: LeaderboardTab; label: string }[] = [
   { key: 'weekly', label: 'This Week' },
-  { key: 'local', label: 'Nearby' },
+  { key: 'city', label: 'City' },
   { key: 'allTime', label: 'All Time' },
 ];
 
@@ -186,6 +190,8 @@ export default function LeaderboardScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<LeaderboardTab>('weekly');
+  const [selectedCity, setSelectedCity] = useState('Mumbai');
+  const [showCitySelector, setShowCitySelector] = useState(false);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -285,6 +291,47 @@ export default function LeaderboardScreen() {
           />
         ))}
       </View>
+
+      {/* City Selector */}
+      {activeTab === 'city' && (
+        <TouchableOpacity 
+          style={styles.citySelector}
+          onPress={() => setShowCitySelector(!showCitySelector)}
+        >
+          <Icon name="location" size={18} color={Colors.primary} />
+          <Text style={styles.citySelectorText}>{selectedCity}</Text>
+          <Icon name="chevron-down" size={18} color={Colors.textSecondary} />
+        </TouchableOpacity>
+      )}
+
+      {/* City Dropdown */}
+      {showCitySelector && activeTab === 'city' && (
+        <View style={styles.cityDropdown}>
+          {CITIES.map(city => (
+            <TouchableOpacity
+              key={city}
+              style={[
+                styles.cityOption,
+                selectedCity === city && styles.cityOptionSelected
+              ]}
+              onPress={() => {
+                setSelectedCity(city);
+                setShowCitySelector(false);
+              }}
+            >
+              <Text style={[
+                styles.cityOptionText,
+                selectedCity === city && styles.cityOptionTextSelected
+              ]}>
+                {city}
+              </Text>
+              {selectedCity === city && (
+                <Icon name="checkmark" size={18} color={Colors.primary} />
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       {/* Podium for Top 3 */}
       <View style={styles.podiumContainer}>
@@ -427,6 +474,55 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: Colors.textInverse,
+  },
+
+  // City Selector
+  citySelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: Spacing.sm,
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.md,
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    gap: Spacing.sm,
+  },
+  citySelectorText: {
+    ...Typography.body,
+    fontWeight: '600',
+    color: Colors.text,
+  },
+  cityDropdown: {
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.md,
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    padding: Spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  cityOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: 12,
+  },
+  cityOptionSelected: {
+    backgroundColor: Colors.primary + '10',
+  },
+  cityOptionText: {
+    ...Typography.body,
+    color: Colors.text,
+  },
+  cityOptionTextSelected: {
+    color: Colors.primary,
+    fontWeight: '600',
   },
 
   // Podium

@@ -30,12 +30,14 @@ export type IconName =
   | 'copy'
   | 'link'
   | 'add'
+  | 'add-circle'
   | 'remove'
   | 'create'
   | 'trash'
   | 'search'
   | 'filter'
   | 'refresh'
+  | 'call'
   
   // Media
   | 'play'
@@ -74,6 +76,7 @@ export type IconName =
   | 'flag'
   | 'crown'
   | 'shield'
+  | 'shield-checkmark'
   
   // Misc
   | 'eye'
@@ -155,6 +158,7 @@ const ICON_MAPPING: Record<string, { family: IconFamily; name: string }> = {
   'copy': { family: 'Ionicons', name: 'copy-outline' },
   'link': { family: 'Ionicons', name: 'link' },
   'add': { family: 'Ionicons', name: 'add' },
+  'add-circle': { family: 'Ionicons', name: 'add-circle' },
   'remove': { family: 'Ionicons', name: 'remove' },
   'create': { family: 'Ionicons', name: 'create-outline' },
   'trash': { family: 'Ionicons', name: 'trash-outline' },
@@ -199,6 +203,8 @@ const ICON_MAPPING: Record<string, { family: IconFamily; name: string }> = {
   'flag': { family: 'Ionicons', name: 'flag' },
   'crown': { family: 'MaterialCommunityIcons', name: 'crown' },
   'shield': { family: 'Ionicons', name: 'shield' },
+  'shield-checkmark': { family: 'Ionicons', name: 'shield-checkmark' },
+  'call': { family: 'Ionicons', name: 'call' },
   
   // Misc
   'eye': { family: 'Ionicons', name: 'eye' },

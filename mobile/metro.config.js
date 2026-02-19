@@ -21,8 +21,12 @@ config.transformer.minifierConfig = {
   },
 };
 
-// Tree shaking - remove unused exports
-config.resolver.sourceExts = ['jsx', 'js', 'ts', 'tsx', 'json'];
+// Keep Expo defaults and add module formats used by dependencies
+config.resolver.sourceExts = [
+  ...config.resolver.sourceExts,
+  'cjs',
+  'mjs',
+];
 
 // Exclude test files and mocks from production bundle
 config.resolver.blockList = [

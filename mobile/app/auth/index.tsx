@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Colors } from '../src/theme/Colors';
-import { Typography } from '../src/theme/Typography';
-import { Spacing } from '../src/theme/Spacing';
-import { Button } from '../src/components/Button';
-import { Icon } from '../src/components/Icon';
-import { FeedbackService } from '../src/services/FeedbackService';
+import { Colors } from '../../src/theme/Colors';
+import { Typography } from '../../src/theme/Typography';
+import { Spacing } from '../../src/theme/Spacing';
+import { Button } from '../../src/components/Button';
+import { Icon } from '../../src/components/Icon';
+import { FeedbackService } from '../../src/services/FeedbackService';
 
 export default function AuthLandingScreen() {
   const router = useRouter();
@@ -58,7 +58,7 @@ export default function AuthLandingScreen() {
           
           <View style={styles.featureItem}>
             <View style={styles.featureIcon}>
-              <Icon name="fitness" size={20} color={Colors.success} />
+              <Icon name="run-fast" size={20} color={Colors.success} />
             </View>
             <Text style={styles.featureText}>Track your fitness journey</Text>
           </View>
@@ -66,13 +66,13 @@ export default function AuthLandingScreen() {
 
         {/* CTA Buttons */}
         <View style={styles.buttonContainer}>
-          <Button
-            title="Get Started"
-            variant="primary"
-            size="large"
-            onPress={handleGetStarted}
+          <TouchableOpacity
             style={styles.getStartedButton}
-          />
+            onPress={handleGetStarted}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.getStartedButtonText}>Get Started</Text>
+          </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.signInContainer}
@@ -121,12 +121,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.xxl,
+    paddingTop: Spacing['2xl'],
     paddingBottom: Spacing.xl,
   },
   logoSection: {
     alignItems: 'center',
-    marginTop: Spacing.xxl,
+    marginTop: Spacing['2xl'],
   },
   logoContainer: {
     width: 120,
@@ -181,8 +181,23 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   getStartedButton: {
-    backgroundColor: Colors.textInverse,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 28,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: Spacing.lg,
+    borderWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  getStartedButtonText: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: Colors.primary,
   },
   signInContainer: {
     flexDirection: 'row',

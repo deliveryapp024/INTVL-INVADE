@@ -68,8 +68,31 @@ export default function SignupScreen() {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof SignupData, string>>>({});
+  const [emailValid, setEmailValid] = useState<boolean | null>(null);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
 
   const totalSteps = 4;
+
+  // Real-time email validation
+  useEffect(() => {
+    const validateEmail = async () => {
+      if (!data.email) {
+        setEmailValid(null);
+        return;
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValid = emailRegex.test(data.email);
+      setEmailValid(isValid);
+      
+      if (isValid && errors.email) {
+        setErrors(prev => ({ ...prev, email: undefined }));
+      }
+    };
+
+    const timeoutId = setTimeout(validateEmail, 500);
+    return () => clearTimeout(timeoutId);
+  }, [data.email]);
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<Record<keyof SignupData, string>> = {};
@@ -226,7 +249,22 @@ export default function SignupScreen() {
       const { error } = await signUp(signupData as any);
 
       if (error) {
-        Alert.alert('Signup Failed', error.message || 'Failed to create account. Please try again.');
+        // Handle specific error types
+        let errorMessage = error.message || 'Failed to create account. Please try again.';
+        let errorTitle = 'Signup Failed';
+        
+        if (error.message?.includes('rate limit') || error.message?.includes('rate_limit')) {
+          errorTitle = 'Too Many Attempts';
+          errorMessage = 'You\'ve tried to sign up too many times. Please wait a few minutes before trying again.';
+        } else if (error.message?.includes('Email address') && error.message?.includes('invalid')) {
+          errorTitle = 'Invalid Email';
+          errorMessage = 'Please check your email address and make sure it\'s correct (e.g., name@gmail.com)';
+        } else if (error.message?.includes('User already registered')) {
+          errorTitle = 'Account Exists';
+          errorMessage = 'An account with this email already exists. Please sign in instead.';
+        }
+        
+        Alert.alert(errorTitle, errorMessage);
         FeedbackService.error();
       } else {
         // Record terms acceptance
@@ -292,7 +330,11 @@ export default function SignupScreen() {
       {/* Email */}
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Email Address *</Text>
-        <View style={[styles.inputWrapper, errors.email && styles.inputError]}>
+        <View style={[
+          styles.inputWrapper, 
+          errors.email && styles.inputError,
+          emailValid === true && styles.inputSuccess
+        ]}>
           <Icon name="mail" size={20} color={Colors.textMuted} style={styles.inputIcon} />
           <TextInput
             style={styles.input}
@@ -306,8 +348,21 @@ export default function SignupScreen() {
               if (errors.email) setErrors(prev => ({ ...prev, email: undefined }));
             }}
           />
+          {emailValid === true && (
+            <View style={styles.validationIcon}>
+              <Icon name="checkmark-circle" size={20} color={Colors.success} />
+            </View>
+          )}
+          {emailValid === false && data.email.length > 0 && (
+            <View style={styles.validationIcon}>
+              <Icon name="alert-circle" size={20} color={Colors.error} />
+            </View>
+          )}
         </View>
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        {emailValid === false && data.email.length > 0 && !errors.email && (
+          <Text style={styles.errorText}>Please enter a valid email address</Text>
+        )}
       </View>
 
       {/* Password */}
@@ -762,6 +817,13 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: Colors.error,
+  },
+  inputSuccess: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.successLight,
+  },
+  validationIcon: {
+    marginLeft: Spacing.sm,
   },
   inputIcon: {
     marginRight: Spacing.sm,

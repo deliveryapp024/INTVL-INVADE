@@ -7,9 +7,11 @@ import { Linking, Platform } from 'react-native';
 import * as LinkingExpo from 'expo-linking';
 
 export interface DeepLinkData {
-  type: 'referral' | 'run' | 'zone' | 'profile' | 'leaderboard';
+  type: 'referral' | 'run' | 'zone' | 'profile' | 'leaderboard' | 'auth';
   code?: string;
   id?: string;
+  access_token?: string;
+  refresh_token?: string;
   params?: Record<string, string>;
 }
 
@@ -26,16 +28,30 @@ export const DeepLinkService = {
    */
   parseURL(url: string): DeepLinkData | null {
     try {
+      console.log('Parsing deep link URL:', url);
+      
       // Handle universal links and custom schemes
       // Examples:
       // invadetheland://referral/CODE123
       // https://invadetheland.app/referral/CODE123
-      // invadetheland://run/RUN456
-      // invadetheland://profile/USER789
+      // com.intvlinvade.app://auth/callback?access_token=xxx&refresh_token=xxx
 
       const parsed = LinkingExpo.parse(url);
+      console.log('Parsed URL:', parsed);
+      
       const path = parsed.path || '';
       const pathParts = path.split('/').filter(Boolean);
+      
+      // Check for OAuth callback
+      if (url.includes('auth/callback') || (parsed.hostname === 'auth' && pathParts[0] === 'callback')) {
+        console.log('Detected OAuth callback');
+        return {
+          type: 'auth',
+          access_token: parsed.queryParams?.access_token as string,
+          refresh_token: parsed.queryParams?.refresh_token as string,
+          params: parsed.queryParams as Record<string, string>,
+        };
+      }
 
       if (pathParts.length === 0) return null;
 
@@ -69,6 +85,14 @@ export const DeepLinkService = {
         case 'leaderboard':
           return {
             type: 'leaderboard',
+            params: parsed.queryParams as Record<string, string>,
+          };
+        case 'auth':
+          // Handle OAuth callback
+          return {
+            type: 'auth',
+            access_token: parsed.queryParams?.access_token as string,
+            refresh_token: parsed.queryParams?.refresh_token as string,
             params: parsed.queryParams as Record<string, string>,
           };
         default:

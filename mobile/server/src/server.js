@@ -42,7 +42,24 @@ app.get('/health', (req, res) => {
 // Get all users
 app.get('/api/users', async (req, res) => {
   try {
-    console.log('Fetching users from Supabase...');
+    console.log('📊 [API] GET /api/users - Fetching users...');
+    console.log('📍 Request from:', req.headers.origin || 'unknown');
+    console.log('🔑 Auth header:', req.headers.authorization ? 'Present' : 'Missing');
+    
+    // Test Supabase connection first
+    const { data: testData, error: testError } = await supabase
+      .from('users')
+      .select('count', { count: 'exact', head: true });
+    
+    if (testError) {
+      console.error('❌ Supabase connection test failed:', testError);
+      return res.status(500).json({ 
+        error: 'Database connection failed',
+        details: testError.message 
+      });
+    }
+    
+    console.log('✅ Supabase connected, fetching users...');
     
     const { data: users, error } = await supabase
       .from('users')
@@ -57,7 +74,12 @@ app.get('/api/users', async (req, res) => {
       });
     }
 
-    console.log(`Found ${users?.length || 0} users`);
+    console.log(`✅ Found ${users?.length || 0} users`);
+    console.log('📋 First user:', users[0] ? { 
+      id: users[0].id, 
+      email: users[0].email,
+      username: users[0].username 
+    } : 'None');
     
     // Transform data for admin dashboard
     const formattedUsers = users.map(user => ({
@@ -75,6 +97,7 @@ app.get('/api/users', async (req, res) => {
       streak_days: user.streak_days || 0
     }));
 
+    console.log(`📤 Sending ${formattedUsers.length} formatted users to client`);
     res.json(formattedUsers);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -186,6 +209,36 @@ app.get('/api/test-connection', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       connected: false,
+      error: error.message
+    });
+  }
+});
+
+// Debug endpoint for admin panel
+app.get('/api/debug', async (req, res) => {
+  try {
+    // Check Supabase connection
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .limit(5);
+    
+    res.json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      supabase_connected: !error,
+      supabase_error: error?.message || null,
+      user_count: data?.length || 0,
+      users_sample: data?.map(u => ({ id: u.id, email: u.email, username: u.username })),
+      env: {
+        supabase_url: supabaseUrl,
+        has_service_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        has_anon_key: !!process.env.SUPABASE_ANON_KEY
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
       error: error.message
     });
   }

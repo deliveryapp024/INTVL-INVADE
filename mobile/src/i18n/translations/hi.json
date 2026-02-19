@@ -1,0 +1,49 @@
+{
+  "common": {
+    "appName": "INVADE",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "done": "पूरा",
+    "search": "खोजें",
+    "km": "कि.मी.",
+    "min": "मिनट"
+  },
+  "navigation": {
+    "home": "होम",
+    "explore": "एक्सप्लोर",
+    "community": "कम्युनिटी",
+    "profile": "प्रोफाइल"
+  },
+  "auth": {
+    "welcome": "INVADE में आपका स्वागत है",
+    "login": "लॉग इन",
+    "signup": "साइन अप",
+    "email": "ईमेल",
+    "password": "पासवर्ड"
+  },
+  "home": {
+    "startRun": "दौड़ शुरू करें",
+    "zonesCaptured": "ज़ोन्स कैप्चर किए"
+  },
+  "run": {
+    "start": "शुरू",
+    "pause": "रोकें",
+    "stop": "बंद",
+    "distance": "दूरी",
+    "time": "समय",
+    "pace": "गति"
+  },
+  "safety": {
+    "safetyCenter": "सुरक्षा केंद्र",
+    "sos": "आपातकालीन SOS",
+    "emergencyContacts": "आपातकालीन संपर्क"
+  },
+  "premium": {
+    "upgrade": "प्रीमियम में अपग्रेड",
+    "monthly": "मासिक",
+    "yearly": "वार्षिक"
+  }
+}

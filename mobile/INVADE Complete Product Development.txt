@@ -1,0 +1,3386 @@
+INVADE: Complete Product Development Plan
+India's First Community Running & Adventure Platform
+---
+PART 1: UNIQUE SELLING PROPOSITION (USP)
+---
+What Makes INVADE Different?
+flowchart TD
+    subgraph Competitors
+        A[Strava] --> A1[Global, Western-focused]
+        B[Nike Run Club] --> B1[No territory/game]
+        C[Adidas Running] --> C1[No Indian community]
+        D[MapMyRun] --> D1[No social gamification]
+    end
+    
+    subgraph INVADE_Unique[INVADE - India First]
+        E1[Territory Capture Game]
+        E2[Indian Cities & Trails]
+        E3[Local Running Communities]
+        E4[Hiking & Mountain Groups]
+        E5[India-Specific Safety]
+        E6[Festival Events & Challenges]
+    end
+---
+USP Matrix: INVADE vs Competitors
+| Feature | Strava | Nike Run Club | Adidas Running | INVADE |
+|---------|--------|---------------|----------------|------------|
+| Territory/GPS Game | ❌ | ❌ | ❌ | ✅ Core Feature |
+| Indian City Focus | ❌ | ❌ | ❌ | ✅ Primary Market |
+| Hiking/Mountain Trails | Limited | ❌ | Limited | ✅ Full Support |
+| Local Running Clubs | Limited | ❌ | ❌ | ✅ Core Social |
+| India Safety Features | ❌ | ❌ | ❌ | ✅ SOS, Night Mode |
+| Regional Languages | ❌ | ❌ | ❌ | ✅ Hindi + Regional |
+| Festival Challenges | ❌ | ❌ | ❌ | ✅ Independence Day, Diwali |
+| Weather/Air Quality | Basic | Basic | Basic | ✅ India-Specific |
+| Segment Leaderboards | ✅ | ❌ | ❌ | ✅ City-Wise |
+| Free Core Features | Partial | ✅ | Partial | ✅ Full Free Core |
+| Price (Premium) | ₹1,499/yr | Free | ₹999/yr | ₹1,499/yr (More Value) |
+---
+INVADE's 5 Core USPs
+USP 1: Territory Capture Game
+> "Own Your City, One Run at a Time"
+- Real-world zones that users capture by running through them
+- Weekly territory control battles
+- Zone defense mechanic (must re-visit to maintain)
+- Team/Club territory battles
+- Why it matters: Gamification that actually gets people moving
+USP 2: India-First Community Network
+> "Run With Your City, Not Just Strangers"
+- City-wise leaderboards and clubs
+- Local running groups integration
+- Regional language support (Phase 2)
+- India-specific events and challenges
+- Why it matters: Community > Features for retention
+USP 3: Adventure & Trail Integration
+> "From City Streets to Mountain Peaks"
+- Full hiking and mountain trail support
+- Trail difficulty ratings and safety info
+- Elevation profiles with GPS mapping
+- Western Ghats, Himalayas, Nilgiris database
+- Why it matters: Unique in Indian market, appeals to growing adventure community
+USP 4: India-Specific Safety System
+> "Run Safe, Run Confident"
+- Live location sharing with trusted contacts
+- SOS emergency system
+- Night run safety scoring
+- Women-only community features
+- Local emergency integration
+- Why it matters: Critical for Indian market, builds trust
+USP 5: Festive & Cultural Integration
+> "Celebrate Every Mile, Every Festival"
+- Independence Day challenges
+- Diwali "Light Up Your Run" events
+- Marathon season events
+- City-specific celebrations
+- Why it matters: Emotional connection with Indian users
+---
+Target User Personas
+Persona 1: Urban Runner Raj (Primary)
+- Age: 25-35
+- Location: Mumbai, Bangalore, Delhi, Pune
+- Behavior: Runs 3-4 times/week, uses apps for tracking
+- Pain Point: No local community, boring solo runs
+- INVADE Solution: City clubs, territory game, local events
+Persona 2: Weekend Warrior Priya (Secondary)
+- Age: 28-40
+- Location: Metro cities, travels to trails
+- Behavior: Hikes on weekends, training for treks
+- Pain Point: No good trail apps for India
+- INVADE Solution: Trail database, hiking groups, safety features
+Persona 3: Fitness Beginner Amit (Tertiary)
+- Age: 20-30
+- Location: Tier 1 & 2 cities
+- Behavior: Wants to start running, needs motivation
+- Pain Point: Intimidated by serious runners, no guidance
+- INVADE Solution: Gamification, beginner-friendly clubs, coaching plans
+Persona 4: Running Club Captain Vikram (Community Builder)
+- Age: 35-50
+- Location: All major cities
+- Behavior: Runs a local running group
+- Pain Point: No good tools to manage members and events
+- INVADE Solution: Club management, event creation, member tracking
+---
+PART 2: DETAILED IMPLEMENTATION PHASES
+---
+PHASE 1: Navigation Foundation
+Duration: 2-3 Days | Priority: CRITICAL
+What We're Building
+Before:
+┌─────────────────────┐
+│  Stack Navigation   │
+│  (Linear screens)   │
+│                     │
+│  Home → Run → etc   │
+│  (No easy way back) │
+└─────────────────────┘
+After:
+┌─────────────────────┐
+│   Tab Navigation    │
+│                     │
+│  [🏠][🧭][▶️][👥][👤]│
+│                     │
+│  Quick access to    │
+│  ALL core features  │
+└─────────────────────┘
+Step-by-Step Implementation
+Step 1.1: Create Tab Layout Structure (Day 1, 2 hours)
+// File: mobile/app/(tabs)/_layout.tsx
+Tasks:
+1. Create Expo Router tabs layout
+2. Configure 5 tabs with icons
+3. Custom tab bar component with center Record button
+4. Tab animation configuration
+5. Safe area handling
+Files to create:
+├── app/(tabs)/_layout.tsx
+├── app/(tabs)/index.tsx (Home)
+├── app/(tabs)/explore.tsx (Placeholder)
+├── app/(tabs)/record.tsx (Redirect logic)
+├── app/(tabs)/community.tsx (Placeholder)
+├── app/(tabs)/profile.tsx (Move existing)
+└── components/CustomTabBar.tsx
+Step 1.2: Build Custom Tab Bar (Day 1, 3 hours)
+// Custom Tab Bar Specifications
+Layout:
+┌──────────────────────────────────────────────────┐
+│                                                  │
+│  ┌─────┐ ┌─────┐   ┌─────┐   ┌─────┐ ┌─────┐   │
+│  │ 🗺️  │ │ 🧭  │   │ ▶️  │   │ 👥  │ │ 👤  │   │
+│  │Home │ │Explr│   │Record│  │Comm │ │Prof │   │
+│  └─────┘ └─────┘   └───┬─┘   └─────┘ └─────┘   │
+│                          │                      │
+│                    [Elevated Circle]            │
+│                    [56px diameter]              │
+│                    [Primary Color]              │
+└──────────────────────────────────────────────────┘
+Tab Bar Specs:
+- Height: 80px (with safe area)
+- Background: #FFFFFF (light) / #1A1A2E (dark)
+- Border: None (use shadow instead)
+- Shadow: 0 -4px 20px rgba(0,0,0,0.1)
+Normal Tab Specs:
+- Size: 48x48px touch target
+- Icon: 24px
+- Label: 11px, weight 500
+- Active color: #00D1FF (primary)
+- Inactive color: #9CA3AF (muted)
+Record Button Specs:
+- Size: 56px diameter
+- Background: #00D1FF
+- Icon: 28px play-circle
+- Elevation: 8px shadow
+- Y-offset: -20px (raised above tab bar)
+- Pulse animation on idle (subtle)
+Step 1.3: Migrate Home Screen (Day 1, 1 hour)
+Tasks:
+1. Move content from app/index.tsx to app/(tabs)/index.tsx
+2. Remove redundant navigation code
+3. Add tab-specific header (no back button on home)
+4. Ensure territory map still works
+5. Add quick action FAB for start run
+Step 1.4: Create Screen Placeholders (Day 1, 1 hour)
+// Explore Placeholder
+Components:
+- "Coming Soon" hero with compass animation
+- Feature preview cards (Routes, Trails, Events)
+- "Get Notified" CTA for launch
+// Community Placeholder
+Components:
+- "Coming Soon" hero with people animation
+- Feature preview cards (Feed, Clubs, Challenges)
+- "Get Notified" CTA
+// Record Tab
+Logic:
+- Auto-opens Record Modal on tab press
+- Or shows quick action sheet
+Step 1.5: Build Record Modal (Day 2, 4 hours)
+// File: components/RecordModal.tsx
+Modal Design:
+┌─────────────────────────────────────────────────┐
+│ ███████████████████████████████████████████████ │
+│ ███████████████████████████████████████████████ │ <- Backdrop (tap to close)
+│ ███████████████████████████████████████████████ │
+│                                                 │
+│     ┌───────────────────────────────────┐       │
+│     │        🏃 Ready to Run?           │       │
+│     │                                   │       │
+│     │  ┌─────────────────────────────┐  │       │
+│     │  │ ▶️  Start Run Now            │  │       │ <- Primary (full width)
+│     │  │     Begin tracking           │  │       │
+│     │  └─────────────────────────────┘  │       │
+│     │                                   │       │
+│     │  ┌─────────────────────────────┐  │       │
+│     │  │ 🗺️  Choose Route             │  │       │ <- Secondary
+│     │  │     Pick a route to follow   │  │       │
+│     │  └─────────────────────────────┘  │       │
+│     │                                   │       │
+│     │  ┌─────────────────────────────┐  │       │
+│     │  │ 🎯  Set Goal                 │  │       │ <- Secondary
+│     │  │     Distance or time goal    │  │       │
+│     │  └─────────────────────────────┘  │       │
+│     │                                   │       │
+│     │         [Cancel]                  │       │
+│     └───────────────────────────────────┘       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Animation Specs:
+- Backdrop: Fade in (opacity 0 → 0.5, 200ms)
+- Modal: Slide up from bottom (translateY 100% → 0, 300ms, ease-out)
+- Buttons: Staggered fade in (50ms delay each)
+- Close: Reverse animation (150ms)
+Modal Specs:
+- Width: 90% of screen
+- Max width: 400px
+- Border radius: 24px
+- Background: #FFFFFF (light) / #1A1A2E (dark)
+- Padding: 24px
+- Shadow: 0 -8px 40px rgba(0,0,0,0.2)
+Button Specs:
+- Primary: Background #00D1FF, height 56px
+- Secondary: Background #F3F4F6, height 56px
+- Border radius: 16px
+- Haptic feedback on press
+Step 1.6: Update Root Layout (Day 2, 1 hour)
+// File: mobile/app/_layout.tsx
+Changes:
+1. Replace Stack with conditional rendering:
+   - If authenticated: show Tabs
+   - If not: show Auth screens
+2. Keep modals and deep-link screens as Stack
+3. Update navigation guards
+4. Test all existing deep links
+New Structure:
+app/
+├── (tabs)/           <- Authenticated users
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   ├── explore.tsx
+│   ├── record.tsx
+│   ├── community.tsx
+│   └── profile.tsx
+├── (auth)/           <- Unauthenticated users
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   ├── login.tsx
+│   └── signup.tsx
+├── (modals)/         <- Modal screens
+│   ├── record-modal.tsx
+│   └── goal-setter.tsx
+├── run.tsx           <- Full screen run
+├── activity-route.tsx
+├── leaderboard.tsx
+└── _layout.tsx       <- Root layout
+---
+Phase 1 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| Tab layout created | ⬜ | app/(tabs)/_layout.tsx |
+| Custom tab bar component | ⬜ | components/CustomTabBar.tsx |
+| Home migrated to tab | ⬜ | app/(tabs)/index.tsx |
+| Explore placeholder | ⬜ | app/(tabs)/explore.tsx |
+| Community placeholder | ⬜ | app/(tabs)/community.tsx |
+| Profile migrated to tab | ⬜ | app/(tabs)/profile.tsx |
+| Record modal created | ⬜ | components/RecordModal.tsx |
+| Root layout updated | ⬜ | app/_layout.tsx |
+| Tab animations working | ⬜ | All tab files |
+| Haptic feedback added | ⬜ | Tab bar + modal |
+---
+Phase 1 Outcome Comparison
+| Metric | Before | After |
+|--------|--------|-------|
+| Navigation taps to Run | 2-3 taps | 1 tap (center button) |
+| Navigation taps to Profile | 3-4 taps | 1 tap |
+| User confusion rate | High (linear nav) | Low (familiar tabs) |
+| Feature discoverability | Poor | Excellent |
+| Time to start run | ~8 seconds | ~2 seconds |
+| Navigation consistency | Inconsistent | Standard pattern |
+---
+PHASE 2: Explore Screen
+Duration: 4-5 Days | Priority: HIGH
+What We're Building
+Explore Screen Architecture:
+┌─────────────────────────────────────────────────┐
+│  🧭 Explore                          [🔍] [📍]  │
+├─────────────────────────────────────────────────┤
+│  [Routes] [Trails] [Events]                     │ <- Sub-tabs
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  📍 Near Mumbai                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ ┌─────────┐  Marine Drive Loop            │  │
+│  │ │ [Map    │  ⭐ 4.8 • 5.2 km • Easy       │  │
+│  │ │ Preview]│  🏃 1.2k runs this month      │  │
+│  │ └─────────┘  [View Route →]               │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ ┌─────────┐  Sanjay Gandhi NP Trail       │  │
+│  │ │ [Map    │  ⭐ 4.6 • 8.5 km • Moderate   │  │
+│  │ │ Preview]│  🥾 Hiking • 320m elevation   │  │
+│  │ └─────────┘  [View Trail →]               │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 📅 Mumbai Marathon 2026                   │  │
+│  │    Feb 15 • 6:00 AM                       │  │
+│  │    👥 2.5k going • [RSVP]                 │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step-by-Step Implementation
+Step 2.1: Create Explore Layout (Day 1, 2 hours)
+// File: app/(tabs)/explore.tsx
+Component Structure:
+├── Header
+│   ├── Title: "Explore"
+│   ├── Search icon button
+│   └── Location filter button
+├── Sub-tabs
+│   ├── Routes (default active)
+│   ├── Trails
+│   └── Events
+├── Location Header
+│   ├── "📍 Near [City]"
+│   └── Change location dropdown
+├── Content (based on active sub-tab)
+│   ├── Routes content
+│   ├── Trails content
+│   └── Events content
+└── FAB
+    └── "Create Route" button
+State Management:
+- Active sub-tab (routes/trails/events)
+- User location (city, lat/lng)
+- Search query
+- Active filters
+- Loading states
+Step 2.2: Build Routes Tab (Day 1-2, 6 hours)
+// File: src/features/explore/RoutesTab.tsx
+Route Card Design:
+┌─────────────────────────────────────────────────┐
+│ ┌─────────────────────────────────────────────┐ │
+│ │                                             │ │
+│ │            [Map Preview with Route]         │ │
+│ │            (Interactive, zoom on tap)       │ │
+│ │                                             │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ Marine Drive Sunset Loop                       │
+│ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐               │
+│ │5.2km│ │ Easy│ │⭐4.8│ │🏃1.2k│               │
+│ └─────┘ └─────┘ └─────┘ └─────┘               │
+│                                                 │
+│ Best time: Morning (6-8 AM)                    │
+│ 🌅 Scenic • 🚿 Water points • 🅿️ Parking       │
+│                                                 │
+│ [View Route Details →]                         │
+└─────────────────────────────────────────────────┘
+Route Data Structure:
+interface Route {
+  id: string;
+  name: string;
+  description: string;
+  distance: number; // meters
+  duration: number; // estimated minutes
+  difficulty: 'easy' | 'moderate' | 'hard';
+  elevationGain: number; // meters
+  surface: 'road' | 'trail' | 'mixed';
+  startPoint: { lat: number; lng: number; name: string };
+  endPoint: { lat: number; lng: number; name: string };
+  waypoints: Array<{ lat: number; lng: number }>;
+  rating: number; // 1-5
+  runCount: number; // total runs on this route
+  bestTimeToRun: 'morning' | 'afternoon' | 'evening' | 'night';
+  tags: string[]; // ['scenic', 'flat', 'traffic-free']
+  safetyRating: 'high' | 'medium' | 'low';
+  waterPoints: boolean;
+  parkingAvailable: boolean;
+  images: string[];
+  createdBy: string; // user id
+  createdAt: Date;
+}
+Features:
+1. Route list with infinite scroll
+2. Route cards with map preview
+3. Filter drawer (distance, difficulty, surface, safety)
+4. Search by name or location
+5. Sort by (popular, nearby, newest)
+6. Pull to refresh
+7. Skeleton loading states
+Step 2.3: Build Trails Tab (Day 2-3, 6 hours)
+// File: src/features/explore/TrailsTab.tsx
+Trail Card Design:
+┌─────────────────────────────────────────────────┐
+│ ┌─────────────────────────────────────────────┐ │
+│ │                                             │ │
+│ │         [Trail Photo/Image]                 │ │
+│ │                                             │ │
+│ │    🏔️ Western Ghats • Maharashtra           │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ Rajmachi Fort Trek                             │
+│ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐           │
+│ │14.5km│ │Hard  │ │860m ⬆️│ │⭐4.7 │           │
+│ └──────┘ └──────┘ └──────┘ └──────┘           │
+│                                                 │
+│ 🥾 Mountain Trail • 📶 Moderate Signal        │
+│ ⏱️ 6-7 hours • Best: Oct-Feb                   │
+│                                                 │
+│ ⚠️ Safety: Carry 2L water, no shops en route   │
+│                                                 │
+│ [View Trail Details →]                         │
+└─────────────────────────────────────────────────┘
+Trail Data Structure:
+interface Trail {
+  id: string;
+  name: string;
+  description: string;
+  region: string; // 'Western Ghats', 'Himalayas', etc.
+  distance: number; // meters
+  duration: string; // '6-7 hours'
+  difficulty: 'easy' | 'moderate' | 'hard' | 'expert';
+  elevationGain: number;
+  maxHeight: number; // peak altitude
+  trailType: 'forest' | 'mountain' | 'coastal' | 'desert';
+  bestSeason: string[]; // ['Oct', 'Nov', 'Dec', 'Jan', 'Feb']
+  mobileSignal: 'none' | 'poor' | 'moderate' | 'good';
+  waterSources: boolean;
+  nearestTown: string;
+  emergencyContacts: string[];
+  gear: string[]; // ['trekking poles', 'rain jacket']
+  permit: boolean;
+  permitInfo?: string;
+  rating: number;
+  completionCount: number;
+  images: string[];
+  gpxFile: string; // download link
+  safetyNotes: string[];
+}
+India Trail Regions (Pre-populated):
+1. Western Ghats (Maharashtra, Karnataka, Kerala)
+2. Himalayas (Himachal, Uttarakhand, Sikkim)
+3. Nilgiri Hills (Tamil Nadu, Karnataka)
+4. Aravalli Range (Rajasthan, Haryana)
+5. Eastern Ghats (Andhra, Odisha)
+6. Coastal Trails (Goa, Kerala, Tamil Nadu)
+Step 2.4: Build Events Tab (Day 3-4, 4 hours)
+// File: src/features/explore/EventsTab.tsx
+Event Card Design:
+┌─────────────────────────────────────────────────┐
+│ 📅 SUNDAY, FEB 16                              │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ 🌅                                         │ │
+│ │    Mumbai Marathon 2026                    │ │
+│ │    Full Marathon • 42.2 km                 │ │
+│ │                                            │ │
+│ │    📍 CST to Marine Drive                  │ │
+│ │    🕐 5:30 AM Start                        │ │
+│ │                                            │ │
+│ │    👥 2,450 going  ✓ You're going          │ │
+│ │                                            │ │
+│ │    [View Event]  [Share]                   │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ 🏃                                         │ │
+│ │    Sunday Long Run - Bangalore             │ │
+│ │    Group Run • 15-21 km options            │ │
+│ │                                            │ │
+│ │    📍 Cubbon Park                          │ │
+│ │    🕐 5:00 AM Start                        │ │
+│ │                                            │ │
+│ │    👥 85 going    [RSVP]                   │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+Event Data Structure:
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  type: 'race' | 'group_run' | 'trail_run' | 'training' | 'social';
+  date: Date;
+  startTime: string;
+  endTime?: string;
+  location: {
+    name: string;
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  distance?: number; // for races
+  distanceOptions?: number[]; // for group runs [10, 15, 21]
+  hostType: 'club' | 'user' | 'brand';
+  hostId: string;
+  hostName: string;
+  maxParticipants?: number;
+  currentParticipants: number;
+  participantAvatars: string[]; // first 5
+  isUserGoing: boolean;
+  isFree: boolean;
+  price?: number;
+  registrationLink?: string;
+  tags: string[];
+  images: string[];
+}
+Event Types:
+1. Races (Marathons, Half Marathons, 10K, 5K)
+2. Group Runs (Weekly club runs)
+3. Trail Runs (Weekend adventures)
+4. Training Sessions (Coaching, intervals)
+5. Social Events (Meet & greets, post-run breakfasts)
+Step 2.5: Build Filter System (Day 4, 3 hours)
+// File: src/features/explore/components/FilterDrawer.tsx
+Filter Design:
+┌─────────────────────────────────────────────────┐
+│ Filters                               [Reset]  │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ DISTANCE                                        │
+│ ○ Under 5km  ○ 5-10km  ○ 10-21km  ○ 21km+     │
+│                                                 │
+│ DIFFICULTY                                      │
+│ ☑ Easy  ☑ Moderate  ☐ Hard  ☐ Expert          │
+│                                                 │
+│ ELEVATION GAIN                                  │
+│ [Slider: 0m ────────────── 1000m+]             │
+│                                                 │
+│ SURFACE (Routes only)                          │
+│ ☑ Road  ☑ Trail  ☐ Mixed                      │
+│                                                 │
+│ SAFETY RATING                                   │
+│ ○ High only  ○ Medium+  ○ Any                 │
+│                                                 │
+│ EVENT DATE (Events only)                       │
+│ ○ Today  ○ This Week  ○ This Month  ○ Any    │
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │         Apply Filters (12 results)          │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+Filter State:
+interface Filters {
+  distance: 'all' | 'under5' | '5-10' | '10-21' | '21+';
+  difficulty: ('easy' | 'moderate' | 'hard' | 'expert')[];
+  elevationRange: [number, number];
+  surface: ('road' | 'trail' | 'mixed')[];
+  safetyRating: 'high' | 'medium' | 'any';
+  eventDate: 'today' | 'week' | 'month' | 'all';
+}
+Step 2.6: Route/Trail Detail Screen (Day 5, 4 hours)
+// File: app/route/[id].tsx
+Route Detail Design:
+┌─────────────────────────────────────────────────┐
+│ [←] Route Details                     [❤️] [⬆️] │
+├─────────────────────────────────────────────────┤
+│ ┌─────────────────────────────────────────────┐ │
+│ │                                             │ │
+│ │         [Full Interactive Map]              │ │
+│ │         with route highlighted              │ │
+│ │         + elevation overlay                 │ │
+│ │                                             │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ Marine Drive Sunset Loop                       │
+│ ⭐ 4.8 (245 reviews) • 🏃 1,245 runs           │
+│                                                 │
+│ ┌────────────────────────────────────────────┐  │
+│ │  5.2 km    │  35 min    │  15m ⬆️        │  │
+│ │  Distance  │  Est. Time │  Elevation     │  │
+│ └────────────────────────────────────────────┘  │
+│                                                 │
+│ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░ Elevation Profile      │
+│                                                 │
+│ ABOUT THIS ROUTE                               │
+│ A beautiful coastal run along Mumbai's iconic  │
+│ Marine Drive. Best enjoyed during sunset...    │
+│                                                 │
+│ 🕐 BEST TIME                                   │
+│ Morning (6-8 AM) or Evening (5-7 PM)           │
+│                                                 │
+│ 🏷️ TAGS                                       │
+│ [Scenic] [Coastal] [Flat] [Traffic-Free]       │
+│                                                 │
+│ ⚠️ SAFETY INFO                                 │
+│ • Well-lit until 10 PM                         │
+│ • Water available at start/end                 │
+│ • Public toilets at 2 points                   │
+│ • Moderate crowd until 8 AM                    │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ REVIEWS (245)                                  │
+│ ┌────────────────────────────────────────────┐  │
+│ │ 👤 Rahul M. ⭐⭐⭐⭐⭐ 2 days ago            │  │
+│ │ Amazing route! Did it at 6 AM, perfect     │  │
+│ │ weather and empty roads.                   │  │
+│ └────────────────────────────────────────────┘  │
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │        🚀 START THIS ROUTE                  │ │
+│ │        Navigate to start point              │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+---
+Phase 2 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| Explore screen layout | ⬜ | app/(tabs)/explore.tsx |
+| Sub-tab navigation | ⬜ | src/features/explore/SubTabs.tsx |
+| Routes tab | ⬜ | src/features/explore/RoutesTab.tsx |
+| Trails tab | ⬜ | src/features/explore/TrailsTab.tsx |
+| Events tab | ⬜ | src/features/explore/EventsTab.tsx |
+| Route card component | ⬜ | src/features/explore/components/RouteCard.tsx |
+| Trail card component | ⬜ | src/features/explore/components/TrailCard.tsx |
+| Event card component | ⬜ | src/features/explore/components/EventCard.tsx |
+| Filter drawer | ⬜ | src/features/explore/components/FilterDrawer.tsx |
+| Route detail screen | ⬜ | app/route/[id].tsx |
+| Trail detail screen | ⬜ | app/trail/[id].tsx |
+| Event detail screen | ⬜ | app/event/[id].tsx |
+| Sample data seeds | ⬜ | src/data/routes.ts, trails.ts, events.ts |
+---
+Phase 2 Outcome Comparison
+| Metric | Before | After |
+|--------|--------|-------|
+| Route discovery | None | Full system |
+| Trail database | None | India-specific |
+| Event discovery | None | Local events |
+| Filter options | None | 6+ filters |
+| User engagement | Track only | Discover + Plan |
+---
+PHASE 3: Community Screen
+Duration: 5-6 Days | Priority: HIGH
+What We're Building
+Community Screen Architecture:
+┌─────────────────────────────────────────────────┐
+│  👥 Community                                   │
+├─────────────────────────────────────────────────┤
+│  [Feed] [Clubs] [Challenges] [Events] [Friends] │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ACTIVITY FEED                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 👤 Rahul completed a run                 │  │
+│  │    🏃 8.5 km • 42:15 • 4:58/km           │  │
+│  │    📍 Marine Drive, Mumbai               │  │
+│  │    [Map Preview]                         │  │
+│  │                                          │  │
+│  │    ❤️ 24   💬 8   📤 Share               │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 🏆 Achievement Unlocked!                 │  │
+│  │    Priya earned "First 10K" badge        │  │
+│  │    [Badge Animation]                     │  │
+│  │                                          │  │
+│  │    ❤️ 156   💬 32   🎉 Congratulate      │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step-by-Step Implementation
+Step 3.1: Community Layout (Day 1, 2 hours)
+// File: app/(tabs)/community.tsx
+Layout Structure:
+├── Header
+│   ├── Title: "Community"
+│   ├── Notification bell (badge count)
+│   └── Create button (+)
+├── Horizontal Sub-tabs
+│   ├── Feed (default)
+│   ├── Clubs
+│   ├── Challenges
+│   ├── Events
+│   └── Friends
+├── Content Area
+│   └── [Active tab content]
+└── FAB (varies by tab)
+    ├── Feed: "Post Activity" (auto after run)
+    ├── Clubs: "Create Club"
+    └── Events: "Create Event"
+Sub-tab Navigation:
+- Scrollable horizontal tabs
+- Active indicator underline
+- Animated tab switching
+- Preserve scroll position per tab
+Step 3.2: Activity Feed (Day 1-2, 6 hours)
+// File: src/features/community/FeedTab.tsx
+Activity Card Types:
+1. RUN ACTIVITY:
+┌─────────────────────────────────────────────────┐
+│ 👤 Rahul Mehta                2 hours ago       │
+│                                                 │
+│ 🏃 Morning Run                                 │
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │         [Route Map Preview]                 │ │
+│ │         with path highlighted               │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ ┌─────────┬─────────┬─────────┬─────────┐      │
+│ │  8.5 km │ 42:15   │ 4:58/km │ 145 bpm │      │
+│ │ Distance│ Time    │ Pace    │ HR Avg  │      │
+│ └─────────┴─────────┴─────────┴─────────┘      │
+│                                                 │
+│ 📍 Marine Drive, Mumbai                        │
+│ 🏆 Captured 3 zones today!                     │
+│                                                 │
+│ ❤️ 24   💬 8   📤 Share                        │
+└─────────────────────────────────────────────────┘
+2. ACHIEVEMENT POST:
+┌─────────────────────────────────────────────────┐
+│ 🏆 Achievement Unlocked!                       │
+│                                                 │
+│ Priya Sharma earned                            │
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │           [Animated Badge]                  │ │
+│ │              🥇                             │ │
+│ │          "First 10K"                        │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ Completed their first 10 kilometer run!        │
+│                                                 │
+│ ❤️ 156   💬 32   🎉 Congratulate               │
+└─────────────────────────────────────────────────┘
+3. CLUB ACTIVITY:
+┌─────────────────────────────────────────────────┐
+│ 🏃 Mumbai Runners                              │
+│                                                 │
+│ Sunday Long Run completed!                     │
+│ 24 members ran a total of 312 km today 🎉     │
+│                                                 │
+│ [Group photo / map of all routes]              │
+│                                                 │
+│ ❤️ 89   💬 15   👥 View Participants           │
+└─────────────────────────────────────────────────┘
+4. EVENT REMINDER:
+┌─────────────────────────────────────────────────┐
+│ 📅 Reminder: Mumbai Marathon                   │
+│                                                 │
+│ Tomorrow at 5:30 AM                            │
+│ 42.2 km • CST to Marine Drive                  │
+│                                                 │
+│ You're registered! 👍                          │
+│                                                 │
+│ [View Event]  [Set Alarm]                      │
+└─────────────────────────────────────────────────┘
+Feed Features:
+1. Infinite scroll with pagination
+2. Pull to refresh
+3. Optimistic kudos (instant UI update)
+4. Comment bottom sheet
+5. Share activity
+6. Hide/Mute user option
+7. Report inappropriate content
+8. Skeleton loading
+9. Empty state for new users
+Step 3.3: Clubs System (Day 2-3, 6 hours)
+// File: src/features/community/ClubsTab.tsx
+Club Discovery:
+┌─────────────────────────────────────────────────┐
+│ 🔍 Search clubs...              📍 Mumbai ▼    │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ YOUR CLUBS                                     │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🏃 Mumbai Runners              [Member]   │  │
+│ │    1,245 members • 89 active              │  │
+│ │    📍 Mumbai, Maharashtra                 │  │
+│ │    Next run: Sunday 5 AM                  │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ RECOMMENDED CLUBS                              │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🥾 Western Ghats Trekkers      [Join]     │  │
+│ │    856 members • 45 active                │  │
+│ │    📍 Pune, Maharashtra                   │  │
+│ │    Next trek: Feb 22                      │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 👩 She Runs India              [Join]     │  │
+│ │    2,340 members • 156 active             │  │
+│ │    📍 All India (Women Only)              │  │
+│ │    Multiple cities                        │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ [+ Create Club]                                │
+└─────────────────────────────────────────────────┘
+Club Detail:
+┌─────────────────────────────────────────────────┐
+│ [←] Mumbai Runners                   [⚙️]      │
+├─────────────────────────────────────────────────┤
+│ ┌─────────────────────────────────────────────┐ │
+│ │                                             │ │
+│ │         [Club Cover Image]                  │ │
+│ │              🏃                            │ │
+│ │         Mumbai Runners                     │ │
+│ │         Since Jan 2022                     │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ 📍 Mumbai, Maharashtra                         │
+│ 👥 1,245 members • 89 active this week        │
+│                                                 │
+│ ┌────────────────────────────────────────────┐  │
+│ │  12,450 km │  892 runs  │  45 events     │  │
+│ │  This month│ This month│  Total          │  │
+│ └────────────────────────────────────────────┘  │
+│                                                 │
+│ [Leave Club]        [👥 Invite Friends]        │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ ABOUT                                          │
+│ Mumbai's largest running community. We run     │
+│ every Sunday at 5 AM from various locations... │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ UPCOMING EVENTS                                │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 📅 Sunday Long Run                        │  │
+│ │    Feb 16 • 5:00 AM • Cubbon Park         │  │
+│ │    👥 45 going                            │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ RECENT ACTIVITIES                              │
+│ [Activity feed filtered to club members]       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Club Data Structure:
+interface Club {
+  id: string;
+  name: string;
+  description: string;
+  coverImage: string;
+  logo: string;
+  location: {
+    city: string;
+    state: string;
+    country: string;
+  };
+  type: 'running' | 'hiking' | 'cycling' | 'multi-sport';
+  isPrivate: boolean;
+  isWomenOnly: boolean;
+  createdBy: string;
+  admins: string[];
+  memberCount: number;
+  activeMemberCount: number; // ran in last 7 days
+  totalDistance: number;
+  totalRuns: number;
+  totalEvents: number;
+  nextEvent?: Event;
+  weeklySchedule?: {
+    day: string;
+    time: string;
+    location: string;
+  }[];
+  socialLinks: {
+    instagram?: string;
+    facebook?: string;
+    whatsapp?: string;
+  };
+  rules: string[];
+  createdAt: Date;
+}
+Step 3.4: Challenges System (Day 3-4, 4 hours)
+// File: src/features/community/ChallengesTab.tsx
+Challenge Discovery:
+┌─────────────────────────────────────────────────┐
+│ 🏆 CHALLENGES                                  │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ ACTIVE NOW                                     │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🎯 February 50K                           │  │
+│ │    Run 50km this month                    │  │
+│ │                                           │  │
+│ │    ▓▓▓▓▓▓▓▓░░░░░░░░░░░░ 32/50 km        │  │
+│ │    8 days remaining                       │  │
+│ │                                           │  │
+│ │    👥 1,234 participating                 │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🔥 7-Day Streak                           │  │
+│ │    Run every day for 7 days               │  │
+│ │                                           │  │
+│ │    Day: ● ● ● ○ ○ ○ ○                     │  │
+│ │    3/7 days completed                     │  │
+│ │                                           │  │
+│ │    👥 567 participating                   │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ CITY VS CITY                                   │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🏙️ Mumbai vs Delhi                        │  │
+│ │    Which city runs more this week?        │  │
+│ │                                           │  │
+│ │    Mumbai    ████████░░   45,230 km      │  │
+│ │    Delhi     ██████░░░░   32,450 km      │  │
+│ │                                           │  │
+│ │    📍 You're running for Mumbai          │  │
+│ │    5 days remaining                       │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ COMING SOON                                    │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 🇮🇳 Independence Day Challenge            │  │
+│ │    Run 75km from Aug 1-15                 │  │
+│ │    Starts in 12 days                      │  │
+│ │                                           │  │
+│ │    [Join Waitlist]                        │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Challenge Types:
+1. Individual Distance (Run 50km this month)
+2. Streak Challenges (Run 7 days in a row)
+3. Time-based (Run for 10 hours this week)
+4. City vs City (Mumbai vs Delhi)
+5. Club Challenges (Club goal)
+6. Special Events (Independence Day, Diwali)
+7. Elevation (Climb 1000m this month)
+8. Zone Capture (Capture 20 zones)
+Challenge Data Structure:
+interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  type: 'individual' | 'city_vs_city' | 'club' | 'community';
+  category: 'distance' | 'streak' | 'time' | 'elevation' | 'zones';
+  goal: number; // km, days, minutes, meters, zones
+  startDate: Date;
+  endDate: Date;
+  imageUrl: string;
+  reward: {
+    badge?: Badge;
+    xp?: number;
+    coins?: number;
+    premiumDays?: number;
+  };
+  participants: number;
+  userProgress?: number;
+  cityProgress?: {
+    city: string;
+    progress: number;
+  };
+  clubProgress?: {
+    clubId: string;
+    progress: number;
+  };
+}
+Step 3.5: Events in Community (Day 4, 2 hours)
+// File: src/features/community/EventsTab.tsx
+Events Integration:
+- Similar to Explore > Events tab
+- Shows events from user's clubs
+- Shows events user is attending
+- Shows friend's attending events
+- RSVP functionality
+- Calendar integration
+Step 3.6: Friends Tab (Day 5, 3 hours)
+// File: src/features/community/FriendsTab.tsx
+Friends Management:
+┌─────────────────────────────────────────────────┐
+│ 👥 FRIENDS                                     │
+├─────────────────────────────────────────────────┤
+│ 🔍 Search friends...                           │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ FRIEND REQUESTS (3)                            │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 👤 Amit Kumar                             │  │
+│ │    @amit_runs • 156 runs                  │  │
+│ │    [Accept]  [Decline]                    │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ YOUR FRIENDS (45)                              │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 👤 Rahul Mehta                 [Message]  │  │
+│ │    @rahul_m • Last run: Today            │  │
+│ │    🏃 234 runs • 1,456 km                 │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ SUGGESTED FRIENDS                              │
+│ ┌───────────────────────────────────────────┐  │
+│ │ 👤 Priya Sharma                [Add]      │  │
+│ │    @priya_runs • 3 mutual friends        │  │
+│ │    🏃 89 runs • 456 km                    │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ [📤 Invite Friends]                            │
+└─────────────────────────────────────────────────┘
+Friend Features:
+1. Search by username/name
+2. Friend suggestions (mutual friends)
+3. Send/accept/decline requests
+4. View friend's profile
+5. Message (future phase)
+6. Activity comparison
+7. Invite via referral code
+---
+Phase 3 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| Community layout | ⬜ | app/(tabs)/community.tsx |
+| Feed tab | ⬜ | src/features/community/FeedTab.tsx |
+| Activity card component | ⬜ | src/features/community/components/ActivityCard.tsx |
+| Kudos animation | ⬜ | src/features/community/components/KudosButton.tsx |
+| Comments sheet | ⬜ | src/features/community/components/CommentsSheet.tsx |
+| Clubs tab | ⬜ | src/features/community/ClubsTab.tsx |
+| Club card component | ⬜ | src/features/community/components/ClubCard.tsx |
+| Club detail screen | ⬜ | app/club/[id].tsx |
+| Create club flow | ⬜ | app/club/create.tsx |
+| Challenges tab | ⬜ | src/features/community/ChallengesTab.tsx |
+| Challenge card | ⬜ | src/features/community/components/ChallengeCard.tsx |
+| Challenge detail | ⬜ | app/challenge/[id].tsx |
+| Events tab (community) | ⬜ | src/features/community/EventsTab.tsx |
+| Friends tab | ⬜ | src/features/community/FriendsTab.tsx |
+| Friend card | ⬜ | src/features/community/components/FriendCard.tsx |
+---
+Phase 3 Outcome Comparison
+| Metric | Before | After |
+|--------|--------|-------|
+| Social features | Basic friends list | Full social network |
+| Club management | None | Complete system |
+| Challenge system | None | 8 challenge types |
+| User engagement | Solo tracking | Community-driven |
+| Daily retention | ~20% | ~45% (expected) |
+| Social interactions | 0 | 10+ per user/week |
+---
+PHASE 4: Safety Features
+Duration: 3-4 Days | Priority: CRITICAL (India Market)
+What We're Building
+Safety System Architecture:
+┌─────────────────────────────────────────────────┐
+│                   SAFETY CENTER                 │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 🆘 EMERGENCY SOS                          │  │
+│  │    Tap to alert emergency contacts        │  │
+│  │    [HOLD FOR 3 SECONDS]                   │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 📍 LIVE LOCATION SHARING                  │  │
+│  │    Share your run location in real-time   │  │
+│  │                                           │  │
+│  │    Sharing with: Mom, Dad                 │  │
+│  │    Duration: Until run ends               │  │
+│  │    [Stop Sharing]                         │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 🌙 NIGHT RUN MODE                         │  │
+│  │    Enable enhanced safety for night runs  │  │
+│  │    • Auto-share location                  │  │
+│  │    • Route safety score                   │  │
+│  │    • Low battery alerts                   │  │
+│  │    [Enable]                               │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  EMERGENCY CONTACTS                            │
+│  • Mom (+91 98765 43210)                       │
+│  • Dad (+91 98765 43211)                       │
+│  • [Add Contact]                               │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step-by-Step Implementation
+Step 4.1: SOS System (Day 1, 4 hours)
+// File: src/features/safety/SOSService.ts
+SOS Flow:
+1. User holds SOS button for 3 seconds
+2. App captures:
+   - Current GPS location
+   - Battery level
+   - Time
+   - Last known route
+3. Sends SMS to emergency contacts:
+   "EMERGENCY ALERT: [Name] has triggered SOS on INVTL.
+    Location: [Google Maps Link]
+    Battery: [X]%
+    Time: [Timestamp]"
+4. Optionally sends to nearby club members
+5. Shows "Help is on the way" screen
+6. Option to cancel within 10 seconds
+SOS Button Design:
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│              ┌───────────────┐                  │
+│              │               │                  │
+│              │      🆘       │                  │
+│              │     SOS       │                  │
+│              │               │                  │
+│              │  Hold 3 sec   │                  │
+│              └───────────────┘                  │
+│                                                 │
+│         (Pulse animation while holding)        │
+│         (Changes color as progress fills)       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Implementation:
+- Circular progress indicator
+- Haptic feedback during hold
+- Vibration on trigger
+- Works even when app in background
+- Offline SMS capability (if possible)
+Step 4.2: Live Location Sharing (Day 1-2, 4 hours)
+// File: src/features/safety/LiveLocationService.ts
+Live Location Features:
+1. Start sharing before/during run
+2. Select contacts to share with
+3. Set duration:
+   - 30 minutes
+   - 1 hour
+   - 2 hours
+   - Until run ends
+   - Custom
+4. Recipients get notification with:
+   - Link to live map
+   - Estimated time remaining
+   - Current pace/distance
+5. Auto-stop when run ends
+6. Battery warning at 20% and 10%
+Live Location UI (for recipient):
+┌─────────────────────────────────────────────────┐
+│ 📍 Rahul is sharing location                    │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ ┌─────────────────────────────────────────────┐ │
+│ │                                             │ │
+│ │         [Live Map with User Marker]         │ │
+│ │              Moving in real-time            │ │
+│ │                                             │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                 │
+│ 🏃 Morning Run • 23:45 elapsed                 │
+│ 📏 4.2 km • Pace: 5:40/km                      │
+│ 🔋 Battery: 67%                                │
+│                                                 │
+│ ETA: 15 minutes remaining                      │
+│                                                 │
+│ [Call]  [Message]  [Stop Watching]             │
+└─────────────────────────────────────────────────┘
+Technical Implementation:
+- Real-time location updates every 5 seconds
+- WebSocket or Supabase Realtime
+- Background location tracking
+- Push notifications for status changes
+Step 4.3: Night Run Mode (Day 2, 3 hours)
+// File: src/features/safety/NightRunMode.tsx
+Night Run Mode Features:
+1. Auto-detects night time (8 PM - 6 AM)
+2. Prompts to enable safety mode
+3. When enabled:
+   - Auto-shares location with contacts
+   - Shows route safety score
+   - Suggests well-lit alternatives
+   - Enables low battery alert to contacts
+   - Reduces auto-pause sensitivity
+Night Run Prompt:
+┌─────────────────────────────────────────────────┐
+│ 🌙 Night Run Detected                          │
+│                                                 │
+│ It's after 8 PM. Enable Night Run Mode for    │
+│ extra safety?                                  │
+│                                                 │
+│ ✓ Auto-share location                          │
+│ ✓ Route safety scoring                         │
+│ ✓ Low battery alerts to contacts               │
+│ ✓ Quick SOS access                             │
+│                                                 │
+│ [Enable Night Mode]  [Skip]                    │
+│                                                 │
+│ [ ] Don't ask again                            │
+└─────────────────────────────────────────────────┘
+Route Safety Score:
+interface RouteSafety {
+  lighting: 'well-lit' | 'partial' | 'dark';
+  traffic: 'low' | 'medium' | 'high';
+  crowdLevel: 'busy' | 'moderate' | 'empty';
+  cctvCoverage: boolean;
+  policeNearby: boolean;
+  previousRuns: number;
+  incidentsReported: number;
+  overallScore: number; // 1-10
+}
+Step 4.4: Emergency Contacts (Day 3, 2 hours)
+// File: src/features/safety/EmergencyContacts.tsx
+Emergency Contact Management:
+┌─────────────────────────────────────────────────┐
+│ Emergency Contacts                             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 👤 Mom                                         │
+│    +91 98765 43210                             │
+│    [Call]  [Message]  [Remove]                 │
+│                                                 │
+│ 👤 Dad                                         │
+│    +91 98765 43211                             │
+│    [Call]  [Message]  [Remove]                 │
+│                                                 │
+│ [+ Add Emergency Contact]                      │
+│                                                 │
+│ Max 3 emergency contacts                       │
+│ They will be notified in case of SOS           │
+└─────────────────────────────────────────────────┘
+Features:
+- Import from phone contacts
+- Verify phone number format
+- Test SMS on save
+- Quick call/message from run screen
+Step 4.5: Women's Safety Features (Day 3-4, 4 hours)
+// File: src/features/safety/WomenSafety.tsx
+Women-Only Features:
+1. Women-only clubs and groups
+2. Verified women-safe routes
+3. Anonymous location sharing (no profile shown)
+4. Community watch (notify nearby women runners)
+5. Fake call feature (trigger fake incoming call)
+6. Quick hide app (disguise as weather app)
+Women's Safety Screen:
+┌─────────────────────────────────────────────────┐
+│ 👩 Women's Safety                              │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ VERIFIED SAFE ROUTES                           │
+│ Routes recommended by women runners            │
+│ [View Safe Routes →]                           │
+│                                                 │
+│ WOMEN-ONLY CLUBS                               │
+│ Connect with women runners nearby              │
+│ [Find Clubs →]                                 │
+│                                                 │
+│ QUICK ACTIONS                                  │
+│ ┌─────────────┐ ┌─────────────┐                │
+│ │ 📞 Fake     │ │ 👥 Alert    │                │
+│ │    Call     │ │    Nearby   │                │
+│ └─────────────┘ └─────────────┘                │
+│                                                 │
+│ PRIVACY                                        │
+│ [ ] Hide profile from strangers                │
+│ [ ] Anonymous location sharing                 │
+│ [ ] Disable activity visibility                │
+│                                                 │
+└─────────────────────────────────────────────────┘
+---
+Phase 4 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| SOS button component | ⬜ | src/features/safety/SOSButton.tsx |
+| SOS service | ⬜ | src/features/safety/SOSService.ts |
+| Live location service | ⬜ | src/features/safety/LiveLocationService.ts |
+| Live location viewer | ⬜ | src/features/safety/LiveLocationViewer.tsx |
+| Night run mode | ⬜ | src/features/safety/NightRunMode.tsx |
+| Route safety scorer | ⬜ | src/features/safety/RouteSafetyScorer.ts |
+| Emergency contacts | ⬜ | src/features/safety/EmergencyContacts.tsx |
+| Safety settings screen | ⬜ | app/profile/safety.tsx |
+| Women's safety features | ⬜ | src/features/safety/WomenSafety.tsx |
+| Safety integration on run | ⬜ | Update run.tsx |
+---
+Phase 4 Outcome Comparison
+| Metric | Before | After |
+|--------|--------|-------|
+| Safety features | None | Full suite |
+| SOS capability | None | 3-second hold trigger |
+| Live sharing | None | Real-time tracking |
+| Night run support | None | Auto-safety mode |
+| Women's safety | None | Dedicated features |
+| User trust score | Low | High |
+| Emergency response | None | < 30 second alert |
+---
+PHASE 5: Gamification & Progression
+Duration: 3-4 Days | Priority: HIGH
+What We're Building
+Gamification System:
+┌─────────────────────────────────────────────────┐
+│                 PROGRESSION                      │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌───────────────────────────────────────────┐  │
+│  │           LEVEL 12                        │  │
+│  │     ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░                 │  │
+│  │         2,450 / 3,000 XP                  │  │
+│  │      🏃 Zone Hunter II                    │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  BADGES EARNED (24/50)                         │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐      │
+│  │ 🥇  │ │ 🏃  │ │ 🔥  │ │ ⭐  │ │ 🎯  │      │
+│  │First │ │100  │ │7-Day│ │10K  │ │Zone │      │
+│  │Run   │ │Runs │ │Streak│ │     │ │Master│    │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘      │
+│                                                 │
+│  NEXT MILESTONE                                │
+│  ┌───────────────────────────────────────────┐  │
+│  │ 🏆 Half Marathon                         │  │
+│  │    Run 21 km in a single run             │  │
+│  │    Progress: 18.5 km (88%)               │  │
+│  │    Reward: 500 XP + Exclusive Badge      │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  WEEKLY GOALS                                  │
+│  ┌──────────┬──────────┬──────────┐            │
+│  │  25 km   │  5 runs  │ 10 zones │            │
+│  │  ▓▓▓░ 60%│  ▓▓▓░ 60%│  ▓▓░ 40% │            │
+│  │  15/25   │   3/5    │   4/10   │            │
+│  └──────────┴──────────┴──────────┘            │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step-by-Step Implementation
+Step 5.1: XP & Level System (Day 1, 3 hours)
+// File: src/features/gamification/XPService.ts
+XP Sources:
+- Run completed: 10 XP per km
+- Zone captured: 25 XP per zone
+- Streak maintained: 50 XP per day
+- Challenge completed: 100-500 XP
+- Badge earned: 50-200 XP
+- Event participation: 75 XP
+- Club activity: 25 XP per activity
+- Referral: 100 XP
+Level Calculation:
+Level 1: 0 XP
+Level 2: 100 XP
+Level 3: 250 XP
+Level 4: 500 XP
+Level 5: 800 XP
+...
+Level N: (N-1)² × 50 XP
+Level Titles:
+1-5: Beginner Runner
+6-10: Zone Scout
+11-15: Zone Hunter
+16-20: Territory Master
+21-25: City Conqueror
+26-30: Region Champion
+31-35: State Legend
+36-40: National Hero
+41-45: International Star
+46-50: World Champion
+Level Up Animation:
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│              ⭐ LEVEL UP! ⭐                    │
+│                                                 │
+│           ┌───────────────┐                     │
+│           │     12        │                     │
+│           │  ZONE HUNTER  │                     │
+│           │      II       │                     │
+│           └───────────────┘                     │
+│                                                 │
+│         Rewards Unlocked:                      │
+│         • New badge slot                       │
+│         • 100 coins                            │
+│         • Premium theme                        │
+│                                                 │
+│         [Awesome!]                             │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step 5.2: Badge System (Day 1-2, 4 hours)
+// File: src/features/gamification/BadgeSystem.ts
+Badge Categories:
+1. DISTANCE BADGES
+- First 5K (🥉)
+- First 10K (🥈)
+- First Half Marathon (🥇)
+- First Full Marathon (🏆)
+- 100km Total (🏅)
+- 500km Total (🌟)
+- 1000km Total (💫)
+- 5000km Total (👑)
+2. STREAK BADGES
+- 7-Day Streak (🔥)
+- 30-Day Streak (🔥🔥)
+- 100-Day Streak (🔥🔥🔥)
+- 365-Day Streak (❄️)
+3. ZONE BADGES
+- First Zone (📍)
+- 10 Zones (🎯)
+- 50 Zones (🎪)
+- 100 Zones (🏰)
+- Zone Master (👑)
+4. SOCIAL BADGES
+- First Friend (👥)
+- 10 Friends (👯)
+- Club Creator (🏃‍♂️)
+- Event Host (📅)
+- Community Leader (🌟)
+5. CHALLENGE BADGES
+- First Challenge (🏆)
+- 10 Challenges (🎖️)
+- City Champion (🏙️)
+- Top 10 Leaderboard (📊)
+6. SPECIAL BADGES
+- Independence Day Run (🇮🇳)
+- Diwali Runner (🪔)
+- New Year Run (🎆)
+- Early Bird (🌅)
+- Night Owl (🦉)
+Badge Animation:
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│           🎉 BADGE UNLOCKED! 🎉                 │
+│                                                 │
+│           [Animated Badge Reveal]              │
+│                 🥇                             │
+│             "First 10K"                        │
+│                                                 │
+│      You completed your first 10km run!       │
+│                                                 │
+│      +100 XP earned!                          │
+│                                                 │
+│      [Share Achievement]  [View Badge]         │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step 5.3: Achievement Milestones (Day 2, 3 hours)
+// File: src/features/gamification/Achievements.tsx
+Milestone Types:
+1. Distance milestones (5K, 10K, 21K, 42K)
+2. Time milestones (Run for 1 hour, 2 hours)
+3. Streak milestones (7 days, 30 days, 100 days)
+4. Zone milestones (10, 50, 100 zones)
+5. Social milestones (10 friends, 100 kudos)
+6. Speed milestones (Fastest 5K, 10K)
+Milestone Tracker:
+┌─────────────────────────────────────────────────┐
+│ MILESTONES IN PROGRESS                         │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 🏃 Half Marathon                              │
+│ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░ 88% (18.5/21 km)       │
+│ Best attempt: 18.5 km                          │
+│                                                 │
+│ 🔥 30-Day Streak                              │
+│ ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░ 47% (14/30 days)        │
+│ Current streak: 14 days                        │
+│                                                 │
+│ 🎯 Zone Master (100 zones)                    │
+│ ▓▓▓▓▓▓▓▓░░░░░░░░░░░░ 38% (38/100 zones)      │
+│ Zones captured: 38                             │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step 5.4: Weekly Goals (Day 2-3, 3 hours)
+// File: src/features/gamification/WeeklyGoals.tsx
+Goal Types:
+- Distance goal (km)
+- Run frequency (days)
+- Zone capture goal
+- Time goal (minutes)
+- Calorie goal
+- Elevation goal
+Weekly Goal Setting:
+┌─────────────────────────────────────────────────┐
+│ SET WEEKLY GOALS                               │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ DISTANCE                                       │
+│ ○ 10 km  ● 25 km  ○ 50 km  ○ Custom          │
+│                                                 │
+│ RUN FREQUENCY                                  │
+│ ○ 3 days  ● 5 days  ○ 7 days                  │
+│                                                 │
+│ ZONES TO CAPTURE                               │
+│ ○ 5 zones  ● 10 zones  ○ 15 zones             │
+│                                                 │
+│ [Save Goals]                                   │
+│                                                 │
+│ Goals reset every Monday at midnight          │
+└─────────────────────────────────────────────────┘
+Step 5.5: Leaderboards (Day 3-4, 4 hours)
+// File: src/features/gamification/Leaderboards.tsx
+Leaderboard Types:
+1. City Leaderboard
+2. Club Leaderboard
+3. Friends Leaderboard
+4. Challenge Leaderboard
+5. Weekly/Monthly/All-time
+City Leaderboard:
+┌─────────────────────────────────────────────────┐
+│ 🏙️ MUMBAI LEADERBOARD                         │
+│ [This Week] [This Month] [All Time]            │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 🥇 1. Rahul Mehta                              │
+│    156 km • 23 zones • 1,245 XP                │
+│                                                 │
+│ 🥈 2. Priya Sharma                             │
+│    142 km • 19 zones • 1,120 XP                │
+│                                                 │
+│ 🥉 3. Amit Kumar                               │
+│    128 km • 15 zones • 980 XP                  │
+│                                                 │
+│ ...                                            │
+│                                                 │
+│ 42. You                                        │
+│    45 km • 8 zones • 380 XP                    │
+│    [View Full Leaderboard]                     │
+│                                                 │
+└─────────────────────────────────────────────────┘
+---
+Phase 5 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| XP calculation service | ⬜ | src/features/gamification/XPService.ts |
+| Level up animation | ⬜ | src/features/gamification/LevelUpModal.tsx |
+| Badge definitions | ⬜ | src/features/gamification/badges.ts |
+| Badge component | ⬜ | src/features/gamification/Badge.tsx |
+| Badge unlock animation | ⬜ | src/features/gamification/BadgeUnlockModal.tsx |
+| Milestone tracker | ⬜ | src/features/gamification/Milestones.tsx |
+| Weekly goals | ⬜ | src/features/gamification/WeeklyGoals.tsx |
+| Leaderboard screen | ⬜ | Update app/leaderboard.tsx |
+| Gamification hooks | ⬜ | src/hooks/useGamification.ts |
+---
+Phase 5 Outcome Comparison
+| Metric | Before | After |
+|--------|--------|-------|
+| Gamification | Basic streak | Full progression |
+| Motivation system | None | XP + Badges + Milestones |
+| User retention | Low | High (gamified) |
+| Competitive element | Basic leaderboard | Multi-level leaderboards |
+| Achievement sharing | None | Shareable badges |
+| Goal setting | None | Weekly customizable goals |
+---
+PHASE 6: Premium & Monetization
+Duration: 2-3 Days | Priority: MEDIUM
+What We're Building
+Premium Tiers:
+┌─────────────────────────────────────────────────┐
+│ CHOOSE YOUR PLAN                              │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ ┌───────────────────────────────────────────┐  │
+│ │           FREE                            │  │
+│ │                                           │  │
+│ │  ✓ Run tracking                           │  │
+│ │  ✓ Territory capture                      │  │
+│ │  ✓ Basic leaderboards                     │  │
+│ │  ✓ 3 clubs max                            │  │
+│ │  ✓ Basic routes                           │  │
+│ │                                           │  │
+│ │           ₹0/month                        │  │
+│ │         [Current Plan]                    │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+│ ┌───────────────────────────────────────────┐  │
+│ │           ⭐ PREMIUM                      │  │
+│ │                                           │  │
+│ │  ✓ Everything in Free                     │  │
+│ │  ✓ Advanced analytics                     │  │
+│ │  ✓ Personalized training plans            │  │
+│ │  ✓ Unlimited clubs                        │  │
+│ │  ✓ Premium routes & trails                │  │
+│ │  ✓ Safety features                        │  │
+│ │  ✓ Custom route builder                   │  │
+│ │  ✓ Ad-free experience                     │  │
+│ │  ✓ Priority event access                  │  │
+│ │                                           │  │
+│ │         ₹199/month                        │  │
+│ │        ₹1,499/year                        │  │
+│ │           (Save ₹889)                     │  │
+│ │                                           │  │
+│ │     [Start 14-Day Free Trial]             │  │
+│ └───────────────────────────────────────────┘  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+Step-by-Step Implementation
+Step 6.1: Premium Features Gating (Day 1, 3 hours)
+// File: src/services/PremiumService.ts
+Premium Feature Gates:
+1. Advanced Analytics
+   - Heart rate zones analysis
+   - Pace distribution chart
+   - Elevation profile details
+   - Training load analysis
+2. Training Plans
+   - 5K beginner plan
+   - 10K improver plan
+   - Half marathon prep
+   - Full marathon training
+3. Route Builder
+   - Create custom routes
+   - Share routes with friends
+   - Elevation preview
+4. Premium Routes
+   - Curated scenic routes
+   - Expert trail guides
+   - Detailed safety info
+5. Advanced Safety
+   - Multiple live location shares
+   - Extended location history
+   - Advanced SOS options
+Premium Check:
+function isPremiumFeatureAvailable(feature: PremiumFeature): boolean {
+  const user = getCurrentUser();
+  return user.isPremium && user.premiumExpiry > new Date();
+}
+Step 6.2: Payment Integration (Day 1-2, 4 hours)
+// File: src/services/PaymentService.ts
+Payment Integration (Razorpay for India):
+1. Monthly subscription: ₹199/month
+2. Yearly subscription: ₹1,499/year
+3. 14-day free trial
+Payment Flow:
+┌─────────────────────────────────────────────────┐
+│ COMPLETE YOUR PURCHASE                         │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ Premium Yearly                                 │
+│ ₹1,499/year (Save ₹889)                       │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ PAYMENT METHOD                                 │
+│ ○ UPI (Recommended)                           │
+│ ○ Credit/Debit Card                           │
+│ ○ Net Banking                                 │
+│ ○ Wallet                                      │
+│                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│                                                 │
+│ By subscribing, you agree to:                  │
+│ • Auto-renewal (cancel anytime)                │
+│ • Terms of Service                             │
+│ • Privacy Policy                               │
+│                                                 │
+│ [Pay ₹1,499]                                  │
+│                                                 │
+│ 🔒 Secure payment by Razorpay                  │
+└─────────────────────────────────────────────────┘
+Step 6.3: Trial Management (Day 2, 2 hours)
+// File: src/services/TrialService.ts
+Trial Features:
+- 14-day free trial
+- No credit card required for trial
+- Trial reminder at day 10
+- Trial ending reminder at day 13
+- Easy cancellation
+- Convert to paid flow
+Trial Screen:
+┌─────────────────────────────────────────────────┐
+│ 🎉 START YOUR FREE TRIAL                       │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ Enjoy 14 days of Premium for FREE!             │
+│                                                 │
+│ ✓ All premium features unlocked                │
+│ ✓ No credit card required                      │
+│ ✓ Cancel anytime                               │
+│                                                 │
+│ What you'll get:                               │
+│ • Advanced analytics                           │
+│ • Personalized training plans                  │
+│ • Unlimited clubs                              │
+│ • Premium routes                               │
+│ • Advanced safety features                     │
+│ • Ad-free experience                           │
+│                                                 │
+│ [Start Free Trial]                             │
+│                                                 │
+│ After 14 days: ₹199/month or ₹1,499/year      │
+└─────────────────────────────────────────────────┘
+---
+Phase 6 Deliverables Checklist
+| Task | Status | File |
+|------|--------|------|
+| Premium service | ⬜ | src/services/PremiumService.ts |
+| Premium feature gates | ⬜ | src/components/PremiumGate.tsx |
+| Premium badge | ⬜ | src/components/PremiumBadge.tsx |
+| Subscription screen | ⬜ | app/premium/index.tsx |
+| Payment integration | ⬜ | src/services/PaymentService.ts |
+| Trial service | ⬜ | src/services/TrialService.ts |
+| Trial onboarding | ⬜ | app/premium/trial.tsx |
+| Manage subscription | ⬜ | app/profile/subscription.tsx |
+---
+PHASE 7+: Future Enhancements
+Duration: Ongoing
+Phase 7: Regional Languages (Week 9-10)
+- Hindi interface
+- Marathi interface
+- Tamil interface
+- Kannada interface
+- Telugu interface
+- Auto-detect system language
+Phase 8: Offline Mode (Week 11)
+- Download routes for offline use
+- Offline run tracking
+- Sync when connected
+- Offline maps integration
+Phase 9: Wearable Integration (Week 12)
+- Apple Watch app
+- Wear OS app
+- Heart rate sync
+- Run controls from watch
+Phase 10: AI Coach (Week 13-14)
+- Personalized training recommendations
+- Injury prevention tips
+- Recovery suggestions
+- Performance predictions
+---
+PART 3: OUTCOME COMPARISON & SUCCESS METRICS
+---
+App Maturity Progression
+CURRENT STATE (v1.0):
+┌─────────────────────────────────────────────────┐
+│ ✓ Run tracking                                 │
+│ ✓ Territory capture                            │
+│ ✓
+Thinking: The user wants a comprehensive, detailed plan with:
+1. Step-by-step phases for building the app
+2. Outcome comparison (what users get at each phase)
+3. USP (Unique Selling Proposition) analysis
+4. Extra detail on everything
+Let me create a thorough document that covers all aspects of building this community running app for India.
+INVADE: Complete Product Development Roadmap
+---
+Executive Summary
+Vision: Build India's #1 community running and hiking app that combines territory capture gaming, social fitness, and India-specific outdoor experiences.
+Target Users: 
+- Urban runners (20-45 years)
+- Hiking enthusiasts
+- Running clubs and communities
+- Corporate wellness programs
+- Trail/mountain adventure seekers
+---
+Unique Selling Proposition (USP)
+What Makes INVADE Different
+flowchart TD
+    A[INVADE USP] --> B[Territory Gaming]
+    A --> C[India-First Design]
+    A --> D[Community-Centric]
+    A --> E[Safety Focus]
+    
+    B --> B1[Zone Capture]
+    B --> B2[Real-world Strategy]
+    B --> B3[Local Competition]
+    
+    C --> C1[Indian Cities]
+    C --> C2[Himalayan Trails]
+    C --> C3[Western Ghats]
+    C --> C4[Local Languages]
+    C --> C5[Festival Events]
+    
+    D --> D1[Running Clubs]
+    D --> D2[City Communities]
+    D --> D3[Group Events]
+    D --> D4[Team Challenges]
+    
+    E --> E1[Live Location Share]
+    E --> E2[SOS System]
+    E --> E3[Night Run Safety]
+    E --> E4[Women's Safety]
+Competitive Analysis
+| Feature | INVADE | Strava | Nike Run Club | Adidas Running | Runkeeper |
+|---------|--------|--------|---------------|----------------|-----------|
+| Territory Capture | ✅ Unique | ❌ | ❌ | ❌ | ❌ |
+| India-Specific Routes | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Hiking/Trails Focus | ✅ | Partial | ❌ | ❌ | ❌ |
+| Local Clubs (India) | ✅ | Limited | ❌ | Limited | ❌ |
+| Safety Features | ✅ Deep | ❌ | ❌ | ❌ | ❌ |
+| Women's Safety Mode | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Festival Challenges | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Multi-Language | ✅ Planned | ❌ | ❌ | ❌ | ❌ |
+| Free Core Features | ✅ | Freemium | ✅ Free | Freemium | Freemium |
+| Elevation Profiles | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Social Feed | ✅ | ✅ Strong | Limited | ✅ | Limited |
+Core USP Statement
+> "INVADE is the only app that turns your city into a game, your trails into adventures, and your runs into community events - built specifically for India's running and hiking culture."
+---
+Phase-by-Phase Implementation Plan
+---
+PHASE 1: Navigation Foundation
+Duration: 3-4 days | Priority: Critical
+Objective
+Restructure the app with bottom tab navigation to support scalable feature growth.
+What to Build
+1.1 Tab Bar Structure
+mobile/app/(tabs)/
+├── _layout.tsx          # Tab navigator with custom Record button
+├── index.tsx            # Home - Territory map
+├── explore.tsx          # Explore - Routes, trails, events
+├── record.tsx           # Record - Placeholder/modal trigger
+├── community.tsx        # Community - Feed, clubs, challenges
+└── profile.tsx          # Profile - Stats, settings, achievements
+1.2 Custom Tab Bar Component
+// Key features:
+- 5 tabs with icons
+- Center Record button 56px, elevated
+- Active state highlighting
+- Haptic feedback on tap
+- Dark/light mode support
+- Safe area handling
+1.3 Record Modal
+// Custom animated modal:
+- Backdrop blur
+- Slide up animation
+- Options: Start Run, Choose Route, Set Goal
+- Swipe down to dismiss
+- Haptic feedback on options
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create (tabs) folder structure | Set up Expo Router tabs | 1h |
+| Build custom TabBar component | Custom UI with center button | 3h |
+| Implement Record modal | Animated overlay | 2h |
+| Migrate HomeScreen | Move to tabs/index.tsx | 1h |
+| Migrate ProfileScreen | Move to tabs/profile.tsx | 1h |
+| Create Explore placeholder | Basic screen structure | 1h |
+| Create Community placeholder | Basic screen structure | 1h |
+| Update root _layout.tsx | Integrate tabs with auth flow | 2h |
+| Test navigation flow | All transitions work | 1h |
+Outcome
+Before Phase 1:
+└── Stack navigation only
+└── Deep screens hard to reach
+└── No clear app structure
+After Phase 1:
+└── Clean 5-tab navigation
+└── Record action always accessible
+└── Scalable structure for new features
+└── Professional app feel
+---
+PHASE 2: Home Screen Enhancement
+Duration: 3-4 days | Priority: High
+Objective
+Transform Home from a simple map to an engaging dashboard that drives daily usage.
+What to Build
+2.1 Dashboard Layout
+Home Screen Components:
+├── Top Section
+│   ├── Greeting with time of day
+│   ├── Weather widget (temp, conditions)
+│   └── Streak counter
+├── Territory Map (existing, enhanced)
+│   ├── Zone markers with colors
+│   ├── Current location
+│   ├── Quick zoom controls
+│   └── Mini-stats overlay
+├── Quick Stats Row
+│   ├── Weekly distance
+│   ├── Zones captured
+│   ├── Active challenges
+│   └── XP progress
+├── Nearby Activity
+│   ├── Recent zone captures
+│   ├── Friends running nearby
+│   └── Live events
+└── Quick Actions
+    ├── Start Run (prominent)
+    ├── View Routes
+    └── Join Event
+2.2 Weather Integration
+// Weather API integration:
+- Current temperature
+- Weather conditions (sunny, cloudy, rain)
+- Air quality index (AQI) - India specific
+- "Good time to run" indicator
+- Heat advisory warnings
+2.3 Streak System
+// Gamification element:
+- Current streak display
+- Longest streak record
+- Streak freeze (premium)
+- Streak recovery
+- Visual fire animation
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Redesign Home layout | Component reorganization | 2h |
+| Build weather widget | API integration | 3h |
+| Enhance streak display | Animations + logic | 2h |
+| Create quick stats row | Cards with data | 2h |
+| Add nearby activity feed | Real-time updates | 3h |
+| Implement pull-to-refresh | Data refresh | 1h |
+| Add loading skeletons | Shimmer effects | 1h |
+| Dark mode polish | All components | 2h |
+Outcome
+Before Phase 2:
+└── Map-only home screen
+└── No weather context
+└── No quick actions
+After Phase 2:
+└── Rich dashboard experience
+└── Weather-aware run suggestions
+└── Streak motivation visible
+└── Quick access to actions
+└── Social proof (nearby activity)
+---
+PHASE 3: Explore Screen (Routes & Trails)
+Duration: 5-6 days | Priority: High
+Objective
+Create a comprehensive discovery experience for routes, trails, and events - India's first running/hiking route database.
+What to Build
+3.1 Explore Screen Structure
+Explore Screen:
+├── Search Bar
+│   ├── Search routes, trails, events
+│   ├── Voice search option
+│   └── Recent searches
+├── Filter Chips
+│   ├── Distance (5km, 10km, 21km...)
+│   ├── Type (Run, Trail, Hike)
+│   ├── Difficulty (Easy, Medium, Hard)
+│   └── Safety Rating
+├── Sub-tabs (horizontal scroll)
+│   ├── Routes
+│   ├── Trails
+│   └── Events
+└── Content Area
+    └── Cards based on selected tab
+3.2 Routes Tab
+Route Card:
+├── Map preview thumbnail
+├── Route name
+├── Distance + Elevation
+├── Difficulty badge
+├── Surface type (road/trail/mixed)
+├── Safety rating (⭐⭐⭐⭐)
+├── Best time to run
+├── Popular count
+└── Save button
+Route Detail:
+├── Full map with route overlay
+├── Elevation profile chart
+├── Start/End points
+├── Turn-by-turn navigation option
+├── Photos from runners
+├── Reviews & ratings
+├── Weather forecast
+└── Start this route button
+3.3 Trails Tab (India Focus)
+Trail Card:
+├── Scenic photo background
+├── Trail name + location
+├── Difficulty level (color-coded)
+├── Distance + Elevation gain
+├── Trail type (forest/mountain/coastal)
+├── Mobile signal quality indicator
+├── Water points available
+└── Best season to visit
+Trail Detail:
+├── Photo gallery
+├── Full description
+├── Elevation profile
+├── Safety information
+├── Emergency contacts
+├── Parking info
+├── Permits required (if any)
+├── Reviews from hikers
+└── Nearby trails
+3.4 India-Specific Trail Database
+Western Ghats:
+├── Matheran Trails
+├── Lonavala Routes
+├── Mahabaleshwar Trails
+└── Coorg Routes
+Himalayas:
+├── Triund Trek (Dharamshala)
+├── Valley of Flowers
+├── Hampta Pass
+├── Kheerganga
+└── Nag Tibba
+Nilgiris:
+├── Ooty Trails
+├── Coonoor Routes
+└── Kotagiri Paths
+City Running:
+├── Marine Drive (Mumbai)
+├── Cubbon Park (Bangalore)
+├── India Gate (Delhi)
+├── Elliots Beach (Chennai)
+└── Necklace Road (Hyderabad)
+3.5 Events Nearby
+Event Card:
+├── Event image
+├── Event name
+├── Date + Time
+├── Location
+├── Host (Club/User)
+├── Attendee count
+└── RSVP status
+Event Detail:
+├── Full description
+├── Meeting point on map
+├── Attendees list
+├── Distance from user
+├── RSVP options
+├── Add to calendar
+└── Share event
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create Explore screen layout | Tabs + search + filters | 3h |
+| Build route card component | Preview + data display | 2h |
+| Build trail card component | Photo-rich display | 2h |
+| Create route detail screen | Map + elevation chart | 4h |
+| Create trail detail screen | Gallery + safety info | 4h |
+| Implement search functionality | Local + API search | 3h |
+| Add filter system | Multi-select filters | 2h |
+| Create elevation profile chart | SVG/Chart component | 3h |
+| Seed initial route data | India-specific content | 3h |
+| Implement save/bookmark | Local storage | 1h |
+Outcome
+Before Phase 3:
+└── No route discovery
+└── No trail information
+└── No event browsing
+After Phase 3:
+└── 100+ India routes available
+└── 50+ trails with details
+└── Elevation profiles visible
+└── Safety ratings for all routes
+└── Event discovery active
+└── India-first route database
+---
+PHASE 4: Community Screen (Social Feed)
+Duration: 5-6 days | Priority: Critical
+Objective
+Build the core social experience that drives daily engagement - the Strava-like feed with India-specific touches.
+What to Build
+4.1 Community Screen Structure
+Community Screen:
+├── Top Navigation (horizontal tabs)
+│   ├── Feed
+│   ├── Clubs
+│   ├── Challenges
+│   ├── Events
+│   └── Friends
+└── Content based on active tab
+4.2 Feed Tab (Core Feature)
+Activity Card:
+├── Header
+│   ├── User avatar
+│   ├── User name
+│   ├── Activity type icon
+│   ├── Timestamp
+│   └── More options (...)
+├── Map Preview
+│   ├── Route snapshot
+│   ├── Zone markers
+│   └── Tap to expand
+├── Stats Row
+│   ├── Distance
+│   ├── Duration
+│   ├── Pace
+│   └── Zones captured
+├── Title/Caption
+│   ├── User's activity title
+│   └── Optional caption
+├── Interactions
+│   ├── Kudos button + count (❤️)
+│   ├── Comment button + count
+│   └── Share button
+└── Achievement Badge (if any)
+    └── "Earned 10K Badge!"
+Feed Interactions:
+├── Pull to refresh
+├── Infinite scroll
+├── Kudos animation (burst effect)
+├── Comment bottom sheet
+├── Share activity
+└── Report/Hide options
+4.3 Comments System
+Comments Bottom Sheet:
+├── Header with comment count
+├── Comments list
+│   ├── Avatar + name
+│   ├── Comment text
+│   ├── Timestamp
+│   └── Like button
+├── Input field
+│   ├── Text input
+│   ├── Send button
+│   └── Emoji picker
+└── Swipe down to close
+4.4 Activity Detail Screen
+Activity Detail:
+├── Full map view
+│   ├── Route path
+│   ├── Kilometer markers
+│   ├── Zone highlights
+│   └── Photo spots
+├── Stats Grid
+│   ├── Distance
+│   ├── Duration
+│   ├── Pace
+│   ├── Calories
+│   ├── Elevation
+│   └── Zones
+├── Splits (if available)
+├── Photos section
+├── Comments section
+├── Related activities
+└── Give Kudos button
+4.5 Feed Algorithms
+Feed Ordering:
+├── Primary: Friends' activities
+├── Secondary: Club activities
+├── Tertiary: Suggested activities
+├── Highlights: Achievements
+└── Time decay: Recent first
+Smart Features:
+├── Hide similar activities
+├── Mute user option
+├── Activity preferences
+└── Best time to show
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create Community screen layout | Tabs + navigation | 2h |
+| Build activity card component | Full card with interactions | 4h |
+| Implement feed list | FlatList with pagination | 3h |
+| Create kudos system | Animation + API | 2h |
+| Build comments bottom sheet | UI + API | 3h |
+| Create activity detail screen | Full view | 4h |
+| Implement share functionality | Native share | 2h |
+| Add feed filters | Activity types | 2h |
+| Implement pull-to-refresh | Refresh logic | 1h |
+| Add infinite scroll | Pagination | 2h |
+| Create empty states | No activities | 1h |
+Outcome
+Before Phase 4:
+└── No social features
+└── No activity sharing
+└── No engagement loop
+After Phase 4:
+└── Full activity feed
+└── Kudos + comments working
+└── Social proof established
+└── Daily engagement driver
+└── FOMO effect created
+└── Viral sharing enabled
+---
+PHASE 5: Clubs & Groups System
+Duration: 6-7 days | Priority: High
+Objective
+Enable the core community building feature that will make INVADE the hub for India's running communities.
+What to Build
+5.1 Clubs Tab Structure
+Clubs Screen:
+├── Search clubs
+├── Filter chips
+│   ├── City
+│   ├── Type (Running/Hiking/Cycling)
+│   └── Size (Small/Medium/Large)
+├── Featured Clubs
+│   ├── Carousel of top clubs
+│   └── "Editor's Pick" badge
+├── Clubs Near You
+│   └── Location-based recommendations
+└── All Clubs
+    └── Grid/List toggle
+5.2 Club Card Component
+Club Card:
+├── Cover image
+├── Club logo/avatar
+├── Club name
+├── Location (City)
+├── Type badge (Running/Hiking)
+├── Member count
+├── Weekly activity count
+├── Verification badge (if official)
+└── Join button
+5.3 Club Profile Screen
+Club Profile:
+├── Header Section
+│   ├── Cover image (editable by admin)
+│   ├── Club logo
+│   ├── Club name
+│   ├── Location
+│   ├── Verification badge
+│   ├── Member count
+│   └── Join/Leave button
+├── Info Section
+│   ├── Description
+│   ├── Founded date
+│   ├── Club type
+│   └── Social links
+├── Stats Section
+│   ├── Total distance (this week)
+│   ├── Total runs
+│   ├── Active members
+│   └── Average pace
+├── Tabs
+│   ├── Feed
+│   ├── Events
+│   ├── Members
+│   └── About
+└── Admin Actions (if admin)
+    ├── Edit club
+    ├── Create event
+    ├── Manage members
+    └── Club settings
+5.4 Club Feed
+Club Feed:
+├── Member activities
+├── Club announcements
+├── Event reminders
+├── Achievement highlights
+├── Weekly summaries
+└── Admin posts
+5.5 Club Events
+Club Events:
+├── Upcoming events
+├── Past events
+├── Event creation (admin)
+├── RSVP management
+└── Event reminders
+5.6 Club Members
+Members List:
+├── Search members
+├── Role indicators
+│   ├── Owner (crown)
+│   ├── Admin (star)
+│   └── Member
+├── Activity status
+├── Quick actions
+│   ├── View profile
+│   ├── Message
+│   └── Remove (admin only)
+└── Invite members button
+5.7 Create Club Flow
+Create Club:
+├── Step 1: Basic Info
+│   ├── Club name
+│   ├── Club type
+│   ├── Description
+│   └── Location
+├── Step 2: Branding
+│   ├── Upload logo
+│   ├── Upload cover
+│   └── Theme colors
+├── Step 3: Settings
+│   ├── Public/Private
+│   ├── Join approval
+│   └── Member limit
+└── Step 4: Preview & Create
+5.8 India Club Database (Seeded)
+Pre-loaded Clubs:
+├── Mumbai
+│   ├── Mumbai Road Runners
+│   ├── Marine Drive Runners
+│   └── Mumbai Hikers Club
+├── Delhi NCR
+│   ├── Delhi Runners Club
+│   ├── Gurgaon Running Group
+│   └── Noida Fitness Community
+├── Bangalore
+│   ├── Bangalore Runners
+│   ├── Cubbon Park Club
+│   └── Nandi Hills Hikers
+├── Pune
+│   ├── Pune Running Club
+│   ├── Deccan Runners
+│   └── Sinhagad Trekkers
+├── Chennai
+│   ├── Chennai Runners
+│   ├── Marina Beach Club
+│   └── East Coast Runners
+├── Hyderabad
+│   ├── Hyderabad Runners
+│   ├── Gachibowli Club
+│   └── Necklace Road Group
+├── Women-Only
+│   ├── Women's Running Network
+│   ├── Girls Run India
+│   └── Pink Pacers
+└── Pan-India
+    ├── India Hikers Association
+    ├── Trail Runners India
+    └── Corporate Run Club
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create Clubs screen layout | Search + filters + list | 3h |
+| Build club card component | Preview card | 2h |
+| Create club profile screen | Full profile with tabs | 5h |
+| Build club feed component | Activity feed | 3h |
+| Create events section | Events list + creation | 4h |
+| Build members list | Search + management | 3h |
+| Create join/leave flow | API + UI | 2h |
+| Build create club flow | Multi-step form | 5h |
+| Implement club search | Local + API | 2h |
+| Add club admin features | Management tools | 4h |
+| Seed initial clubs | 30+ clubs | 3h |
+| Create notification triggers | Club events | 2h |
+Outcome
+Before Phase 5:
+└── No community structure
+└── No group features
+└── No club management
+After Phase 5:
+└── 30+ seeded clubs
+└── Full club creation flow
+└── Club management tools
+└── Event creation enabled
+└── Community building active
+└── India-wide club network
+---
+PHASE 6: Challenges System
+Duration: 4-5 days | Priority: High
+Objective
+Create competitive and collaborative challenges that drive weekly/monthly engagement.
+What to Build
+6.1 Challenges Tab
+Challenges Screen:
+├── Active Challenges
+│   ├── Featured challenge banner
+│   ├── Progress overview
+│   └── Time remaining
+├── Upcoming Challenges
+│   └── Scheduled challenges
+├── Completed Challenges
+│   └── Past achievements
+├── Challenge Categories
+│   ├── Distance
+│   ├── Streak
+│   ├── Zones
+│   └── Community
+└── Create Challenge (for clubs)
+6.2 Challenge Types
+Individual Challenges:
+├── Weekly Distance Goal
+│   ├── Run 20km this week
+│   ├── Progress bar
+│   └── Reward: XP + Badge
+├── Streak Challenge
+│   ├── Run 7 days in a row
+│   ├── Calendar view
+│   └── Reward: Streak freeze
+├── Zone Challenge
+│   ├── Capture 10 zones
+│   ├── Map overlay
+│   └── Reward: Territory badge
+└── Personal Best
+    ├── Beat your 5K time
+    ├── Comparison view
+    └── Reward: Speed badge
+Community Challenges:
+├── City Challenge
+│   ├── Mumbai vs Delhi
+│   ├── Combined distance
+│   └── Winner gets city badge
+├── Club Challenge
+│   ├── Club vs Club
+│   ├── Weekly competition
+│   └── Winner gets trophy
+├── Global Challenge
+│   ├── Run across India (virtual)
+│   ├── Collective goal
+│   └── Milestone rewards
+└── Festival Challenge
+    ├── Independence Day Run
+    ├── Republic Day Challenge
+    └── Special rewards
+6.3 Challenge Card Component
+Challenge Card:
+├── Challenge image/banner
+├── Challenge name
+├── Challenge type badge
+├── Progress indicator
+│   ├── Progress bar
+│   ├── Current/Target
+│   └── Percentage
+├── Time remaining
+├── Participants count
+├── Reward preview
+└── Join/View button
+6.4 Challenge Detail Screen
+Challenge Detail:
+├── Banner image
+├── Challenge name + description
+├── Progress section
+│   ├── Visual progress
+│   ├── Daily breakdown
+│   └── Remaining target
+├── Leaderboard (if competitive)
+│   ├── Top 10
+│   ├── Your position
+│   └── Friends on leaderboard
+├── Participants
+│   ├── Avatar list
+│   └── See all
+├── Rewards
+│   ├── XP amount
+│   ├── Badge preview
+│   └── Other rewards
+├── Rules
+│   └── Challenge requirements
+└── Share progress button
+6.5 India Festival Challenges
+Festival Calendar:
+├── January: Republic Day Run
+├── March: Holi Color Run
+├── August: Independence Day Challenge
+├── October: Dussehra Victory Run
+├── October/November: Diwali Light Run
+├── December: Year End Challenge
+└── Regional festivals
+    ├── Pongal (South)
+    ├── Bihu (East)
+    └── Navratri (West)
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create Challenges screen | Layout + categories | 3h |
+| Build challenge card component | Progress display | 2h |
+| Create challenge detail screen | Full view | 3h |
+| Implement challenge progress | Real-time updates | 3h |
+| Build leaderboard component | Rankings display | 2h |
+| Create challenge completion | Rewards flow | 2h |
+| Implement festival challenges | Special events | 2h |
+| Add challenge notifications | Reminders | 2h |
+| Create challenge sharing | Social share | 1h |
+Outcome
+Before Phase 6:
+└── No competitive element
+└── No recurring engagement
+└── No goals system
+After Phase 6:
+└── Multiple challenge types
+└── Weekly/monthly goals
+└── Festival-themed events
+└── City vs city competition
+└── Club challenges active
+└── Gamification deep
+---
+PHASE 7: Events System
+Duration: 5-6 days | Priority: High
+Objective
+Enable group runs, events, and meetups that bring the community together offline.
+What to Build
+7.1 Events Tab Structure
+Events Screen:
+├── Calendar View Toggle
+├── Map View Toggle
+├── Filter Chips
+│   ├── This Week
+│   ├── This Month
+│   ├── Type (Run/Hike/Event)
+│   └── Distance
+├── Featured Events
+│   └── Promoted events carousel
+├── Events Near You
+│   └── Location-based list
+└── All Events
+    └── Chronological list
+7.2 Event Types
+Event Types:
+├── Group Run
+│   ├── Casual run
+│   ├── Pace groups available
+│   ├── Route predetermined
+│   └── All levels welcome
+├── Trail Run
+│   ├── Off-road running
+│   ├── Difficulty rating
+│   ├── Gear requirements
+│   └── Limited spots
+├── Hike/Trek
+│   ├── Mountain trails
+│   ├── Duration (hours)
+│   ├── Elevation gain
+│   └── Guide available
+├── Training Session
+│   ├── Interval training
+│   ├── Tempo runs
+│   ├── Long runs
+│   └── Coach-led
+├── Race
+│   ├── Timed event
+│   ├── Race bib
+│   ├── Results tracking
+│   └── Official timing
+└── Social Event
+    ├── Post-run breakfast
+    ├── Club meetup
+    └── Networking event
+7.3 Event Card Component
+Event Card:
+├── Event image
+├── Event type badge
+├── Event name
+├── Date + Time
+├── Location preview
+├── Host (Club/User)
+├── Attendee avatars
+├── Spots remaining (if limited)
+├── RSVP status
+└── Price (if paid)
+7.4 Event Detail Screen
+Event Detail:
+├── Hero Section
+│   ├── Event image
+│   ├── Event name
+│   ├── Date + Time
+│   └── Type badge
+├── Host Section
+│   ├── Host avatar + name
+│   ├── Host verification
+│   └── Message host
+├── Location Section
+│   ├── Map preview
+│   ├── Address
+│   ├── Meeting point
+│   ├── Parking info
+│   └── Get directions
+├── Details Section
+│   ├── Description
+│   ├── Route preview (if run)
+│   ├── Distance/Duration
+│   ├── Difficulty level
+│   └── Requirements
+├── Attendees Section
+│   ├── Going count
+│   ├── Maybe count
+│   ├── Avatar list
+│   └── See all attendees
+├── Discussion Section
+│   ├── Comments/Questions
+│   └── Host announcements
+└── Action Section
+    ├── RSVP buttons
+    ├── Add to calendar
+    ├── Share event
+    └── Report event
+7.5 Create Event Flow
+Create Event:
+├── Step 1: Basic Info
+│   ├── Event name
+│   ├── Event type
+│   ├── Description
+│   └── Cover image
+├── Step 2: Date & Location
+│   ├── Date picker
+│   ├── Time picker
+│   ├── Location search
+│   └── Map pin placement
+├── Step 3: Details
+│   ├── Distance/Duration
+│   ├── Difficulty level
+│   ├── Max participants
+│   ├── Requirements
+│   └── Price (optional)
+├── Step 4: Route (if run)
+│   ├── Select saved route
+│   ├── Draw new route
+│   └── Route preview
+└── Step 5: Review & Publish
+    ├── Preview
+    ├── Invite options
+    └── Publish
+7.6 Event Reminders & Notifications
+Reminder Schedule:
+├── 1 week before
+├── 1 day before
+├── 2 hours before
+├── Event starting
+└── Post-event feedback
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create Events screen | Layout + views | 3h |
+| Build event card component | Preview display | 2h |
+| Create event detail screen | Full information | 4h |
+| Implement RSVP system | Going/Maybe/Not Going | 3h |
+| Build create event flow | Multi-step form | 5h |
+| Add calendar integration | Add to calendar | 2h |
+| Implement event search | Find events | 2h |
+| Create event notifications | Reminders | 2h |
+| Add map view | Events on map | 3h |
+| Implement discussion | Comments system | 2h |
+| Create event sharing | Social share | 1h |
+Outcome
+Before Phase 7:
+└── No group activities
+└── No event discovery
+└── No meetup capability
+After Phase 7:
+└── Full event system
+└── RSVP management
+└── Event creation for all
+└── Calendar integration
+└── Event reminders
+└── Community meetups enabled
+---
+PHASE 8: Safety Features
+Duration: 4-5 days | Priority: Critical
+Objective
+Build India-specific safety features that differentiate INVADE and address real concerns.
+What to Build
+8.1 Live Location Sharing
+Live Location Feature:
+├── Start Screen
+│   ├── Select trusted contacts
+│   ├── Set duration
+│   │   ├── 30 minutes
+│   │   ├── 1 hour
+│   │   ├── Until run ends
+│   │   └── Custom
+│   ├── Add message
+│   └── Start sharing
+├── During Run
+│   ├── Live map view (for contacts)
+│   ├── Pace indicator
+│   ├── Heart rate (if connected)
+│   ├── Last update time
+│   └── "I'm safe" button
+└── For Contacts
+    ├── Push notification when started
+    ├── Live location map
+    ├── Quick call button
+    └── Message button
+8.2 SOS System
+SOS Feature:
+├── SOS Button (on run screen)
+│   ├── Long press (3 sec) to activate
+│   ├── Confirmation dialog
+│   └── Haptic feedback
+├── When Activated
+│   ├── Send location to all emergency contacts
+│   ├── Send notification to nearby club members
+│   ├── Display emergency info on screen
+│   ├── One-tap call emergency services
+│   └── Share live location indefinitely
+└── Emergency Info
+    ├── Blood group
+    ├── Allergies
+    ├── Emergency contact
+    ├── Medical conditions
+    └── Insurance info
+8.3 Night Run Mode
+Night Run Features:
+├── Automatic Detection
+│   ├── Detect run start after 8 PM
+│   ├── Suggest night run mode
+│   └── Auto-enable with preference
+├── Safety Suggestions
+│   ├── Show well-lit routes
+│   ├── Avoid isolated areas
+│   ├── Show open shops/stalls
+│   └── Suggest running with group
+├── Auto Share Location
+│   ├── Automatic live share
+│   ├── Notify contacts
+│   └── Check-in reminders
+└── Night Run Stats
+    ├── Night runs count
+    ├── Safe night runs badge
+    └── Preferred night routes
+8.4 Safety Rating for Routes
+Route Safety Rating:
+├── Factors
+│   ├── Street lighting
+│   ├── Footpath quality
+│   ├── Traffic density
+│   ├── Crowd density
+│   ├── CCTV coverage
+│   ├── Police station proximity
+│   └── Time of day variation
+├── Rating Display
+│   ├── Safety score (1-10)
+│   ├── Color coding
+│   │   ├── Green: Safe
+│   │   ├── Yellow: Moderate
+│   │   └── Red: Avoid at night
+│   └── Safety tips
+└── Community Input
+    ├── User safety reports
+    ├── Photo uploads
+    └── Safety updates
+8.5 Women's Safety Mode
+Women-Specific Features:
+├── Women-Only Events
+│   ├── Filter events by women-only
+│   ├── Verified host badge
+│   └── Safe meeting points
+├── Women-Only Clubs
+│   ├── Private women's clubs
+│   ├── Verified members only
+│   └── Safe community
+├── Route Preferences
+│   ├── Women-safe routes highlighted
+│   ├── Avoid isolated areas
+│   └── Suggest busy routes
+├── Emergency Features
+│   ├── Quick SOS
+│   ├── Fake call button
+│   └── Siren sound option
+└── Privacy Controls
+    ├── Hide location from strangers
+    ├── Disable activity map
+    └── Private profile option
+8.6 Inactivity Alert
+Inactivity Detection:
+├── During Run Monitoring
+│   ├── Detect if stopped > 5 min
+│   ├── Check heart rate (if available)
+│   └── Compare with typical pace
+├── Alert Flow
+│   ├── Push notification to user
+│   │   └── "Are you okay?"
+│   ├── If no response in 2 min
+│   │   └── Alert emergency contacts
+│   └── If still no response
+│       └── Share last known location
+└── False Alarm
+    └── User can dismiss alert
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Implement live location sharing | Real-time tracking | 5h |
+| Build SOS system | Emergency flow | 4h |
+| Create night run mode | Auto-detection + features | 3h |
+| Build safety ratings | Route scoring | 4h |
+| Implement women's safety mode | Special features | 4h |
+| Create inactivity detection | Monitoring logic | 3h |
+| Add emergency contacts management | CRUD operations | 2h |
+| Build safety settings screen | Preferences UI | 2h |
+| Integrate with run screen | All features accessible | 2h |
+| Test all safety flows | Edge cases | 3h |
+Outcome
+Before Phase 8:
+└── No safety features
+└── No emergency system
+└── No night run support
+After Phase 8:
+└── Live location sharing
+└── SOS emergency system
+└── Night run safety mode
+└── Route safety ratings
+└── Women's safety features
+└── Inactivity detection
+└── India's safest running app
+---
+PHASE 9: Advanced Profile & Progression
+Duration: 4-5 days | Priority: Medium
+Objective
+Transform the profile into a comprehensive achievement showcase and progression system.
+What to Build
+9.1 Enhanced Profile Structure
+Profile Screen:
+├── Header Section
+│   ├── Avatar (editable)
+│   ├── Name + Username
+│   ├── Level badge
+│   ├── Location
+│   ├── Bio
+│   ├── Verification badge
+│   └── Edit profile button
+├── Stats Overview
+│   ├── Total runs
+│   ├── Total distance
+│   ├── Total time
+│   ├── Zones captured
+│   └── Current streak
+├── Progress Section
+│   ├── XP bar
+│   ├── Level progress
+│   ├── Next level reward
+│   └── Weekly goal
+├── Tabs
+│   ├── Stats
+│   ├── Badges
+│   ├── Activities
+│   └── Settings
+└── Quick Actions
+    ├── Share profile
+    ├── Invite friends
+    └── View leaderboard
+9.2 Stats Tab
+Stats Dashboard:
+├── This Week
+│   ├── Distance
+│   ├── Runs
+│   ├── Time
+│   └── Zones
+├── This Month
+│   ├── Distance
+│   ├── Runs
+│   ├── Time
+│   └── Zones
+├── All Time
+│   ├── Total distance
+│   ├── Total runs
+│   ├── Total time
+│   └── Total zones
+├── Personal Records
+│   ├── Fastest 5K
+│   ├── Fastest 10K
+│   ├── Longest run
+│   ├── Most zones in one run
+│   └── Longest streak
+├── Charts
+│   ├── Weekly distance chart
+│   ├── Pace trend chart
+│   ├── Zone capture chart
+│   └── Activity heatmap
+└── Comparisons
+    ├── vs Last week
+    ├── vs Last month
+    └── vs Same period last year
+9.3 Badges Tab
+Badges Collection:
+├── Achievement Badges
+│   ├── Distance milestones
+│   │   ├── First 5K
+│   │   ├── First 10K
+│   │   ├── 50K total
+│   │   ├── 100K total
+│   │   ├── 500K total
+│   │   └── 1000K total
+│   ├── Streak badges
+│   │   ├── 7 day streak
+│   │   ├── 30 day streak
+│   │   ├── 100 day streak
+│   │   └── 365 day streak
+│   ├── Zone badges
+│   │   ├── First zone
+│   │   ├── 10 zones
+│   │   ├── 50 zones
+│   │   └── Zone master (100)
+│   ├── Event badges
+│   │   ├── First event
+│   │   ├── 10 events
+│   │   └── Event regular
+│   └── Special badges
+│       ├── Early adopter
+│       ├── Beta tester
+│       └── Festival runs
+├── Locked Badges
+│   ├── Grayed out
+│   ├── Progress indicator
+│   └── How to unlock
+└── Badge Detail
+    ├── Achievement description
+    ├── Date earned
+    ├── Share badge
+    └── Related badges
+9.4 Activities Tab
+Activity History:
+├── Filter options
+│   ├── All activities
+│   ├── Runs only
+│   ├── Trails only
+│   └── This month
+├── Activity List
+│   ├── Date
+│   ├── Activity type icon
+│   ├── Distance
+│   ├── Duration
+│   ├── Zones captured
+│   └── Tap to view detail
+├── Activity Detail
+│   ├── Full stats
+│   ├── Map view
+│   ├── Photos
+│   └── Share
+└── Export Data
+    ├── CSV export
+    ├── GPX export
+    └── Share file
+9.5 Level & XP System
+Leveling System:
+├── XP Sources
+│   ├── Run: 10 XP per km
+│   ├── Zone capture: 50 XP
+│   ├── Event participation: 100 XP
+│   ├── Challenge completion: 200 XP
+│   ├── Kudos received: 5 XP each
+│   ├── Club activity: 20 XP
+│   └── Referral: 500 XP
+├── Level Thresholds
+│   ├── Level 1: 0 XP
+│   ├── Level 2: 500 XP
+│   ├── Level 5: 5,000 XP
+│   ├── Level 10: 25,000 XP
+│   ├── Level 25: 100,000 XP
+│   ├── Level 50: 500,000 XP
+│   └── Level 100: 2,000,000 XP
+├── Level Rewards
+│   ├── Title unlock
+│   ├── Badge unlock
+│   ├── Avatar frame
+│   ├── Premium trial
+│   └── Special features
+└── Level Titles
+    ├── 1-9: Beginner
+    ├── 10-24: Runner
+    ├── 25-49: Athlete
+    ├── 50-74: Champion
+    ├── 75-99: Legend
+    └── 100: Invader
+9.6 Settings Tab
+Settings Sections:
+├── Account
+│   ├── Edit profile
+│   ├── Change password
+│   ├── Email settings
+│   ├── Phone verification
+│   └── Connected accounts
+├── Privacy
+│   ├── Profile visibility
+│   ├── Activity privacy
+│   ├── Location sharing
+│   ├── Map visibility
+│   └── Block list
+├── Notifications
+│   ├── Push notifications
+│   ├── Email notifications
+│   ├── Quiet hours
+│   └── Notification types
+├── Safety
+│   ├── Emergency contacts
+│   ├── Auto-share location
+│   ├── Night run mode
+│   └── SOS settings
+├── Preferences
+│   ├── Units (km/miles)
+│   ├── Language
+│   ├── Dark mode
+│   └── Haptic feedback
+├── App Info
+│   ├── About
+│   ├── Terms of Service
+│   ├── Privacy Policy
+│   ├── Contact support
+│   └── Rate app
+└── Account Actions
+    ├── Logout
+    └── Delete account
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Redesign profile screen | New layout | 3h |
+| Build stats dashboard | Charts + data | 4h |
+| Create badges system | Collection + display | 4h |
+| Implement XP & levels | Progression logic | 4h |
+| Build activity history | List + filters | 3h |
+| Create settings screens | All settings | 4h |
+| Implement data export | CSV + GPX | 2h |
+| Add level-up animations | Celebration effects | 2h |
+| Build achievement sharing | Social share | 1h |
+Outcome
+Before Phase 9:
+└── Basic profile only
+└── No progression
+└── No achievements
+After Phase 9:
+└── Rich profile dashboard
+└── XP & level system
+└── Badge collection
+└── Detailed statistics
+└── Activity history
+└── Comprehensive settings
+└── Progression motivation
+---
+PHASE 10: Messaging & Notifications
+Duration: 4-5 days | Priority: Medium
+Objective
+Enable communication between users and build a robust notification system.
+What to Build
+10.1 Direct Messaging
+Messaging System:
+├── Inbox Screen
+│   ├── Search conversations
+│   ├── Conversation list
+│   │   ├── User avatar
+│   │   ├── Name
+│   │   ├── Last message preview
+│   │   ├── Timestamp
+│   │   └── Unread badge
+│   └── New message button
+├── Chat Screen
+│   ├── Header
+│   │   ├── User avatar + name
+│   │   ├── Online status
+│   │   └── Options menu
+│   ├── Messages list
+│   │   ├── Text messages
+│   │   ├── Image messages
+│   │   ├── Activity shares
+│   │   ├── Route shares
+│   │   └── Event invites
+│   └── Input area
+│       ├── Text input
+│       ├── Image picker
+│       ├── Quick share
+│       └── Send button
+└── Group Chats (for clubs)
+    ├── Group info
+    ├── Members list
+    └── Shared media
+10.2 Notification System
+Notification Types:
+├── Activity
+│   ├── Friend started run
+│   ├── Friend finished run
+│   ├── Kudos received
+│   ├── Comment on activity
+│   └── Mention in comment
+├── Social
+│   ├── New follower
+│   ├── Friend request
+│   ├── Friend joined
+│   └── Message received
+├── Club
+│   ├── Club invite
+│   ├── Club announcement
+│   ├── Club event reminder
+│   └── New club member
+├── Challenge
+│   ├── Challenge starting
+│   ├── Challenge reminder
+│   ├── Challenge completed
+│   └── Leaderboard change
+├── Event
+│   ├── Event reminder
+│   ├── Event starting soon
+│   ├── Event update
+│   └── Event cancelled
+├── Safety
+│   ├── Live share started
+│   ├── Live share ended
+│   ├── SOS activated
+│   └── Safety check-in
+└── System
+    ├── New feature available
+    ├── App update required
+    ├── Weekly summary ready
+    └── Account alerts
+10.3 Notification Preferences
+Notification Settings:
+├── By Type
+│   ├── Activities: On/Off
+│   ├── Social: On/Off
+│   ├── Clubs: On/Off
+│   ├── Challenges: On/Off
+│   ├── Events: On/Off
+│   └── Safety: Always On
+├── Quiet Hours
+│   ├── Enable/disable
+│   ├── Start time
+│   └── End time
+├── Sound & Vibration
+│   ├── Sound on/off
+│   ├── Vibration on/off
+│   └── Custom sounds
+└── Per-Contact
+    ├── Mute conversation
+    └── Custom notification
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create inbox screen | Conversation list | 3h |
+| Build chat screen | Messaging UI | 4h |
+| Implement real-time messaging | WebSocket/SSE | 4h |
+| Create notification center | All notifications | 3h |
+| Build notification preferences | Settings UI | 2h |
+| Implement push notifications | FCM/APNs | 4h |
+| Add notification actions | Quick actions | 2h |
+| Create message sharing | Share activities | 2h |
+Outcome
+Before Phase 10:
+└── No messaging
+└── Basic notifications
+└── No communication
+After Phase 10:
+└── Full messaging system
+└── Real-time chat
+└── Rich notifications
+└── Notification preferences
+└── Activity sharing in chat
+└── Club group chats
+---
+PHASE 11: Monetization (Premium)
+Duration: 3-4 days | Priority: Medium
+Objective
+Introduce premium features while keeping core functionality free.
+What to Build
+11.1 Premium Features
+Premium Tiers:
+├── Free Tier (Forever Free)
+│   ├── Basic run tracking
+│   ├── Territory capture
+│   ├── Basic leaderboards
+│   ├── 3 clubs membership
+│   ├── Basic routes
+│   ├── Community feed
+│   ├── Basic challenges
+│   └── Standard support
+├── Premium (₹199/month or ₹1499/year)
+│   ├── Advanced Analytics
+│   │   ├── Detailed pace analysis
+│   │   ├── Heart rate zones
+│   │   ├── Training load
+│   │   ├── Recovery insights
+│   │   └── Performance trends
+│   ├── Training Plans
+│   │   ├── 5K program
+│   │   ├── 10K program
+│   │   ├── Half marathon
+│   │   ├── Full marathon
+│   │   └── Trail training
+│   ├── Unlimited Features
+│   │   ├── Unlimited clubs
+│   │   ├── Unlimited routes
+│   │   ├── Unlimited challenges
+│   │   └── Unlimited events
+│   ├── Enhanced Safety
+│   │   ├── 24/7 live sharing
+│   │   ├── Advanced SOS
+│   │   ├── Safety alerts
+│   │   └── Emergency services
+│   ├── Route Builder
+│   │   ├── Custom route creation
+│   │   ├── Route planning
+│   │   ├── Elevation preview
+│   │   └── Route sharing
+│   ├── Club Admin Pro
+│   │   ├── Analytics dashboard
+│   │   ├── Member insights
+│   │   ├── Custom branding
+│   │   └── Priority support
+│   └── Ad-Free Experience
+│       └── No advertisements
+└── Premium+ (₹299/month or ₹2499/year)
+    ├── Everything in Premium
+    ├── Personal Coach
+    │   ├── AI recommendations
+    │   ├── Form analysis
+    │   └── Injury prevention
+    ├── Exclusive Events
+    │   ├── Premium-only events
+    │   ├── Celebrity runs
+    │   └── VIP access
+    ├── Merchandise Discounts
+    │   └── 20% off partner stores
+    └── Priority Support
+        └── 24/7 chat support
+11.2 Premium Paywall
+Paywall Screen:
+├── Header
+│   ├── "Upgrade to Premium"
+│   └── Feature highlight carousel
+├── Plans
+│   ├── Monthly (₹199/month)
+│   ├── Annual (₹1499/year) - Save 37%
+│   └── Recommended badge on annual
+├── Features List
+│   ├── ✓ Advanced analytics
+│   ├── ✓ Training plans
+│   ├── ✓ Route builder
+│   ├── ✓ Unlimited clubs
+│   ├── ✓ Enhanced safety
+│   └── ✓ Ad-free experience
+├── Social Proof
+│   ├── "Join 10,000+ Premium members"
+│   └── Testimonials
+├── Trust Badges
+│   ├── Cancel anytime
+│   ├── 7-day free trial
+│   └── Secure payment
+└── CTA
+    └── "Start Free Trial"
+11.3 Premium Indicators
+Premium Badges:
+├── Profile badge (crown icon)
+├── Premium frame on avatar
+├── Premium label on activities
+├── Exclusive badge collection
+└── Premium-only challenges
+11.4 Payment Integration
+Payment Methods (India):
+├── UPI
+│   ├── Google Pay
+│   ├── PhonePe
+│   ├── Paytm
+│   └── Any UPI app
+├── Cards
+│   ├── Credit card
+│   └── Debit card
+├── Net Banking
+│   └── All major banks
+├── Wallets
+│   ├── Paytm
+│   ├── Amazon Pay
+│   └── Mobikwik
+└── International
+    ├── Credit cards
+    └── PayPal
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Create premium paywall screen | UI + pricing | 3h |
+| Build premium features gates | Feature access | 3h |
+| Implement subscription flow | Purchase logic | 4h |
+| Integrate payment gateway | Razorpay | 4h |
+| Create subscription management | Cancel/upgrade | 3h |
+| Build analytics dashboard | Premium analytics | 4h |
+| Create training plans | Content + tracking | 4h |
+| Implement route builder | Planning tool | 5h |
+| Add premium indicators | Badges + labels | 1h |
+| Create receipt/invoice | Transaction history | 2h |
+Outcome
+Before Phase 11:
+└── No monetization
+└── All features free
+└── No revenue
+After Phase 11:
+└── Two-tier premium model
+└── India-specific pricing
+└── Multiple payment options
+└── Free trial available
+└── Revenue stream active
+└── Premium value clear
+---
+PHASE 12: Localization & Accessibility
+Duration: 3-4 days | Priority: Medium
+Objective
+Make INVADE accessible to all Indians with language support and accessibility features.
+What to Build
+12.1 Multi-Language Support
+Language Options:
+├── English (Primary)
+├── Hindi
+├── Marathi
+├── Tamil
+├── Telugu
+├── Kannada
+├── Bengali
+├── Gujarati
+└── Malayalam
+Implementation:
+├── i18n framework
+├── Translation files
+├── Language detection
+├── Language switcher
+└── RTL support (future)
+12.2 Accessibility Features
+Accessibility:
+├── Screen Reader Support
+│   ├── VoiceOver (iOS)
+│   ├── TalkBack (Android)
+│   └── Proper labels
+├── Visual Accessibility
+│   ├── High contrast mode
+│   ├── Large text option
+│   ├── Color blind mode
+│   └── Reduced motion
+├── Motor Accessibility
+│   ├── Voice commands
+│   ├── Switch control
+│   └── Large touch targets
+└── Hearing Accessibility
+    ├── Visual alerts
+    ├── Caption support
+    └── Vibration feedback
+Technical Tasks
+| Task | Description | Hours |
+|------|-------------|-------|
+| Set up i18n framework | react-i18next | 2h |
+| Create translation files | 9 languages | 8h |
+| Build language switcher | Settings UI | 2h |
+| Add accessibility labels | All components | 4h |
+| Implement high contrast | Theme variant | 2h |
+| Add large text support | Dynamic sizing | 2h |
+| Test with screen readers | VoiceOver/TalkBack | 3h |
+Outcome
+Before Phase 12:
+└── English only
+└── Basic accessibility
+After Phase 12:
+└── 9 languages supported
+└── Full accessibility
+└── Wider audience reach
+└── Compliance with standards
+└── Inclusive design
+---
+Outcome Comparison Matrix
+Phase Completion Benefits
+| Phase | User Value | Retention Impact | Revenue Impact | Competitive Edge |
+|-------|------------|------------------|----------------|------------------|
+| 1: Navigation | Easy access | Low | None | Standard |
+| 2: Home Enhancement | Daily dashboard | Medium | None | Good |
+| 3: Explore | Discovery | High | Premium upsell | Strong (India routes) |
+| 4: Social Feed | FOMO + engagement | Very High | None | Standard |
+| 5: Clubs | Community | Very High | Premium upsell | Strong (India clubs) |
+| 6: Challenges | Goals + competition | High | Premium upsell | Good |
+| 7: Events | Offline connection | Very High | Revenue source | Strong (India focus) |
+| 8: Safety | Trust + peace of mind | High | Premium upsell | Very Strong (unique) |
+| 9: Profile/Progression | Achievement | Medium | None | Good |
+| 10: Messaging | Communication | Medium | None | Standard |
+| 11: Monetization | Sustainability | Low | High | Standard |
+| 12: Localization | Accessibility | Medium | Market expansion | Strong (India) |
+---
+Final Product Vision
+After All Phases Complete
+INVADE will be:
+┌─────────────────────────────────────────────────────────────┐
+│                    COMPLETE INVADE APP                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  🗺️ TERRITORY GAMING                                        │
+│  └── Capture zones, compete locally, defend territory       │
+│                                                              │
+│  🏃 RUN TRACKING                                             │
+│  └── GPS tracking, stats, personal records, goals           │
+│                                                              │
+│  🧭 ROUTES & TRAILS                                          │
+│  └── 100+ India routes, 50+ trails, elevation profiles      │
+│                                                              │
+│  👥 COMMUNITY                                                 │
+│  └── Feed, clubs, challenges, events, friends               │
+│                                                              │
+│  🛡️ SAFETY                                                    │
+│  └── Live sharing, SOS, night mode, women's safety          │
+│                                                              │
+│  🏆 GAMIFICATION                                              │
+│  └── XP, levels, badges, leaderboards, challenges           │
+│                                                              │
+│  💬 COMMUNICATION                                             │
+│  └── Messaging, notifications, club chats                    │
+│                                                              │
+│  🌐 LOCALIZATION                                              │
+│  └── 9 languages, accessibility features                     │
+│                                                              │
+│  💰 MONETIZATION                                              │
+│  └── Premium features, training plans, advanced safety       │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+---
+Success Metrics
+Key Performance Indicators
+| Metric | Target (6 months) | Target (12 months) |
+|--------|-------------------|---------------------|
+| Downloads | 100,000 | 500,000 |
+| MAU (Monthly Active Users) | 50,000 | 250,000 |
+| DAU (Daily Active Users) | 10,000 | 50,000 |
+| Retention D1 | 40% | 50% |
+| Retention D7 | 20% | 30% |
+| Retention D30 | 10% | 15% |
+| Premium Conversion | 3% | 5% |
+| ARPU (Average Revenue Per User) | ₹15 | ₹25 |
+| Clubs Created | 500 | 2,000 |
+| Events Hosted | 200 | 1,000 |
+| Routes Created | 1,000 | 5,000 |
+| App Store Rating | 4.5 | 4.7 |
+---
+Timeline Overview
+Week 1-2:   Phase 1 + 2 (Navigation + Home)
+Week 3-4:   Phase 3 (Explore)
+Week 5-6:   Phase 4 (Social Feed)
+Week 7-8:   Phase 5 (Clubs)
+Week 9-10:  Phase 6 (Challenges)
+Week 11-12: Phase 7 (Events)
+Week 13-14: Phase 8 (Safety)
+Week 15-16: Phase 9 (Profile)
+Week 17-18: Phase 10 (Messaging)
+Week 19-20: Phase 11 (Monetization)
+Week 21-22: Phase 12 (Localization)
+Week 23-24: Polish + Launch Prep
+Total: 6 months for complete product
+---

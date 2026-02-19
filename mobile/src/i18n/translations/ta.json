@@ -1,0 +1,49 @@
+{
+  "common": {
+    "appName": "INVADE",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "search": "Search",
+    "km": "km",
+    "min": "min"
+  },
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "community": "Community",
+    "profile": "Profile"
+  },
+  "auth": {
+    "welcome": "Welcome to INVADE",
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password"
+  },
+  "home": {
+    "startRun": "Start Run",
+    "zonesCaptured": "Zones Captured"
+  },
+  "run": {
+    "start": "Start",
+    "pause": "Pause",
+    "stop": "Stop",
+    "distance": "Distance",
+    "time": "Time",
+    "pace": "Pace"
+  },
+  "safety": {
+    "safetyCenter": "Safety Center",
+    "sos": "SOS Emergency",
+    "emergencyContacts": "Emergency Contacts"
+  },
+  "premium": {
+    "upgrade": "Upgrade to Premium",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  }
+}
