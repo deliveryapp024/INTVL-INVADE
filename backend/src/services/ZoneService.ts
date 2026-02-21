@@ -281,9 +281,9 @@ class ZoneService {
 
     const userZoneIds = new Set(currentOwnerships?.map((o: any) => o.zone_id) || [])
 
-    return (zones || []).map(zone => ({
+    return (zones || []).map((zone: any) => ({
       ...zone,
-      currentOwner: null, // Will be populated if needed
+      currentOwner: null,
       capturedAt: null,
       isOwnedByUser: userZoneIds.has(zone.id)
     }))
@@ -344,25 +344,29 @@ class ZoneService {
   async getZoneLeaderboard(zoneId: string, limit: number = 10): Promise<Array<{ user: User; captures: number }>> {
     const { data: ownerships } = await supabaseAdmin
       .from('zone_ownerships')
-      .select(`
-        user:user_id (*)
-      `)
+      .select('user_id')
       .eq('zone_id', zoneId)
 
     if (!ownerships) return []
+    
+    // Get user details
+    const userIds = [...new Set(ownerships.map((o: any) => o.user_id))]
+    const { data: users } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .in('id', userIds)
+    
+    const userMap = new Map(users?.map((u: any) => [u.id, u]) || [])
 
     // Count captures per user
-    const captureCounts = new Map<string, { user: User; captures: number }>()
-    ownerships.forEach(o => {
-      const user = o.user as User
-      if (captureCounts.has(user.id)) {
-        captureCounts.get(user.id)!.captures++
-      } else {
-        captureCounts.set(user.id, { user, captures: 1 })
-      }
+    const captureCounts = new Map<string, number>()
+    ownerships.forEach((o: any) => {
+      captureCounts.set(o.user_id, (captureCounts.get(o.user_id) || 0) + 1)
     })
 
-    return Array.from(captureCounts.values())
+    return Array.from(captureCounts.entries())
+      .map(([userId, captures]) => ({ user: userMap.get(userId) as User, captures }))
+      .filter(item => item.user)
       .sort((a, b) => b.captures - a.captures)
       .slice(0, limit)
   }
