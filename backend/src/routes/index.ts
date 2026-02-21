@@ -10,8 +10,12 @@ import adminRoutes from './admin'
 import adminNotificationRoutes from './admin-notifications'
 import adminComplianceRoutes from './admin-compliance'
 import settingsRoutes from './settings'
+import bootstrapRoutes from './bootstrap'
 
 const router = Router()
+
+// Public bootstrap route (one-time setup)
+router.use('/bootstrap', bootstrapRoutes)
 
 // API routes
 router.use('/auth', authRoutes)
