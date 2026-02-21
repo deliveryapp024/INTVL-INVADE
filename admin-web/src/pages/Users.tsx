@@ -35,10 +35,17 @@ export default function UsersPage() {
   const [page, setPage] = useState(1)
   const queryClient = useQueryClient()
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['users', page, search, roleFilter, statusFilter],
-    queryFn: () => usersApi.getUsers({ page, limit: 20, search, role: roleFilter, status: statusFilter }).then(res => res.data)
+    queryFn: () => usersApi.getUsers({ page, limit: 20, search, role: roleFilter, status: statusFilter }).then(res => {
+      console.log('Users API response:', res.data)
+      return res.data
+    })
   })
+
+  // Debug logging
+  console.log('Users data:', data)
+  console.log('Users error:', error)
 
   const suspendMutation = useMutation({
     mutationFn: (id: string) => usersApi.suspendUser(id),

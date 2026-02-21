@@ -77,7 +77,15 @@ export const authApi = {
 // Users API
 export const usersApi = {
   getUsers: (params?: { page?: number; limit?: number; search?: string; role?: string; status?: string }) =>
-    api.get('/admin/users', { params }),
+    api.get('/admin/users', { 
+      params: {
+        offset: params?.page ? (params.page - 1) * (params.limit || 20) : 0,
+        limit: params?.limit || 20,
+        query: params?.search,
+        role: params?.role,
+        status: params?.status
+      }
+    }),
   
   getUser: (id: string) =>
     api.get(`/admin/users/${id}`),
@@ -98,7 +106,14 @@ export const usersApi = {
 // Runs API
 export const runsApi = {
   getRuns: (params?: { page?: number; limit?: number; user_id?: string; search?: string }) =>
-    api.get('/admin/runs', { params }),
+    api.get('/admin/runs', { 
+      params: {
+        offset: params?.page ? (params.page - 1) * (params.limit || 20) : 0,
+        limit: params?.limit || 20,
+        userId: params?.user_id,
+        query: params?.search
+      }
+    }),
   
   getRun: (id: string) =>
     api.get(`/admin/runs/${id}`),
