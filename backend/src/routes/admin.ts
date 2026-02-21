@@ -124,11 +124,11 @@ router.get('/users', requireStaff, asyncHandler(async (req: AuthenticatedRequest
     dbQuery = dbQuery.or(`email.ilike.%${query}%,username.ilike.%${query}%,name.ilike.%${query}%`)
   }
 
-  if (role) {
+  if (role && role !== 'all') {
     dbQuery = dbQuery.eq('role', role)
   }
 
-  if (status) {
+  if (status && status !== 'all') {
     dbQuery = dbQuery.eq('status', status)
   }
 
@@ -397,7 +397,7 @@ router.get('/runs', requireStaff, asyncHandler(async (req: AuthenticatedRequest,
     dbQuery = dbQuery.eq('user_id', userId)
   }
 
-  if (status) {
+  if (status && status !== 'all') {
     dbQuery = dbQuery.eq('status', status)
   }
 
