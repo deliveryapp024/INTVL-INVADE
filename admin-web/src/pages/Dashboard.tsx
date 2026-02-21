@@ -143,35 +143,35 @@ export default function DashboardPage() {
   const metrics = [
     { 
       title: 'Total Users', 
-      value: stats?.data?.totalUsers?.toLocaleString() || '0',
+      value: stats?.data?.users?.toLocaleString() || '0',
       icon: Users,
       change: '+12.5%',
       changeType: 'positive' as const,
-      subtitle: 'Active runners'
+      subtitle: 'Total registered users'
     },
     { 
       title: 'Active Runs', 
-      value: stats?.data?.activeRuns?.toLocaleString() || '0',
+      value: stats?.data?.runs?.toLocaleString() || '0',
       icon: Activity,
       change: '+8.2%',
       changeType: 'positive' as const,
-      subtitle: 'Currently running'
+      subtitle: 'Total runs recorded'
     },
     { 
       title: 'Territories', 
-      value: stats?.data?.territories?.toLocaleString() || '0',
+      value: stats?.data?.zones?.toLocaleString() || '0',
       icon: Target,
       change: '+23.1%',
       changeType: 'positive' as const,
-      subtitle: 'Zones captured'
+      subtitle: 'Total zones'
     },
     { 
       title: 'Total Distance', 
-      value: `${(stats?.data?.totalDistance || 0).toLocaleString()} km`,
+      value: `${(stats?.data?.achievements || 0).toLocaleString()} achievements`,
       icon: Zap,
       change: '+15.3%',
       changeType: 'positive' as const,
-      subtitle: 'All time'
+      subtitle: 'Achievements earned'
     },
   ];
 

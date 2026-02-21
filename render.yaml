@@ -1,10 +1,11 @@
 # Render Deployment Configuration
 # For INVADE Admin Dashboard + Backend
+# FIXED VERSION - All service names now match
 
 services:
   # Backend API
   - type: web
-    name: invade-api
+    name: intvl-invade-backend  # Changed to match the URL used in frontend
     runtime: node
     repo: https://github.com/deliveryapp024/INTVL-INVADE.git
     branch: master
@@ -27,7 +28,7 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CORS_ORIGINS
-        value: "https://invade-admin.onrender.com,http://localhost:3000"
+        value: "https://invade-admin.onrender.com,https://intvl-invade-admin.onrender.com,http://localhost:3000"
       - key: REDIS_URL
         fromService:
           type: redis
@@ -48,7 +49,7 @@ services:
 
   # Admin Web Dashboard
   - type: web
-    name: invade-admin
+    name: intvl-invade-admin  # Changed to be consistent
     runtime: static
     repo: https://github.com/deliveryapp024/INTVL-INVADE.git
     branch: master
@@ -85,3 +86,4 @@ services:
 #    - FIREBASE_PROJECT_ID
 #    - FIREBASE_CLIENT_EMAIL
 #    - FIREBASE_PRIVATE_KEY
+# 2. After first deploy, update CORS_ORIGINS with actual frontend URL if different

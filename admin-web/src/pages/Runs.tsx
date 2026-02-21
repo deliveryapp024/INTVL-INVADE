@@ -29,8 +29,8 @@ export default function RunsPage() {
     queryFn: () => runsApi.getRuns({ page, limit: 20, search }).then(res => res.data)
   })
 
-  const runs = data?.runs || []
-  const pagination = data?.pagination
+  const runs = data?.data || []
+  const pagination = data?.meta
 
   const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' | 'primary' | 'warning' | 'success' => {
     switch (status) {
@@ -65,7 +65,7 @@ export default function RunsPage() {
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Runs</p>
                 <p className="metric-value">
-                  {isLoading ? <Skeleton className="h-8 w-16" /> : data?.stats?.total || '-'}
+                  {isLoading ? <Skeleton className="h-8 w-16" /> : pagination?.total || '-'}
                 </p>
               </div>
             </div>
