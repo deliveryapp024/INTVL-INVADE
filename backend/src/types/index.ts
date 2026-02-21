@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { User } from './database'
+import { User, Zone, Achievement, Challenge, Friendship } from './database'
 
 // Extended Express Request with user info
 export interface AuthenticatedRequest extends Request {
