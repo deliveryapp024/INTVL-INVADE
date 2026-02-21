@@ -207,6 +207,7 @@ class ZoneService {
         .eq('id', previousOwnership.user_id)
         .single()
       previousOwner = prevUser as User
+    }
 
     // Check if user already owns the zone
     if (previousOwner?.id === userId) {
