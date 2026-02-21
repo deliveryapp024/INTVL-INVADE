@@ -194,6 +194,90 @@ export const dashboardApi = {
   getActivity: () => api.get('/admin/activity')
 }
 
+// Zones API
+export const zonesApi = {
+  getZones: (params?: { search?: string; sort?: string }) =>
+    api.get('/zones', { params }),
+  
+  getZone: (id: string) =>
+    api.get(`/zones/${id}`),
+  
+  createZone: (data: any) =>
+    api.post('/zones', data),
+  
+  updateZone: (id: string, data: any) =>
+    api.patch(`/zones/${id}`, data),
+  
+  deleteZone: (id: string) =>
+    api.delete(`/zones/${id}`)
+}
+
+// Webhooks API
+export const webhooksApi = {
+  getWebhooks: () =>
+    api.get('/webhooks'),
+  
+  getWebhook: (id: string) =>
+    api.get(`/webhooks/${id}`),
+  
+  createWebhook: (data: any) =>
+    api.post('/webhooks', data),
+  
+  updateWebhook: (id: string, data: any) =>
+    api.patch(`/webhooks/${id}`, data),
+  
+  deleteWebhook: (id: string) =>
+    api.delete(`/webhooks/${id}`),
+  
+  getDeliveryLogs: (webhookId: string) =>
+    api.get(`/webhooks/${webhookId}/deliveries`),
+  
+  testWebhook: (id: string) =>
+    api.post(`/webhooks/${id}/test`)
+}
+
+// Challenges API
+export const challengesApi = {
+  getChallenges: (params?: { search?: string; status?: string }) =>
+    api.get('/challenges/all', { params }),
+  
+  getChallenge: (id: string) =>
+    api.get(`/challenges/${id}`),
+  
+  createChallenge: (data: any) =>
+    api.post('/challenges', data),
+  
+  updateChallenge: (id: string, data: any) =>
+    api.patch(`/challenges/${id}`, data),
+  
+  deleteChallenge: (id: string) =>
+    api.delete(`/challenges/${id}`),
+  
+  getLeaderboard: (id: string) =>
+    api.get(`/challenges/${id}/leaderboard`)
+}
+
+// Achievements API
+export const achievementsApi = {
+  getAchievements: (params?: { search?: string; category?: string }) =>
+    api.get('/achievements', { params }),
+  
+  getAchievement: (id: string) =>
+    api.get(`/achievements/${id}`),
+  
+  createAchievement: (data: any) =>
+    api.post('/achievements', data),
+  
+  updateAchievement: (id: string, data: any) =>
+    api.patch(`/achievements/${id}`, data),
+  
+  deleteAchievement: (id: string) =>
+    api.delete(`/achievements/${id}`),
+  
+  getStats: () =>
+    api.get('/achievements/stats')
+}
+
 // Settings API
 export const settingsApi = {
   getSettings: () =>

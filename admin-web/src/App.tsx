@@ -6,7 +6,11 @@ import LoginPage from '@/pages/Login';
 import DashboardPage from '@/pages/Dashboard';
 import UsersPage from '@/pages/Users';
 import RunsPage from '@/pages/Runs';
+import AchievementsPage from '@/pages/Achievements';
+import ChallengesPage from '@/pages/Challenges';
+import ZonesPage from '@/pages/Zones';
 import NotificationsPage from '@/pages/Notifications';
+import WebhooksPage from '@/pages/Webhooks';
 import CompliancePage from '@/pages/Compliance';
 import AuditLogsPage from '@/pages/AuditLogs';
 import ProfilePage from '@/pages/Profile';
@@ -33,7 +37,11 @@ function App() {
             <Route index element={<DashboardPage />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="runs" element={<RunsPage />} />
+            <Route path="achievements" element={<AchievementsPage />} />
+            <Route path="challenges" element={<ChallengesPage />} />
+            <Route path="zones" element={<ZonesPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="webhooks" element={<WebhooksPage />} />
             <Route path="compliance" element={<CompliancePage />} />
             <Route path="audit-logs" element={<AuditLogsPage />} />
             <Route path="profile" element={<ProfilePage />} />

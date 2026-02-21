@@ -12,7 +12,11 @@ import {
   Search,
   Command,
   Zap,
-  ChevronRight
+  ChevronRight,
+  Trophy,
+  Target,
+  MapPin,
+  Webhook
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -34,7 +38,11 @@ const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, badge: null },
   { name: 'Users', href: '/users', icon: Users, badge: null },
   { name: 'Runs', href: '/runs', icon: Activity, badge: 'Live' },
+  { name: 'Achievements', href: '/achievements', icon: Trophy, badge: null },
+  { name: 'Challenges', href: '/challenges', icon: Target, badge: null },
+  { name: 'Zones', href: '/zones', icon: MapPin, badge: null },
   { name: 'Notifications', href: '/notifications', icon: Bell, badge: null },
+  { name: 'Webhooks', href: '/webhooks', icon: Webhook, badge: null },
   { name: 'Compliance', href: '/compliance', icon: Shield, badge: null },
   { name: 'Audit Logs', href: '/audit-logs', icon: FileText, badge: null },
 ];
