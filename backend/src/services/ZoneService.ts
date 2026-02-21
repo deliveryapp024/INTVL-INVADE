@@ -253,7 +253,7 @@ class ZoneService {
   }
 
   // Get zones owned by user
-  async getUserZones(userId: string): Promise<ZoneWithDetails[]> {
+  async getUserZones(userId: string) {
     const { data: ownerships } = await supabaseAdmin
       .from('zone_ownerships')
       .select('zone_id')
