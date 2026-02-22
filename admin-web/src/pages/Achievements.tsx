@@ -73,7 +73,7 @@ export default function AchievementsPage() {
     onError: () => toast.error('Failed to delete achievement')
   })
 
-  const achievements = data?.data || []
+  const achievements = Array.isArray(data?.data?.achievements) ? data.data.achievements : []
 
   const stats = [
     { label: 'Total Achievements', value: achievements.length, icon: Trophy },
