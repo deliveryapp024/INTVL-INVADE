@@ -85,7 +85,7 @@ export default function ChallengesPage() {
     }
   })
 
-  const challenges = data?.data || []
+  const challenges = Array.isArray(data?.data?.challenges) ? data.data.challenges : []
 
   const stats = [
     { label: 'Active', value: challenges.filter((c: Challenge) => c.status === 'active').length, color: 'text-green-500' },

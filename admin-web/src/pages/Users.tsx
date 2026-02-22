@@ -65,7 +65,7 @@ export default function UsersPage() {
     onError: () => toast.error('Failed to unsuspend user')
   })
 
-  const users = data?.data || []
+  const users = Array.isArray(data?.data?.users) ? data.data.users : []
   const pagination = data?.meta
 
   const getRoleIcon = (role: string) => {

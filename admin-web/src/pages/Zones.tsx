@@ -41,7 +41,7 @@ export default function ZonesPage() {
     queryFn: () => zonesApi.getZones({ search, sort: sortBy }).then(res => res.data)
   })
 
-  const zones = data?.data || []
+  const zones = Array.isArray(data?.data?.zones) ? data.data.zones : []
 
   const stats = [
     { label: 'Total Zones', value: zones.length, icon: MapPin },
